@@ -28,7 +28,10 @@ The CMS still holds short intro pages that link across to these.
 ## Where submissions go
 
 All three forms post to one Google Apps Script attached to the Chanukah
-Fest spreadsheet. Each writes to its own tab:
+Fest spreadsheet:
+
+    https://docs.google.com/spreadsheets/d/1xp-U-rGHynR4uq-wrsIbukWg92pShE4H8dPVafhwQao/edit
+ Each writes to its own tab:
 
 | Form | Tab |
 |---|---|

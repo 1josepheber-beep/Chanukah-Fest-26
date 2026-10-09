@@ -15,10 +15,10 @@ var CONFIG = {
 
   // Shown in the admin panel. If this is not the version Claude last
   // sent, you are opening an older download.
-  FILE_VERSION: "Draw screen v11 (hosted)",
+  FILE_VERSION: "Draw screen v12 (hosted)",
 
   // Your Apps Script address. Same one the entry form uses.
-  ENDPOINT: "https://script.google.com/macros/s/AKfycbzOX7Y9XUhsQNWcLTylr1FllwX4BOM-hYSRfc6WaJQH0DLMB7LIByxPVRyb45TMzYjWyw/exec",
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbzwDkEPx2ioKaDoiBkkZNm37rI4ox4MiVe8v3fk138SWPDx66XJy5BD4TErWS3eLhJ5/exec",
 
   // Deliberately empty. This page is on a public address, so the key
   // that unlocks the entrant list cannot live in the file. It is typed
@@ -491,7 +491,11 @@ var SAMPLE = [
   { name: "Ari Green" }, { name: "Naomi Fisher" }, { name: "Yaakov Roth" }
 ];
 
-var STORE = "cf26-draw-v1";
+// Bumped when the saved state must be thrown away: it holds the script
+// address and the access key, and a stale one silently overrides the
+// address in this file. Changing the name here is how a browser is made
+// to start fresh.
+var STORE = "cf26-draw-v2";
 var entries = [];       // one TICKET per person: {id, name, household, age, gone}
 var winners = [];       // indexed by slot: winners[0] is prize 1
 var drawing = false;

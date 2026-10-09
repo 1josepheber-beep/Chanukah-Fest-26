@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chanukah Fest 2026 — Raffle Draw</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap">
+
+<script>
+/* ===================================================================
+   SETTINGS — the only part you should ever need to change.
+   =================================================================== */
+var CONFIG = {
+
+  // Shown in the admin panel. If this is not the version Claude last
+  // sent, you are opening an older download.
+  FILE_VERSION: "Draw screen v11 (hosted)",
+
+  // Your Apps Script address. Same one the entry form uses.
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbzOX7Y9XUhsQNWcLTylr1FllwX4BOM-hYSRfc6WaJQH0DLMB7LIByxPVRyb45TMzYjWyw/exec",
+
+  // Deliberately empty. This page is on a public address, so the key
+  // that unlocks the entrant list cannot live in the file. It is typed
+  // in once per computer and kept in that browser from then on.
+  KEY: "",
+
+  // How many prizes. Change it here or in the admin panel.
+  PRIZES: 30,
+
+  // Mark the winner in the Google Sheet and email them the moment
+  // their name appears. Turn off from the admin panel while testing.
+  SEND_EMAILS: true,
+
+  EVENT: "Chanukah Fest 2026",
+
+  // Status messages are hidden from the screen. Turn them on in the
+  // admin panel while you are testing on your own.
+  SHOW_STATUS: false,
+
+  // Drawing is BLOCKED unless the Google Sheet answered, so a sample
+  // name can never be announced to a room. Switch this on in the admin
+  // panel to practise with the sample names.
+  DEMO: false,
+
+  // The winner email. {name} {firstname} {prize} get filled in.
+  // Editable from the admin panel.
+  SUBJECT: "You won a Chanukah Fest raffle prize",
+  MESSAGE:
+    "Mazel tov, {name}!\n\n" +
+    "Your name was just drawn for {prize} in the Chanukah Fest 2026 raffle " +
+    "at Houston City Hall.\n\n" +
+    "Come to the information booth with this email to collect your prize.\n\n" +
+    "Questions? Call 713-774-0300."
+};
+</script>
+
+<style>
+/* Layout: one projector screen. Marquee title, a fixed-size ticket that
+   never changes height, then the prize board. Nothing moves except the
+   name inside the ticket. */
+:root {
+  --night:      #0A1E38;   /* festival navy */
+  --night-2:    #16355C;
+  --ticket:     #F0B429;   /* festival gold */
+  --ticket-ink: #2A1600;
+  --pink:       #D9376E;
+  --mint:       #3EE8B5;
+  --text:       #F3EEFF;
+  --muted:      #93A9C2;
+  --display: "Bungee", "Impact", sans-serif;
+  --body: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: radial-gradient(ellipse at 50% 0%, var(--night-2), var(--night) 70%);
+  background-color: var(--night);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 16px;
+  padding-inline: 16px;
+  overflow-x: hidden;
+}
+#fx { position: fixed; inset: 0; pointer-events: none; z-index: 50; width: 100%; height: 100%; }
+
+.wrap {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 22px;
+  padding-block: 20px 28px;
+}
+
+/* ---------------- header ---------------- */
+header { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.bulbs { display: flex; gap: 14px; }
+.bulbs span { width: 10px; height: 10px; border-radius: 50%; background: var(--ticket); box-shadow: 0 0 10px var(--ticket); animation: blink 1.2s infinite; }
+.bulbs span:nth-child(even) { animation-delay: .6s; }
+@keyframes blink { 50% { opacity: .25; box-shadow: none; } }
+h1 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(2rem, 5.5vw, 4rem); line-height: 1; margin: 0;
+  letter-spacing: .02em; color: var(--ticket); text-shadow: 4px 4px 0 var(--pink);
+}
+.event {
+  color: var(--muted); font: 600 clamp(.9rem, 1.6vw, 1.1rem) var(--body);
+  text-transform: uppercase; letter-spacing: .16em;
+}
+
+/* ---------------- ticket ----------------
+   Fixed height at every size, so nothing on the page ever shifts. */
+.stage { display: flex; justify-content: center; }
+.ticket {
+  position: relative; width: min(100%, 980px);
+  display: grid; grid-template-columns: 1fr auto;
+  background: var(--ticket); color: var(--ticket-ink);
+  border-radius: 14px;
+  -webkit-mask: radial-gradient(circle 22px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle 22px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle 22px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle 22px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+}
+.ticket.win { animation: pop .6s cubic-bezier(.2,1.6,.4,1); }
+@keyframes pop { 0% { transform: scale(.94); } 100% { transform: scale(1); } }
+.ticket.rolling .t-label { opacity: 1; }
+
+.t-main {
+  padding: 26px 36px 24px 52px;
+  display: flex; flex-direction: column; justify-content: center; gap: 8px;
+  min-width: 0;
+}
+.t-label { font: 800 .8rem var(--body); text-transform: uppercase; letter-spacing: .2em; opacity: .7; height: 1.2em; }
+
+/* The name box is a FIXED box. The text scales to fit it. */
+#nameBox {
+  height: clamp(84px, 13vh, 140px);
+  display: flex; align-items: center;
+  overflow: hidden;
+}
+#winnerName {
+  font-family: var(--display); line-height: 1.02; margin: 0;
+  white-space: nowrap;
+  transform-origin: left center;
+}
+#winnerExtra {
+  font-weight: 600; font-size: 1rem; min-height: 1.4em;
+  opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 100%;
+}
+/* the not-connected explanation needs room to wrap */
+#winnerExtra[style*="normal"] { font-size: .92rem; line-height: 1.45; max-height: 4.4em; }
+
+.t-stub {
+  border-left: 4px dashed var(--ticket-ink);
+  padding: 26px 40px 26px 26px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+}
+.t-stub .t-label { writing-mode: vertical-rl; transform: rotate(180deg); height: auto; }
+#prizeNo { font-family: var(--display); font-size: clamp(1.6rem, 3vw, 2.4rem); font-variant-numeric: tabular-nums; }
+
+/* ---------------- controls ---------------- */
+.controls { display: flex; justify-content: center; align-items: center; gap: 16px; }
+#drawBtn {
+  font-family: var(--display); font-weight: 400; font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+  padding: 18px 54px; border-radius: 999px; border: 2px solid var(--pink);
+  background: var(--pink); color: #fff; cursor: pointer;
+  box-shadow: 0 6px 0 #8E1C45; transition: transform .12s, box-shadow .12s;
+}
+#drawBtn:active { transform: translateY(4px); box-shadow: 0 2px 0 #8E1C45; }
+#drawBtn:disabled { opacity: .45; cursor: default; transform: none; box-shadow: 0 6px 0 #8E1C45; }
+#drawBtn:focus-visible { outline: 3px solid var(--mint); outline-offset: 4px; }
+.status { color: var(--muted); font-size: .9rem; text-align: center; min-height: 1.3em; }
+.status.warn { color: var(--ticket); }
+
+/* ---------------- prize board ---------------- */
+.board { display: flex; flex-direction: column; gap: 10px; }
+.board h2 {
+  margin: 0; font: 800 .8rem var(--body); text-transform: uppercase;
+  letter-spacing: .18em; color: var(--muted);
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.board h2 b { color: var(--mint); font-variant-numeric: tabular-nums; }
+.slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 8px;
+}
+.slot {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(147,169,194,.22);
+  border-radius: 9px;
+  padding: 9px 12px;
+  min-width: 0;
+  min-height: 46px;
+}
+.slot .n {
+  font-family: var(--display); font-size: .95rem; font-variant-numeric: tabular-nums;
+  color: var(--muted); flex: 0 0 auto; min-width: 1.9em;
+}
+.slot .who {
+  font-weight: 700; font-size: .95rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+.slot.filled { background: rgba(240,180,41,.13); border-color: rgba(240,180,41,.5); }
+.slot.filled .n { color: var(--ticket); }
+.slot.latest { background: var(--ticket); border-color: var(--ticket); }
+.slot.latest .n, .slot.latest .who { color: var(--ticket-ink); }
+
+/* ---------------- the way in ---------------- */
+.lock {
+  position: fixed; inset: 0; z-index: 90;
+  background-color: #06142A;
+  background-image: radial-gradient(700px 340px at 50% 118%, rgba(240,180,41,.22) 0%, rgba(240,180,41,0) 70%);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+
+.lock[hidden] { display: none; }
+
+.lock-box { width: min(100%, 400px); text-align: center; }
+
+.lock-box h1 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(1.7rem, 5vw, 2.4rem); line-height: 1.05;
+  color: var(--ticket); text-shadow: 3px 3px 0 var(--pink);
+  margin: 0 0 10px;
+}
+
+.lock-box p { color: var(--muted); font-size: .95rem; margin: 0 0 22px; line-height: 1.5; }
+
+.lock-box input {
+  width: 100%; padding: 15px 16px; font: 1rem var(--body);
+  background: #09182B; color: var(--text);
+  border: 1px solid rgba(147,169,194,.4); border-radius: 9px;
+  text-align: center; letter-spacing: .04em;
+}
+
+.lock-box input:focus { outline: 2px solid var(--mint); outline-offset: 1px; }
+
+.lock-box button {
+  width: 100%; margin-top: 12px; padding: 15px;
+  font: 800 1rem var(--body); border: 0; border-radius: 9px;
+  background: var(--ticket); color: var(--ticket-ink); cursor: pointer;
+}
+
+.lock-box button:hover { background: #DDA31C; }
+.lock-box button:disabled { opacity: .55; cursor: default; }
+
+.lock-msg { margin-top: 14px; font-size: .9rem; font-weight: 600; color: var(--pink); min-height: 1.3em; }
+
+.lock-keep { margin-top: 18px; font-size: .82rem; color: var(--muted); line-height: 1.5; }
+
+/* ---------------- hidden admin ---------------- */
+/* Hidden admin corner. The dot is the only thing on screen that is not
+   for the audience: 8px, barely visible from a seat, easy to find from
+   the laptop. Colour says whether we are live on the sheet. */
+#adminDot {
+  position: fixed; top: 0; left: 0; width: 56px; height: 56px;
+  z-index: 60; cursor: default; background: transparent;
+  border: 0; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+#adminDot::after {
+  content: ""; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--muted); opacity: .35; transition: background .3s, opacity .3s;
+}
+#adminDot.live::after   { background: var(--mint); opacity: .32; }
+#adminDot.offline::after{ background: var(--ticket); opacity: .5; }
+#adminDot.busy::after   { background: var(--mint); opacity: .9; animation: pulse 1s infinite; }
+#adminDot.bad::after    { background: var(--pink); opacity: .75; }
+@keyframes pulse { 50% { opacity: .25; } }
+#adminDot:focus-visible { outline: 2px solid var(--mint); }
+
+.status[hidden] { display: none; }
+.sheet {
+  position: fixed; inset: 0; z-index: 70;
+  background: rgba(6,12,24,.88);
+  display: flex; align-items: center; justify-content: center;
+  padding: 14px;
+}
+.sheet[hidden] { display: none; }
+
+/* The panel is taller than a laptop screen, so it scrolls inside
+   itself with the title and close button always reachable. */
+.card {
+  background: #0E2744; border: 1px solid rgba(147,169,194,.35);
+  border-radius: 14px; width: min(100%, 480px);
+  max-height: calc(100vh - 28px);
+  max-height: calc(100dvh - 28px);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 16px 20px;
+  border-bottom: 1px solid rgba(147,169,194,.25);
+  flex: 0 0 auto;
+}
+.card-body {
+  padding: 18px 20px 20px;
+  overflow-y: auto; overscroll-behavior: contain;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.card h3 { margin: 0; font-size: 1.1rem; }
+.card .x {
+  flex: 0 0 auto; width: 34px; height: 34px; padding: 0;
+  border-radius: 8px; font-size: 1.3rem; line-height: 1;
+  color: var(--muted);
+}
+.card .x:hover { color: var(--text); }
+.card label { font-size: .85rem; font-weight: 700; color: var(--muted); display: block; margin-bottom: 5px; }
+.card fieldset { border: 0; padding: 0; margin: 0; }
+.card input {
+  width: 100%; padding: 12px 14px; font: 1rem var(--body);
+  background: #09182B; color: var(--text);
+  border: 1px solid rgba(147,169,194,.4); border-radius: 8px;
+}
+.card input:focus { outline: 2px solid var(--mint); outline-offset: 1px; }
+.card button {
+  font: 700 .95rem var(--body); padding: 12px 16px; border-radius: 8px;
+  border: 1px solid rgba(147,169,194,.4); background: transparent;
+  color: var(--text); cursor: pointer;
+}
+.card button:hover { background: rgba(255,255,255,.06); }
+.card button.primary { background: var(--mint); border-color: var(--mint); color: #05231A; }
+.card button.danger { border-color: #D9376E; color: #FF8FB4; }
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; }
+.msg { font-size: .85rem; color: var(--ticket); min-height: 1.2em; }
+.hint { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+@media (max-width: 760px) {
+  .t-main { padding: 20px 18px 18px 36px; }
+  .t-stub { padding: 18px 22px 18px 16px; }
+  .slots { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<div class="lock" id="lock">
+  <div class="lock-box">
+    <h1>Raffle Draw</h1>
+    <p>Chanukah Fest 2026. Enter the access key to load the entries.</p>
+    <input type="password" id="lockKey" autocomplete="current-password"
+           spellcheck="false" placeholder="Access key" />
+    <button id="lockBtn">Unlock</button>
+    <div class="lock-msg" id="lockMsg"></div>
+    <div class="lock-keep">Remembered on this computer until you sign out.
+      The entries and winners come from the spreadsheet, so every computer
+      shows the same board.</div>
+  </div>
+</div>
+
+<canvas id="fx"></canvas>
+<button id="adminDot" aria-label="Admin"></button>
+
+<div class="wrap">
+  <header>
+    <div class="bulbs" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <h1>Raffle</h1>
+    <div class="event" id="eventName">Chanukah Fest 2026</div>
+  </header>
+
+  <section class="stage">
+    <div class="ticket" id="ticket">
+      <div class="t-main">
+        <div class="t-label" id="tLabel">Press Draw to pick a winner</div>
+        <div id="nameBox"><p id="winnerName">Ready?</p></div>
+        <div id="winnerExtra"></div>
+      </div>
+      <div class="t-stub">
+        <div class="t-label">Winner</div>
+        <div id="prizeNo">—</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="controls">
+    <button id="drawBtn">Draw!</button>
+  </div>
+  <div class="status" id="status" hidden></div>
+
+  <div class="board">
+    <h2>Winners <b><span id="wonCount">0</span> / <span id="prizeTotal">30</span></b></h2>
+    <div class="slots" id="slots"></div>
+  </div>
+</div>
+
+<!-- hidden admin panel -->
+<div class="sheet" id="adminSheet" hidden>
+  <div class="card" id="adminCard">
+    <div class="card-head">
+      <h3>Admin</h3>
+      <button class="x" id="closeX" aria-label="Close">&times;</button>
+    </div>
+    <div class="card-body">
+
+    <div id="lockView" hidden></div>
+
+    <div id="adminView" hidden>
+      <div class="hint" id="adminStats"></div>
+      <div class="hint" id="adminStatus" style="margin-top:8px;color:var(--ticket)"></div>
+      <div class="hint" id="adminDiag" style="margin-top:6px"></div>
+
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(147,169,194,.25)">
+        <label for="endpoint">Google Apps Script address</label>
+        <input type="text" id="endpoint" spellcheck="false">
+        <div class="hint" style="margin-top:4px">
+          Must end in /exec. Paste a different deployment here if you made a new one.
+        </div>
+      </div>
+      <label style="display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--text);font-size:.95rem">
+        <input type="checkbox" id="showStatus" style="width:18px;height:18px;accent-color:#3EE8B5">
+        Show status messages on the screen
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;margin-top:10px;color:var(--text);font-size:.95rem">
+        <input type="checkbox" id="demoMode" style="width:18px;height:18px;accent-color:#F0B429">
+        Demo mode — let me draw the sample names
+      </label>
+      <div class="hint" style="margin-top:4px">
+        Leave this off for the real event. With it off, Draw does nothing
+        unless the sheet answered.
+      </div>
+
+      <div style="margin-top:14px">
+        <label for="prizeCount">How many winners to draw</label>
+        <input type="number" id="prizeCount" min="1" max="200">
+      </div>
+
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(147,169,194,.25)">
+        <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;color:var(--text);font-size:.95rem">
+          <input type="checkbox" id="sendEmails" style="width:18px;height:18px;accent-color:#3EE8B5">
+          Email the winner as soon as their name appears
+        </label>
+
+        <label for="emSubject">Email subject</label>
+        <input type="text" id="emSubject">
+
+        <label for="emMessage" style="margin-top:12px">Email message</label>
+        <textarea id="emMessage" rows="5" style="width:100%;padding:12px 14px;font:.92rem var(--body);background:#09182B;color:var(--text);border:1px solid rgba(147,169,194,.4);border-radius:8px;resize:vertical"></textarea>
+        <div class="hint" style="margin-top:6px">
+          {name}, {firstname} and {prize} are filled in automatically.
+          A blank line starts a new paragraph.
+        </div>
+
+        <label for="testTo" style="margin-top:12px">Send a test to</label>
+        <input type="email" id="testTo" placeholder="you@example.com">
+        <button id="testBtn" style="margin-top:10px;width:100%">Send test email</button>
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <button id="reloadBtn">Reload entries</button>
+        <button id="applyBtn" class="primary">Apply</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="danger" id="resetBtn">Reset all winners</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button id="signOutBtn">Sign out on this computer</button>
+      </div>
+      <div class="msg" id="adminMsg"></div>
+      <div class="hint" style="margin-top:10px">
+        Reset clears this screen only. The Won columns stay in your Google Sheet, so
+        reloading entries will bring the board straight back. To start truly fresh,
+        use Raffle &gt; Clear all winners in the sheet first.
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button id="closeAdmin">Close</button>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================================================================
+   STATE
+   =================================================================== */
+var SAMPLE = [
+  { name: "Sarah Cohen" }, { name: "Jack Cohen", age: "4", household: "Sarah Cohen" },
+  { name: "Mia Cohen", age: "7", household: "Sarah Cohen" },
+  { name: "David Levy" }, { name: "Rachel Friedman" }, { name: "Moshe Katz" },
+  { name: "Leah Goldberg" }, { name: "Yossi Schwartz" }, { name: "Miriam Adler" },
+  { name: "Ben Rosen" }, { name: "Chana Klein" }, { name: "Eli Weiss" },
+  { name: "Dina Berger" }, { name: "Avi Stern" }, { name: "Tova Feldman" },
+  { name: "Noah Kaplan" }, { name: "Esther Gold" }, { name: "Danny Shapiro" },
+  { name: "Rivka Hirsch" }, { name: "Josh Bloom" }, { name: "Shira Mandel" },
+  { name: "Ari Green" }, { name: "Naomi Fisher" }, { name: "Yaakov Roth" }
+];
+
+var STORE = "cf26-draw-v1";
+var entries = [];       // one TICKET per person: {id, name, household, age, gone}
+var winners = [];       // indexed by slot: winners[0] is prize 1
+var drawing = false;
+var usingSample = false;
+var fitCache = {};
+
+function $(id) { return document.getElementById(id); }
+
+/* Nothing technical belongs on a screen a crowd is watching, so status
+   goes to the corner dot and the admin panel. Switch SHOW_STATUS on to
+   see the words while testing alone. */
+var lastStatus = "";
+function setStatus(text, kind) {
+  lastStatus = text;
+  var dot = $("adminDot");
+  dot.className = kind || "";
+  var line = $("status");
+  line.hidden = !CONFIG.SHOW_STATUS;
+  line.className = "status" + (kind === "offline" || kind === "bad" ? " warn" : "");
+  line.textContent = text;
+  var panel = $("adminStatus");
+  if (panel) panel.textContent = text;
+
+  // If we are sitting in the not-connected state, show the reason there.
+  if (usingSample && !CONFIG.DEMO && $("winnerName").textContent === "Can't draw yet") {
+    $("winnerExtra").style.whiteSpace = "normal";
+    $("winnerExtra").textContent = text;
+  }
+}
+
+/** How many prizes have actually been awarded. */
+function wonCount() {
+  var n = 0;
+  for (var i = 0; i < CONFIG.PRIZES; i++) if (winners[i]) n++;
+  return n;
+}
+
+/** Drawing is only allowed on real entries, unless demo mode is on. */
+function canDraw() {
+  if (nextSlot() === -1) return false;
+  if (usingSample && !CONFIG.DEMO) return false;
+  return true;
+}
+
+function updateDrawButton() {
+  $("drawBtn").disabled = !canDraw();
+  if (usingSample && !CONFIG.DEMO) {
+    $("tLabel").textContent = "Not connected to the Google Sheet";
+    $("winnerName").style.fontSize = "";
+    $("winnerName").textContent = "Can't draw yet";
+    $("winnerExtra").style.whiteSpace = "normal";
+    $("winnerExtra").textContent = lastStatus || "";
+  } else if (nextSlot() === -1) {
+    $("tLabel").textContent = "All " + CONFIG.PRIZES + " winners drawn";
+  }
+}
+
+/** The next empty prize slot, or -1 when the board is full. */
+function nextSlot() {
+  for (var i = 0; i < CONFIG.PRIZES; i++) if (!winners[i]) return i;
+  return -1;
+}
+
+/* ===================================================================
+   The Google Sheet is the record. Every draw writes Won / Won at /
+   Prize / Emailed to the row, and the board below is rebuilt FROM the
+   sheet each time this page loads. What follows is only a local copy,
+   so the board is still on screen if Google can't be reached.
+   =================================================================== */
+function save() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify({
+      winners: winners, prizes: CONFIG.PRIZES,
+      subject: CONFIG.SUBJECT, message: CONFIG.MESSAGE, send: CONFIG.SEND_EMAILS,
+      showStatus: CONFIG.SHOW_STATUS, demo: CONFIG.DEMO,
+      endpoint: CONFIG.ENDPOINT, key: CONFIG.KEY
+    }));
+  } catch (e) {}
+}
+function restore() {
+  try {
+    var raw = localStorage.getItem(STORE);
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    if (!d) return;
+    if (d.winners) winners = d.winners;
+    if (d.prizes) CONFIG.PRIZES = d.prizes;
+    if (d.subject) CONFIG.SUBJECT = d.subject;
+    if (d.message) CONFIG.MESSAGE = d.message;
+    if (typeof d.send === "boolean") CONFIG.SEND_EMAILS = d.send;
+    if (typeof d.showStatus === "boolean") CONFIG.SHOW_STATUS = d.showStatus;
+    if (typeof d.demo === "boolean") CONFIG.DEMO = d.demo;
+    if (d.endpoint) CONFIG.ENDPOINT = d.endpoint;
+    if (d.key) CONFIG.KEY = d.key;
+  } catch (e) {}
+}
+
+/* ===================================================================
+   READING THE SHEET  (JSONP — works from a local file, no CORS)
+   =================================================================== */
+/* Talking to Google.
+
+   Two ways, tried in order. A real fetch() comes first: when this page
+   is opened straight from disk, Chrome refuses to run a remote <script>
+   tag, which is what broke the first version. fetch works there, and it
+   also reports a usable error instead of a bare "failed".
+
+   The script tag stays as a fallback for anything fetch can't do.
+   Either way Google replies as callback(json), so both paths unwrap the
+   same thing. */
+
+var lastTransport = "none";
+var lastDetail = "";
+
+function buildUrl(params, cb) {
+  var qs = ["key=" + encodeURIComponent(CONFIG.KEY), "callback=" + cb, "t=" + Date.now()];
+  for (var k in params) {
+    if (params[k] !== undefined && params[k] !== null) {
+      qs.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k]));
+    }
+  }
+  return CONFIG.ENDPOINT + "?" + qs.join("&");
+}
+
+/** Pulls the JSON out of  callback({...}) */
+function unwrap(text) {
+  var open = text.indexOf("(");
+  var close = text.lastIndexOf(")");
+  if (open < 0 || close <= open) {
+    // Either the key was refused or the deployment is stale. Both look
+    // identical from here: a web page where data should be.
+    throw new Error("Google sent a web page instead of data, which means the " +
+                    "key was refused or the deployment is out of date.");
+  }
+  return JSON.parse(text.slice(open + 1, close));
+}
+
+function jsonp(params, done) {
+  var cb = "cf26cb" + Math.random().toString(36).slice(2);
+  var url = buildUrl(params, cb);
+  var settled = false;
+
+  function finish(result, how, detail) {
+    if (settled) return;
+    settled = true;
+    lastTransport = how;
+    lastDetail = detail || "";
+    done(result);
+  }
+
+  /* ---- fallback: a <script> tag ---- */
+  function viaScriptTag(whyFetchFailed) {
+    var el = document.createElement("script");
+    var done2 = false;
+
+    function cleanup() {
+      try { delete window[cb]; } catch (e) { window[cb] = undefined; }
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }
+
+    var timer = setTimeout(function () {
+      if (done2) return;
+      done2 = true; cleanup();
+      finish({ ok: false, error: "Google did not answer in time." }, "script", whyFetchFailed);
+    }, 12000);
+
+    window[cb] = function (data) {
+      if (done2) return;
+      done2 = true; clearTimeout(timer); cleanup();
+      finish(data || { ok: false, error: "Empty reply." }, "script", whyFetchFailed);
+    };
+
+    el.src = url;
+    el.onerror = function () {
+      if (done2) return;
+      done2 = true; clearTimeout(timer); cleanup();
+      finish({
+        ok: false,
+        error: "Chrome blocked the connection. This happens when the file is " +
+               "opened from your Downloads folder" +
+               (whyFetchFailed ? " (" + whyFetchFailed + ")" : "") + "."
+      }, "script", whyFetchFailed);
+    };
+    document.head.appendChild(el);
+  }
+
+  /* ---- preferred: a real request ---- */
+  if (window.fetch) {
+    var ctl = null;
+    try { ctl = new AbortController(); } catch (e) {}
+    var killer = setTimeout(function () { try { if (ctl) ctl.abort(); } catch (e) {} }, 12000);
+
+    fetch(url, {
+      method: "GET",
+      mode: "cors",
+      cache: "no-store",
+      redirect: "follow",
+      signal: ctl ? ctl.signal : undefined
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error("Google replied " + r.status);
+        return r.text();
+      })
+      .then(function (txt) {
+        clearTimeout(killer);
+        var data;
+        try {
+          data = unwrap(txt);
+        } catch (bad) {
+          // Google answered, just not with data. A script tag would be
+          // handed the same page, so retrying that way only wastes the
+          // twelve second timeout and leaves HTML being parsed as code.
+          finish({ ok: false, error: bad.message }, "direct", "");
+          return;
+        }
+        finish(data, "direct", "");
+      })
+      .catch(function (err) {
+        clearTimeout(killer);
+        viaScriptTag(String((err && err.message) || err));
+      });
+    return;
+  }
+
+  viaScriptTag("");
+}
+
+function loadEntries(done) {
+  setStatus("Asking Google for the entries…", "busy");
+
+  jsonp({}, function (data) {
+    // Four different failures used to look identical on screen. They
+    // don't any more — each one names its own fix.
+    if (!data) {
+      lastReply = "no reply at all";
+      fallback("Google did not answer. Check the computer is online and the " +
+               "Apps Script is deployed with Who has access: Anyone.");
+      if (done) done(false);
+      return;
+    }
+
+    if (data.ok === false || data.error) {
+      lastReply = "error: " + (data.error || "unknown");
+      fallback("Google answered with an error: " + (data.error || "unknown") + ".");
+      if (done) done(false);
+      return;
+    }
+
+    // The giveaway for a stale deployment: an answer in the old shape.
+    if (!data.tickets) {
+      lastReply = "answered, but with no 'tickets' list" +
+                  (data.entries ? " (it sent the older 'entries' list instead)" : "");
+      fallback("The script answered, but in the old format. Open Apps Script, " +
+               "then Deploy > Manage deployments > pencil > Version: New version > Deploy.");
+      if (done) done(false);
+      return;
+    }
+
+    if (!data.tickets.length) {
+      lastReply = "answered, 0 people in the sheet";
+      fallback("Connected to the sheet, but it has no entries yet.");
+      if (done) done(false);
+      return;
+    }
+
+    lastReply = "answered, " + data.tickets.length + " people";
+    usingSample = false;
+    setTickets(data.tickets, data.winners || []);
+    setStatus(data.tickets.length + " people in the draw, from the Google Sheet. " +
+      wonCount() + " of " + CONFIG.PRIZES + " winners already drawn.", "live");
+    if (done) done(true);
+  });
+}
+
+function fallback(message) {
+  usingSample = true;
+  setTickets(SAMPLE.map(function (p, i) {
+    return { id: "s-" + i, name: p.name, household: p.household || p.name, age: p.age || "" };
+  }), null);
+  setStatus(message, "offline");
+}
+
+function setTickets(list, sheetWinners) {
+  entries = list.map(function (t) {
+    return {
+      id: String(t.id),
+      name: String(t.name).trim(),
+      household: String(t.household || t.name).trim(),
+      age: t.age || "",
+      gone: false
+    };
+  }).filter(function (t) { return t.name; });
+
+  if (sheetWinners) rebuildBoard(sheetWinners);
+
+  // Anyone already on the board is out of the pool.
+  var out = {};
+  for (var i = 0; i < CONFIG.PRIZES; i++) if (winners[i]) out[winners[i].id] = true;
+  entries.forEach(function (t) { if (out[t.id]) t.gone = true; });
+
+  fitCache = {};
+  renderSlots();
+}
+
+/** Puts every winner back in the slot their prize number names. */
+function rebuildBoard(list) {
+  var board = [], leftovers = [];
+
+  list.forEach(function (w) {
+    var entry = {
+      id: String(w.id || ""), name: String(w.name || "").trim(),
+      household: String(w.household || "").trim(), wonAt: w.wonAt || 0
+    };
+    if (!entry.name) return;
+    var n = parseInt(w.prize, 10);
+    if (n >= 1 && n <= CONFIG.PRIZES && !board[n - 1]) {
+      entry.prize = n;
+      board[n - 1] = entry;
+      return;
+    }
+    leftovers.push(entry);
+  });
+
+  leftovers.sort(function (a, b) { return a.wonAt - b.wonAt; });
+  for (var i = 0, k = 0; i < CONFIG.PRIZES && k < leftovers.length; i++) {
+    if (!board[i]) { leftovers[k].prize = i + 1; board[i] = leftovers[k]; k++; }
+  }
+
+  winners = board;
+  save();
+}
+
+/* ===================================================================
+   FITTING THE NAME — the ticket never changes size
+   =================================================================== */
+var meas = document.createElement("span");
+meas.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;left:-9999px;top:0;" +
+                     "font-family:var(--display);line-height:1.02;";
+document.body.appendChild(meas);
+
+function fontFor(name) {
+  if (fitCache[name]) return fitCache[name];
+  var box = $("nameBox");
+  var maxW = box.clientWidth || 600;
+  var maxH = box.clientHeight || 110;
+  var hi = Math.min(maxH * 0.86, 86), lo = 16, best = lo;
+  for (var i = 0; i < 9; i++) {              // binary search, 9 passes is plenty
+    var mid = (hi + lo) / 2;
+    meas.style.fontSize = mid + "px";
+    meas.textContent = name;
+    if (meas.offsetWidth <= maxW) { best = mid; lo = mid; } else { hi = mid; }
+  }
+  fitCache[name] = Math.floor(best) + "px";
+  return fitCache[name];
+}
+
+function showName(name) {
+  var el = $("winnerName");
+  el.style.fontSize = fontFor(name);
+  el.textContent = name;
+}
+
+/* ===================================================================
+   PRIZE BOARD
+   =================================================================== */
+function renderSlots() {
+  var box = $("slots");
+  box.innerHTML = "";
+  var lastFilled = -1;
+  for (var j = 0; j < CONFIG.PRIZES; j++) if (winners[j]) lastFilled = j;
+  for (var i = 0; i < CONFIG.PRIZES; i++) {
+    var w = winners[i];
+    var d = document.createElement("div");
+    d.className = "slot" + (w ? " filled" : "") + (i === lastFilled ? " latest" : "");
+    var n = document.createElement("span");
+    n.className = "n";
+    n.textContent = (i + 1);
+    var who = document.createElement("span");
+    who.className = "who";
+    who.textContent = w ? w.name : "";
+    d.appendChild(n);
+    d.appendChild(who);
+    box.appendChild(d);
+  }
+  $("wonCount").textContent = wonCount();
+  $("prizeTotal").textContent = CONFIG.PRIZES;
+  updateDrawButton();
+}
+
+/* ===================================================================
+   THE DRAW
+   =================================================================== */
+function draw() {
+  if (drawing) return;
+  if (usingSample && !CONFIG.DEMO) {
+    setStatus("Not connected to the sheet. Drawing is blocked so a sample name " +
+              "can't be announced. Redeploy the Apps Script, then Reload entries.", "bad");
+    return;
+  }
+  var slot = nextSlot();
+  if (slot === -1) return;
+
+  var live = entries.filter(function (e) { return !e.gone; });
+  if (!live.length) {
+    $("tLabel").textContent = "Everyone has won";
+    return;
+  }
+
+  drawing = true;
+  $("drawBtn").disabled = true;
+  var prizeNum = slot + 1;
+
+  var pick = live[crypto.getRandomValues(new Uint32Array(1))[0] % live.length];
+  var t = $("ticket");
+  t.classList.remove("win");
+  t.classList.add("rolling");
+  $("tLabel").textContent = "Drawing winner " + prizeNum + "…" + (usingSample ? "  (DEMO)" : "");
+  $("winnerExtra").textContent = "";
+  $("prizeNo").textContent = prizeNum;
+  tick();
+
+  var delay = 40;
+  var start = performance.now();
+
+  (function step() {
+    showName(live[Math.floor(Math.random() * live.length)].name);
+    tick();
+    if (performance.now() - start > 3200) delay *= 1.18;
+    if (delay < 520) setTimeout(step, delay);
+    else reveal(pick, slot);
+  })();
+}
+
+function reveal(w, slot) {
+  var prizeNum = slot + 1;
+  var t = $("ticket");
+  t.classList.remove("rolling");
+  void t.offsetWidth;
+  t.classList.add("win");
+
+  $("tLabel").textContent = usingSample ? "Demo draw — not a real entrant" : "And the winner is";
+  showName(w.name);
+  $("prizeNo").textContent = prizeNum;
+  $("winnerExtra").style.whiteSpace = "nowrap";
+  var extra = [];
+  if (w.age) extra.push("age " + w.age);
+  if (w.household && w.household !== w.name) extra.push("entered by " + w.household);
+  $("winnerExtra").textContent = extra.join("  \u00b7  ");
+
+  w.gone = true;
+  winners[slot] = { id: w.id, name: w.name, household: w.household,
+                    prize: prizeNum, wonAt: Date.now() };
+  save();
+  renderSlots();
+  fanfare();
+  confetti();
+
+  announceEmail(w, prizeNum);
+
+  drawing = false;
+  updateDrawButton();
+}
+
+/* Mark the row as won and email the winner, then say so on screen. */
+function announceEmail(w, prizeNum) {
+  if (usingSample) {
+    setStatus("Sample names. Nothing emailed, sheet unchanged.", "offline");
+    return;
+  }
+  if (!CONFIG.SEND_EMAILS) {
+    setStatus("Winner " + prizeNum + ": " + w.name + ". Emails are switched off.", "live");
+    return;
+  }
+  if (!w.id) {
+    setStatus("Couldn't match " + w.name + " back to the sheet, so no email was sent.", "bad");
+    return;
+  }
+
+  setStatus("Emailing " + w.name + "…", "busy");
+
+  jsonp({
+    action: "won",
+    ticket: w.id,
+    prize: prizeNum,
+    subject: CONFIG.SUBJECT,
+    message: CONFIG.MESSAGE
+  }, function (r) {
+    if (r && r.ok && r.emailed) {
+      setStatus("Winner " + prizeNum + " — " + w.name +
+        (w.household !== w.name ? " (entered by " + w.household + ")" : "") +
+        " — emailed.", "live");
+    } else {
+      setStatus("Winner " + prizeNum + " drawn, but the email did not send" +
+        ((r && (r.note || r.error)) ? ": " + (r.note || r.error) : "."), "bad");
+    }
+  });
+}
+
+/* ===================================================================
+   SOUND + CONFETTI
+   =================================================================== */
+var ac;
+function audio() { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} return ac; }
+function tone(f, d, type, v, at) {
+  type = type || "square"; v = v || .05; at = at || 0;
+  var a = audio(); if (!a) return;
+  var o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(v, a.currentTime + at);
+  g.gain.exponentialRampToValueAtTime(.0001, a.currentTime + at + d);
+  o.connect(g).connect(a.destination);
+  o.start(a.currentTime + at); o.stop(a.currentTime + at + d);
+}
+function tick() { tone(900 + Math.random() * 300, .04, "square", .03); }
+function fanfare() {
+  [523, 659, 784, 1047].forEach(function (f, i) { tone(f, .35, "triangle", .12, i * .12); });
+  tone(1047, .9, "triangle", .12, .5);
+}
+
+var cv = $("fx"), cx = cv.getContext("2d"), bits = [];
+function sizeCanvas() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
+addEventListener("resize", function () { sizeCanvas(); fitCache = {}; });
+sizeCanvas();
+function confetti() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var cols = ["#F0B429", "#D9376E", "#3EE8B5", "#8F7BFF", "#FFFFFF"];
+  for (var i = 0; i < 260; i++) bits.push({
+    x: cv.width / 2, y: cv.height * .42,
+    vx: (Math.random() - .5) * 30 * devicePixelRatio,
+    vy: (Math.random() * -22 - 6) * devicePixelRatio,
+    r: Math.random() * 6 + 4, c: cols[i % 5],
+    a: Math.random() * 6, s: Math.random() * .3 - .15, life: 0
+  });
+  if (bits.length === 260) requestAnimationFrame(loop);
+}
+function loop() {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  bits.forEach(function (b) {
+    b.vy += .55 * devicePixelRatio; b.vx *= .985;
+    b.x += b.vx; b.y += b.vy; b.a += b.s; b.life++;
+    cx.save(); cx.translate(b.x, b.y); cx.rotate(b.a); cx.fillStyle = b.c;
+    cx.fillRect(-b.r * devicePixelRatio, -b.r * .5 * devicePixelRatio,
+                b.r * 2 * devicePixelRatio, b.r * devicePixelRatio);
+    cx.restore();
+  });
+  bits = bits.filter(function (b) { return b.y < cv.height + 40 && b.life < 400; });
+  if (bits.length) requestAnimationFrame(loop); else cx.clearRect(0, 0, cv.width, cv.height);
+}
+
+/* ===================================================================
+   HIDDEN ADMIN — triple-click the top-left corner, or press A
+   =================================================================== */
+var clicks = 0, clickTimer;
+$("adminDot").addEventListener("click", function () {
+  clicks++;
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(function () { clicks = 0; }, 800);
+  if (clicks >= 3) { clicks = 0; openAdmin(); }
+});
+
+function openAdmin() {
+  // No second password. Getting past the lock screen is the only gate;
+  // asking twice just gave two things to forget.
+  $("adminSheet").hidden = false;
+  var body = document.querySelector(".card-body");
+  if (body) body.scrollTop = 0;
+  showAdmin();
+}
+
+function closeAdmin() { $("adminSheet").hidden = true; }
+
+function showAdmin() {
+  $("lockView").hidden = true;
+  $("adminView").hidden = false;
+  $("prizeCount").value = CONFIG.PRIZES;
+  $("sendEmails").checked = CONFIG.SEND_EMAILS;
+  $("showStatus").checked = CONFIG.SHOW_STATUS;
+  $("demoMode").checked = CONFIG.DEMO;
+  $("emSubject").value = CONFIG.SUBJECT;
+  $("emMessage").value = CONFIG.MESSAGE;
+  $("adminStatus").textContent = lastStatus;
+  $("adminDiag").textContent = CONFIG.FILE_VERSION +
+    ".  Connection: " + lastTransport +
+    (lastDetail ? " (fetch failed: " + lastDetail + ")" : "") +
+    ".  Last reply: " + lastReply;
+  $("endpoint").value = CONFIG.ENDPOINT;
+  $("adminMsg").textContent = "";
+  $("adminStats").textContent =
+    entries.length + " people in the draw" +
+    (usingSample ? " (SAMPLE NAMES \u2014 the sheet was not reachable)" : "") + ". " +
+    entries.filter(function (e) { return !e.gone; }).length + " still eligible. " +
+    wonCount() + " winners drawn.";
+}
+
+var unlock = showAdmin;
+
+$("closeAdmin").onclick = closeAdmin;
+$("closeX").onclick = closeAdmin;
+
+$("applyBtn").onclick = function () {
+  var n = parseInt($("prizeCount").value, 10);
+  if (!n || n < 1 || n > 200) { $("adminMsg").textContent = "Enter a number between 1 and 200."; return; }
+  if (n < wonCount()) { $("adminMsg").textContent = "Already " + wonCount() + " winners. Reset first."; return; }
+  if (!$("emSubject").value.trim()) { $("adminMsg").textContent = "The email needs a subject."; return; }
+  if (!$("emMessage").value.trim()) { $("adminMsg").textContent = "The email needs a message."; return; }
+
+  CONFIG.PRIZES = n;
+  CONFIG.SEND_EMAILS = $("sendEmails").checked;
+  CONFIG.SHOW_STATUS = $("showStatus").checked;
+  CONFIG.DEMO = $("demoMode").checked;
+
+  var ep = $("endpoint").value.trim();
+  if (ep && ep !== CONFIG.ENDPOINT) {
+    if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(ep)) {
+      $("adminMsg").textContent = "That address doesn't look right. It should start with " +
+        "https://script.google.com/macros/s/ and end with /exec.";
+      return;
+    }
+    CONFIG.ENDPOINT = ep;
+    save();
+    $("adminMsg").textContent = "Address saved. Reloading entries…";
+    loadEntries(function () { unlock(); });
+    return;
+  }
+  $("status").hidden = !CONFIG.SHOW_STATUS;
+  updateDrawButton();
+  CONFIG.SUBJECT = $("emSubject").value.trim();
+  CONFIG.MESSAGE = $("emMessage").value;
+  save(); renderSlots();
+  $("adminMsg").textContent = "Saved. " + n + " winners, emails " +
+    (CONFIG.SEND_EMAILS ? "on" : "off") + ".";
+};
+
+$("testBtn").onclick = function () {
+  var to = $("testTo").value.trim();
+  if (!to) { $("adminMsg").textContent = "Type an address to send the test to."; return; }
+  if (usingSample) { $("adminMsg").textContent = "Not connected to the sheet, so no test can be sent."; return; }
+  $("testBtn").disabled = true;
+  $("adminMsg").textContent = "Sending…";
+  jsonp({
+    action: "test",
+    to: to,
+    name: "Sarah Cohen",
+    prize: "Prize 1",
+    subject: $("emSubject").value.trim(),
+    message: $("emMessage").value
+  }, function (r) {
+    $("testBtn").disabled = false;
+    $("adminMsg").textContent = (r && r.ok && r.emailed)
+      ? "Test sent to " + to + ". " + (r.remaining != null ? r.remaining + " emails left today." : "")
+      : "Test failed" + ((r && (r.error || r.note)) ? ": " + (r.error || r.note) : ".");
+  });
+};
+
+$("reloadBtn").onclick = function () {
+  $("adminMsg").textContent = "Reloading…";
+  loadEntries(function (ok) {
+    $("adminMsg").textContent = ok ? entries.length + " entries loaded." : "Could not reach the sheet.";
+    unlock();
+  });
+};
+
+$("resetBtn").onclick = function () {
+  if ($("resetBtn").dataset.armed !== "1") {
+    $("resetBtn").dataset.armed = "1";
+    $("resetBtn").textContent = "Tap again to confirm";
+    setTimeout(function () {
+      $("resetBtn").dataset.armed = "0";
+      $("resetBtn").textContent = "Reset all winners";
+    }, 4000);
+    return;
+  }
+  winners = [];
+  entries.forEach(function (e) { e.gone = false; });
+  try { localStorage.removeItem(STORE); } catch (e) {}
+  $("resetBtn").dataset.armed = "0";
+  $("resetBtn").textContent = "Reset all winners";
+  $("winnerName").textContent = "Ready?";
+  $("winnerName").style.fontSize = "";
+  $("winnerExtra").textContent = "";
+  $("tLabel").textContent = "Press Draw to pick a winner";
+  $("prizeNo").textContent = "—";
+  renderSlots();
+  $("adminMsg").textContent = "Board cleared.";
+};
+
+$("signOutBtn").onclick = function () {
+  CONFIG.KEY = "";
+  save();
+  location.reload();
+};
+
+addEventListener("keydown", function (e) {
+  if ($("adminSheet").hidden === false) {
+    if (e.key === "Escape") closeAdmin();
+    return;
+  }
+  if (e.code === "Space") { e.preventDefault(); draw(); }
+  if (e.key === "a" || e.key === "A") openAdmin();
+});
+
+/* ===================================================================
+   THE WAY IN
+   The key is checked by using it: if the sheet answers with entries,
+   it was right. There is nothing to verify locally, which is the point
+   of keeping it out of this file.
+   =================================================================== */
+
+function tryKey(key) {
+  var btn = $("lockBtn");
+  btn.disabled = true;
+  btn.textContent = "Checking\u2026";
+  $("lockMsg").textContent = "";
+
+  CONFIG.KEY = key;
+  loadEntries(function (ok) {
+    btn.disabled = false;
+    btn.textContent = "Unlock";
+    if (ok) {
+      save();
+      $("lock").hidden = true;
+      return;
+    }
+    CONFIG.KEY = "";
+    $("lockMsg").textContent = lastReply.indexOf("web page") > -1 || lastReply.indexOf("error") > -1
+      ? "That key was not accepted."
+      : "Could not reach the spreadsheet. Check the connection and try again.";
+    $("lockKey").select();
+  });
+}
+
+$("lockBtn").onclick = function () {
+  var k = $("lockKey").value.trim();
+  if (!k) { $("lockMsg").textContent = "Enter the access key."; return; }
+  tryKey(k);
+};
+
+$("lockKey").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") $("lockBtn").click();
+});
+
+/* ===================================================================
+   GO
+   =================================================================== */
+$("drawBtn").onclick = draw;
+$("eventName").textContent = CONFIG.EVENT;
+restore();
+renderSlots();
+
+if (CONFIG.KEY) {
+  $("lock").hidden = true;
+  loadEntries();
+} else {
+  setTimeout(function () { $("lockKey").focus(); }, 60);
+}
+</script>
+
+</body>
+</html>

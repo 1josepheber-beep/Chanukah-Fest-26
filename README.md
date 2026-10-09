@@ -11,6 +11,7 @@ Sunday 6 December 2026.
 | `/raffle/` | Free raffle entry form. This is where the QR code points. |
 | `/sponsor/` | Sponsorship levels and application |
 | `/vendor/` | Vendor booth application |
+| `/draw/` | The draw screen for the festival. Unlisted and key-protected. |
 
 Volunteer, Performers and Location still live on chabadoutreach.org and
 are linked out to.
@@ -54,11 +55,27 @@ only in the draw screen, which is not published here.
   been typed into it, so a half-filled row can be cleared instead of
   blocking the entry.
 
+## The draw screen
+
+`/draw/` is the big-screen page for drawing winners. It is not linked
+from anywhere and carries a noindex tag, but it is on a public address,
+so the key that unlocks the entrant list is not in the file. It is typed
+in once per computer and kept in that browser until you sign out.
+
+The board is rebuilt from the `Winners` tab every time the page loads, so
+any computer shows the same state and nothing is lost if one is closed.
+Open it on a second machine, enter the key, and you see the same board.
+
+Press `A`, or triple-click the top-left corner, for settings: how many
+winners to draw, the winner email, a test send, reload entries, reset the
+board, and sign out.
+
 ## Files
 
 ```
 index.html            festival page
 raffle/index.html     raffle entry form
+draw/index.html       draw screen, unlisted
 sponsor/index.html    sponsorship
 vendor/index.html     vendor application
 assets/forms.js       shared validation for sponsor and vendor

@@ -74,6 +74,88 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
   font-weight: 600;
 }
 
+/* ---- back to the rest of the site ---- */
+.subnav { background: var(--navy-2); border-bottom: 1px solid rgba(255,255,255,.10); }
+
+.subnav-inner {
+  display: flex;
+  gap: 2px;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.subnav-inner::-webkit-scrollbar { display: none; }
+
+.subnav-home {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #fff !important;
+}
+
+.subnav-home::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-left: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  transform: rotate(45deg);
+}
+
+.subnav-home:hover { color: var(--gold) !important; }
+
+.subnav-link {
+  flex: 0 0 auto;
+  padding: 13px 11px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #8EA6BE !important;
+}
+
+.subnav-link:hover { color: #fff !important; }
+
+/* ---- where to go once you are entered ---- */
+.done-next {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 15px 30px;
+  border-radius: 9px;
+  background: var(--gold);
+  color: var(--ink) !important;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.done-next:hover { background: #DDA31C; }
+
+.done-more {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.done-more a {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #C9DAEC !important;
+  border-bottom: 1px solid rgba(201,218,236,.35);
+  padding-bottom: 2px;
+}
+
+.done-more a:hover { color: var(--gold) !important; border-bottom-color: var(--gold); }
+
 /* ---------------------------- HEADER ---------------------------- */
 .head {
   background: var(--navy);
@@ -428,6 +510,14 @@ input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10,30,56,.10
       <div class="done-list">
         <div class="done-list-label" id="doneCount"></div>
         <div id="doneNames"></div>
+      </div>
+
+      <a class="done-next" href="/Chanukah-Fest-26/">Back to Chanukah Fest 2026</a>
+
+      <div class="done-more">
+        <a href="/Chanukah-Fest-26/sponsor/">Sponsor the festival</a>
+        <a href="/Chanukah-Fest-26/vendor/">Reserve a booth</a>
+        <a href="https://www.chabadoutreach.org/article.asp?aid=7472785">Getting there</a>
       </div>
     </div>
 

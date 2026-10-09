@@ -15,7 +15,7 @@ var CONFIG = {
 
   // Shown in the admin panel. If this is not the version Claude last
   // sent, you are opening an older download.
-  FILE_VERSION: "Draw screen v14 (adds the latke)",
+  FILE_VERSION: "Draw screen v15 (quiet attack, sound switch)",
 
   // Your Apps Script address. Same one the entry form uses.
   ENDPOINT: "https://script.google.com/macros/s/AKfycbzwDkEPx2ioKaDoiBkkZNm37rI4ox4MiVe8v3fk138SWPDx66XJy5BD4TErWS3eLhJ5/exec",
@@ -60,6 +60,9 @@ var CONFIG = {
   FX_MENORAH: true,
   FX_DONUT: true,
   FX_LATKE: true,
+
+  // Ticking while it rolls, and a fanfare on the winner.
+  SOUND: true,
 
   SUBJECT: "You won a Chanukah Fest raffle prize",
   MESSAGE:
@@ -739,6 +742,14 @@ h1 {
             <input type="checkbox" id="fxLat" style="width:16px;height:16px;accent-color:#F0B429"> Latke
           </label>
         </div>
+        <label style="display:flex;align-items:center;gap:10px;margin-top:14px;color:var(--text);font-size:.95rem">
+          <input type="checkbox" id="sndOn" style="width:18px;height:18px;accent-color:#F0B429">
+          Sound
+        </label>
+        <div class="hint" style="margin-top:4px">
+          Ticking while the name rolls, and a fanfare on the winner.
+          Turn it off if the hall has its own sound.
+        </div>
       </div>
 
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(147,169,194,.25)">
@@ -888,7 +899,7 @@ function save() {
       autoUntil: CONFIG.AUTO_UNTIL, autoEvery: CONFIG.AUTO_EVERY,
       fx: CONFIG.FX, fxDre: CONFIG.FX_DREIDELS,
       fxMen: CONFIG.FX_MENORAH, fxDon: CONFIG.FX_DONUT,
-      fxLat: CONFIG.FX_LATKE
+      fxLat: CONFIG.FX_LATKE, sound: CONFIG.SOUND
     }));
   } catch (e) {}
 }
@@ -916,6 +927,7 @@ function restore() {
     if (typeof d.fxMen === "boolean") CONFIG.FX_MENORAH = d.fxMen;
     if (typeof d.fxDon === "boolean") CONFIG.FX_DONUT = d.fxDon;
     if (typeof d.fxLat === "boolean") CONFIG.FX_LATKE = d.fxLat;
+    if (typeof d.sound === "boolean") CONFIG.SOUND = d.sound;
   } catch (e) {}
 }
 
@@ -1325,18 +1337,44 @@ function announceEmail(w, prizeNum) {
    SOUND + CONFETTI
    =================================================================== */
 var ac;
-function audio() { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} return ac; }
+function audio() {
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    // A tab left alone can have its audio suspended. Waking it here means
+    // a draw that happens on the timer still makes a sound.
+    if (ac.state === "suspended") ac.resume();
+  } catch (e) {}
+  return ac;
+}
+
+/* Every note is faded in and faded out. Jumping the volume from silence
+   to full in one sample is a step the speaker reproduces as a click, and
+   that click is the pop you could hear on each draw. A few milliseconds
+   of ramp at each end removes it without softening the note. */
 function tone(f, d, type, v, at) {
+  if (!CONFIG.SOUND) return;
   type = type || "square"; v = v || .05; at = at || 0;
   var a = audio(); if (!a) return;
+
+  var t0 = a.currentTime + at;
+  var rise = Math.min(.012, d * .3);      // fade in
+  var fall = Math.min(.025, d * .4);      // fade out, then true silence
+
   var o = a.createOscillator(), g = a.createGain();
-  o.type = type; o.frequency.value = f;
-  g.gain.setValueAtTime(v, a.currentTime + at);
-  g.gain.exponentialRampToValueAtTime(.0001, a.currentTime + at + d);
+  o.type = type;
+  o.frequency.value = f;
+
+  g.gain.setValueAtTime(.0001, t0);
+  g.gain.exponentialRampToValueAtTime(v, t0 + rise);
+  g.gain.exponentialRampToValueAtTime(.0001, t0 + d);
+  // exponential ramps can never reach zero, so land it with a linear one
+  g.gain.linearRampToValueAtTime(0, t0 + d + fall);
+
   o.connect(g).connect(a.destination);
-  o.start(a.currentTime + at); o.stop(a.currentTime + at + d);
+  o.start(t0);
+  o.stop(t0 + d + fall + .01);
 }
-function tick() { tone(900 + Math.random() * 300, .04, "square", .03); }
+function tick() { tone(900 + Math.random() * 300, .045, "triangle", .035); }
 function fanfare() {
   [523, 659, 784, 1047].forEach(function (f, i) { tone(f, .35, "triangle", .12, i * .12); });
   tone(1047, .9, "triangle", .12, .5);
@@ -1877,6 +1915,7 @@ function showAdmin() {
   $("fxMen").checked = CONFIG.FX_MENORAH;
   $("fxDon").checked = CONFIG.FX_DONUT;
   $("fxLat").checked = CONFIG.FX_LATKE;
+  $("sndOn").checked = CONFIG.SOUND;
   showAutoMath();
   $("adminStatus").textContent = lastStatus;
   $("adminDiag").textContent = CONFIG.FILE_VERSION +
@@ -1927,6 +1966,7 @@ $("applyBtn").onclick = function () {
   CONFIG.FX_MENORAH = $("fxMen").checked;
   CONFIG.FX_DONUT = $("fxDon").checked;
   CONFIG.FX_LATKE = $("fxLat").checked;
+  CONFIG.SOUND = $("sndOn").checked;
   applyFx();
   resetAuto();
 

@@ -296,14 +296,19 @@
 }
 
 .cf26 .cf26-nav-inner {
-  display: flex;
-  gap: 4px;
   max-width: 1080px;
   margin: 0 auto;
   padding: 0 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+}
+
+.cf26 .cf26-nav-row {
+  display: flex;
+  gap: 4px;
+  width: max-content;
+  margin: 0 auto;     /* centred while it fits, flush left once it scrolls */
 }
 
 .cf26 .cf26-nav-inner::-webkit-scrollbar { display: none; }
@@ -375,7 +380,7 @@
 
 .cf26 .cf26-apps-links {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
@@ -991,6 +996,7 @@ label.cf-bad {
   <!-- ==================== STICKY NAV ==================== -->
   <div class="cf26-nav">
     <div class="cf26-nav-inner">
+      <div class="cf26-nav-row">
       <a class="cf26-navlink" href="#about">About</a>
       <a class="cf26-navlink" href="#schedule">Schedule</a>
       <a class="cf26-navlink" href="#stage">On stage</a>
@@ -999,6 +1005,7 @@ label.cf-bad {
       <a class="cf26-navlink cf26-navlink-go" href="#involved"><span>Get involved</span></a>
       <a class="cf26-navlink" href="#location">Location</a>
       <a class="cf26-navlink" href="#questions">Questions</a>
+      </div>
     </div>
   </div>
 
@@ -1014,6 +1021,10 @@ label.cf-bad {
         <a class="cf26-apps-link" href="/Chanukah-Fest-26/vendor/">
           <span class="cf26-apps-name">Vendor booth</span>
           <span class="cf26-apps-due">Due <span class="cf26-fill">[[ DATE ]]</span></span>
+        </a>
+        <a class="cf26-apps-link" href="/Chanukah-Fest-26/volunteer/">
+          <span class="cf26-apps-name">Volunteer</span>
+          <span class="cf26-apps-due">Pick your shifts</span>
         </a>
       </div>
     </div>

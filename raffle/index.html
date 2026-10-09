@@ -78,14 +78,19 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
 .subnav { background: var(--navy-2); border-bottom: 1px solid rgba(255,255,255,.10); }
 
 .subnav-inner {
-  display: flex;
-  gap: 2px;
   max-width: 620px;
   margin: 0 auto;
   padding: 0 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+}
+
+.subnav-row {
+  display: flex;
+  gap: 2px;
+  width: max-content;
+  margin: 0 auto;     /* centred while it fits, flush left once it scrolls */
 }
 
 .subnav-inner::-webkit-scrollbar { display: none; }
@@ -469,11 +474,13 @@ input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10,30,56,.10
 
 <div class="subnav">
   <div class="subnav-inner">
+    <div class="subnav-row">
     <a class="subnav-home" href="/Chanukah-Fest-26/">Chanukah Fest 2026</a>
     <a class="subnav-link" href="/Chanukah-Fest-26/sponsor/">Sponsor</a>
     <a class="subnav-link" href="/Chanukah-Fest-26/vendor/">Vendor</a>
     <a class="subnav-link" href="/Chanukah-Fest-26/volunteer/">Volunteer</a>
     <a class="subnav-link" href="/Chanukah-Fest-26/#location">Location</a>
+    </div>
   </div>
 </div>
 

@@ -526,14 +526,19 @@
 }
 
 .vf26 .vf26-subnav-inner {
-  display: flex;
-  gap: 2px;
   max-width: 880px;
   margin: 0 auto;
-  padding: 0 14px;
+  padding: 0 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+}
+
+.vf26 .vf26-subnav-row {
+  display: flex;
+  gap: 2px;
+  width: max-content;
+  margin: 0 auto;     /* centred while it fits, flush left once it scrolls */
 }
 
 .vf26 .vf26-subnav-inner::-webkit-scrollbar { display: none; }
@@ -747,12 +752,14 @@ label.cf-bad {
 
   <div class="vf26-subnav">
     <div class="vf26-subnav-inner">
+      <div class="vf26-subnav-row">
       <a class="vf26-subnav-home" href="/Chanukah-Fest-26/">Chanukah Fest 2026</a>
       <a class="vf26-subnav-link" href="/Chanukah-Fest-26/sponsor/">Sponsor</a>
       <a class="vf26-subnav-link vf26-subnav-current" href="/Chanukah-Fest-26/vendor/">Vendor</a>
       <a class="vf26-subnav-link" href="/Chanukah-Fest-26/raffle/">Raffle</a>
       <a class="vf26-subnav-link" href="/Chanukah-Fest-26/volunteer/">Volunteer</a>
       <a class="vf26-subnav-link" href="/Chanukah-Fest-26/#location">Location</a>
+      </div>
     </div>
   </div>
 

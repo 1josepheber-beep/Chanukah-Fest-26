@@ -11,10 +11,12 @@ Sunday 6 December 2026.
 | `/raffle/` | Free raffle entry form. This is where the QR code points. |
 | `/sponsor/` | Sponsorship levels and application |
 | `/vendor/` | Vendor booth application |
+| `/volunteer/` | Volunteer sign-up |
 | `/draw/` | The draw screen for the festival. Unlisted and key-protected. |
 
-Volunteer, Performers and Location still live on chabadoutreach.org and
-are linked out to.
+Performers and Location are sections of the main page, not separate
+pages, so the nav points at them there. Nothing links to the old site
+any more.
 
 ## Why these pages are here and not in the Chabad CMS
 
@@ -38,6 +40,7 @@ Fest spreadsheet:
 | Raffle | `Entries`, with winners recorded in `Winners` |
 | Vendor | `Vendors` |
 | Sponsor | `Sponsors` |
+| Volunteer | `Volunteers` |
 
 The script also blocks duplicate raffle entries by phone number and email,
 and emails raffle winners when they are drawn.
@@ -81,11 +84,17 @@ raffle/index.html     raffle entry form
 draw/index.html       draw screen, unlisted
 sponsor/index.html    sponsorship
 vendor/index.html     vendor application
+volunteer/index.html  volunteer sign-up
 assets/forms.js       shared validation for sponsor and vendor
 ```
 
 The raffle form carries its own script because it also manages the
 family rows.
+
+## Correspondence
+
+All contact addresses on the site, and the reply address on winner
+emails, are mendy@chabadoutreach.org.
 
 ## Still to fill in
 

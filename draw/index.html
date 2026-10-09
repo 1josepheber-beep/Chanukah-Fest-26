@@ -15,7 +15,7 @@ var CONFIG = {
 
   // Shown in the admin panel. If this is not the version Claude last
   // sent, you are opening an older download.
-  FILE_VERSION: "Draw screen v16 (everyone stays on screen)",
+  FILE_VERSION: "Draw screen v17 (dreidels wander too)",
 
   // Your Apps Script address. Same one the entry form uses.
   ENDPOINT: "https://script.google.com/macros/s/AKfycbzwDkEPx2ioKaDoiBkkZNm37rI4ox4MiVe8v3fk138SWPDx66XJy5BD4TErWS3eLhJ5/exec",
@@ -459,10 +459,10 @@ h1 {
 
 /* ---------------- dreidels ---------------- */
 .dr {
-  position: absolute; left: 0; top: var(--y);
+  position: absolute; left: 0; top: 0;
   width: var(--sz); height: calc(var(--sz) * 1.474);
   opacity: var(--op);
-  animation: cross var(--dur) ease-in-out var(--delay) infinite;
+  transition: transform 30s ease-in-out;
 }
 /* Out to the far edge and back again. The ends are eased, so each one
    slows, turns and sets off the other way rather than snapping round.
@@ -1476,10 +1476,12 @@ function dreidelBack(letter, shade) {
 
 /* The four faces of a sevivon: nun, gimel, hey, shin. */
 var DR_SET = [
-  { color: "#F0B429", shade: "#C2860F", letter: "\u05E0", y: "2vh",  sz: 88,  dur: 54, spin: 1.15, delay: -6,  rtl: 0, op: .5  },
-  { color: "#3EE8B5", shade: "#1F9D77", letter: "\u05D2", y: "61vh", sz: 100, dur: 68, spin: 1.5,  delay: -30, rtl: 1, op: .5  },
-  { color: "#8F7BFF", shade: "#6450C9", letter: "\u05D4", y: "76vh", sz: 76,  dur: 59, spin: .95,  delay: -14, rtl: 1, op: .46 },
-  { color: "#D9376E", shade: "#9C1C47", letter: "\u05E9", y: "67vh", sz: 64,  dur: 87, spin: 1.8,  delay: -52, rtl: 0, op: .4  }
+  // drift is how many pixels a second it covers on its way somewhere —
+  // deliberately slow, so they look like they are thinking about it
+  { color: "#F0B429", shade: "#C2860F", letter: "\u05E0", sz: 88,  spin: 1.15, drift: 30, op: .5  },
+  { color: "#3EE8B5", shade: "#1F9D77", letter: "\u05D2", sz: 100, spin: 1.5,  drift: 24, op: .5  },
+  { color: "#8F7BFF", shade: "#6450C9", letter: "\u05D4", sz: 76,  spin: .95,  drift: 35, op: .46 },
+  { color: "#D9376E", shade: "#9C1C47", letter: "\u05E9", sz: 64,  spin: 1.8,  drift: 42, op: .4  }
 ];
 
 function buildDreidels() {
@@ -1490,13 +1492,9 @@ function buildDreidels() {
     var el = document.createElement("div");
     el.className = "dr";
     el.style.color = d.color;
-    el.style.setProperty("--y", d.y);
     el.style.setProperty("--sz", d.sz + "px");
-    el.style.setProperty("--dur", d.dur + "s");
     el.style.setProperty("--spin", d.spin + "s");
-    el.style.setProperty("--delay", d.delay + "s");
     el.style.setProperty("--op", d.op);
-    el.dataset.rtl = d.rtl ? "1" : "0";
 
     var inner = document.createElement("div");
     inner.className = "dr-in";
@@ -1511,6 +1509,10 @@ function buildDreidels() {
     inner.appendChild(arm("r"));
     el.appendChild(inner);
     box.appendChild(el);
+
+    // slow, and free to use the whole screen bar the keep-out boxes
+    WANDER.push({ el: el, band: [.02, .9], speed: d.drift,
+                  quickest: 16, slowest: 56, rest: 2200, at: null });
   });
 
   return box;
@@ -1642,6 +1644,10 @@ function buildLatke() {
   inner.appendChild(arm("l"));
   inner.appendChild(arm("r"));
   el.appendChild(inner);
+
+  // quick, and kept low so it can never cover the name
+  WANDER.push({ el: el, band: [.5, 1], speed: 165,
+                quickest: 1.5, slowest: 4.5, rest: 600, at: null });
   return el;
 }
 
@@ -1722,6 +1728,8 @@ function buildMenorah() {
 }
 
 function buildScenery() {
+  WANDER.forEach(function (it) { clearTimeout(it.timer); });
+  WANDER = [];
   SCENE.innerHTML = "";
   SCENE.appendChild(buildDreidels());
   SCENE.appendChild(buildMenorah());
@@ -1746,7 +1754,7 @@ function placeRanges() {
   var pad = 8;
   var keepOut = menorahBox();
 
-  var walkers = SCENE.querySelectorAll(".dr, .dn");
+  var walkers = SCENE.querySelectorAll(".dn");
   Array.prototype.forEach.call(walkers, function (el) {
     var w = ownWidth(el);
     var left = pad;
@@ -1776,50 +1784,108 @@ function menorahBox() {
   return r.width ? r : null;
 }
 
-addEventListener("resize", placeRanges);
+addEventListener("resize", function () { placeRanges(); reinWander(); });
 
-/* ---------------- the latke wanders ----------------
-   No fixed route. It picks somewhere else to be, hops over, has a think,
-   then picks again. It is kept below the ticket so that whatever else it
-   does, it can never end up sitting on the winner's name. */
-var roamTimer, roamAt = null;
+/* ---------------- wandering ----------------
+   A wanderer has no route at all. It picks somewhere else to be, travels
+   over, waits a moment and picks again. The dreidels do it slowly, the
+   latke quickly, and both are kept off the two things on this screen
+   that must never be covered: the winner's name and the menorah. */
 
-function roam() {
-  clearTimeout(roamTimer);
-  var el = $("fxLatke");
-  if (!el) return;
+var WANDER = [];
 
-  if (el.hidden || SCENE.hidden) {        // switched off; look again shortly
-    roamTimer = setTimeout(roam, 1500);
+function shown(el) {
+  return el && !SCENE.hidden && el.getClientRects().length > 0;
+}
+
+function grow(r, by) {
+  return { left: r.left - by, right: r.right + by,
+           top: r.top - by, bottom: r.bottom + by };
+}
+
+/* The places nobody may stop. */
+function keepOuts() {
+  var out = [];
+  var t = $("ticket");
+  if (t) { var r = t.getBoundingClientRect(); if (r.width) out.push(grow(r, 16)); }
+  var m = menorahBox();
+  if (m) out.push(grow(m, 10));
+  return out;
+}
+
+function clashes(x, y, w, h, boxes) {
+  for (var i = 0; i < boxes.length; i++) {
+    var b = boxes[i];
+    if (x < b.right && x + w > b.left && y < b.bottom && y + h > b.top) return true;
+  }
+  return false;
+}
+
+function pickSpot(w, h, band, boxes) {
+  var pad = 10;
+  var acrossMax = Math.max(0, innerWidth - w - pad * 2);
+  var top = innerHeight * band[0];
+  var bottom = Math.min(innerHeight - h - pad, innerHeight * band[1]);
+  var down = Math.max(0, bottom - top);
+  var x = pad, y = top;
+
+  for (var i = 0; i < 26; i++) {
+    x = pad + Math.random() * acrossMax;
+    y = top + Math.random() * down;
+    if (!clashes(x, y, w, h, boxes)) return { x: x, y: y };
+  }
+  return { x: x, y: y };   // 26 misses on a crowded screen: it is only scenery
+}
+
+function wander(it) {
+  clearTimeout(it.timer);
+  var el = it.el;
+  if (!shown(el)) {                      // switched off; look again shortly
+    it.timer = setTimeout(function () { wander(it); }, 1500);
     return;
   }
 
-  var w = ownWidth(el, 104), h = w * .76;
-  var pad = 10;
-  var top = innerHeight * .5;
-  var bottom = innerHeight - h - pad;
-  var keepOut = menorahBox();
-  var x, y, tries = 0;
+  var w = ownWidth(el, 100);
+  var h = el.offsetHeight || w;
+  var spot = pickSpot(w, h, it.band, keepOuts());
 
-  // Pick a spot; if it has landed on the menorah, pick again.
-  do {
-    x = pad + Math.random() * Math.max(0, innerWidth - w - pad * 2);
-    y = top + Math.random() * Math.max(0, bottom - top);
-    tries++;
-  } while (keepOut && tries < 12 &&
-           x < keepOut.right + 10 && x + w > keepOut.left - 10 &&
-           y < keepOut.bottom && y + h > keepOut.top);
+  // The very first placing is instant, or everyone would be seen gliding
+  // out of the top-left corner when the screen opens.
+  var secs = 0;
+  if (!it.at) {
+    el.style.transitionDuration = "0s";
+  } else {
+    var far = Math.sqrt(Math.pow(spot.x - it.at.x, 2) + Math.pow(spot.y - it.at.y, 2));
+    secs = Math.min(it.slowest, Math.max(it.quickest, far / it.speed));
+    el.style.transitionDuration = secs.toFixed(2) + "s";
+  }
 
-  if (!roamAt) roamAt = { x: x, y: bottom };   // first appearance
+  el.style.transform = "translate(" + Math.round(spot.x) + "px," + Math.round(spot.y) + "px)";
+  var first = !it.at;
+  it.at = spot;
 
-  var far = Math.sqrt(Math.pow(x - roamAt.x, 2) + Math.pow(y - roamAt.y, 2));
-  var secs = Math.min(4.5, Math.max(1.5, far / 165));
+  it.timer = setTimeout(function () { wander(it); },
+    first ? 400 + Math.random() * 1400
+          : secs * 1000 + it.rest + Math.random() * it.rest);
+}
 
-  el.style.transitionDuration = secs.toFixed(2) + "s";
-  el.style.transform = "translate(" + Math.round(x) + "px," + Math.round(y) + "px)";
-  roamAt = { x: x, y: y };
+function roam() {
+  WANDER.forEach(function (it) { wander(it); });
+}
 
-  roamTimer = setTimeout(roam, secs * 1000 + 500 + Math.random() * 1100);
+/* A window that shrinks could leave somebody outside it, and they would
+   stay there until their next move. Pull them back in now instead. */
+function reinWander() {
+  WANDER.forEach(function (it) {
+    if (!it.at || !shown(it.el)) return;
+    var w = ownWidth(it.el, 100), h = it.el.offsetHeight || w;
+    var x = Math.max(10, Math.min(it.at.x, innerWidth - w - 10));
+    var y = Math.max(10, Math.min(it.at.y, innerHeight - h - 10));
+    if (x === it.at.x && y === it.at.y) return;
+    it.at = { x: x, y: y };
+    it.el.style.transitionDuration = ".45s";
+    it.el.style.transform = "translate(" + Math.round(x) + "px," + Math.round(y) + "px)";
+  });
 }
 
 function applyFx() {

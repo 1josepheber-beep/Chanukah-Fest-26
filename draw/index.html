@@ -15,7 +15,7 @@ var CONFIG = {
 
   // Shown in the admin panel. If this is not the version Claude last
   // sent, you are opening an older download.
-  FILE_VERSION: "Draw screen v13 (timer + characters)",
+  FILE_VERSION: "Draw screen v14 (adds the latke)",
 
   // Your Apps Script address. Same one the entry form uses.
   ENDPOINT: "https://script.google.com/macros/s/AKfycbzwDkEPx2ioKaDoiBkkZNm37rI4ox4MiVe8v3fk138SWPDx66XJy5BD4TErWS3eLhJ5/exec",
@@ -59,6 +59,7 @@ var CONFIG = {
   FX_DREIDELS: true,
   FX_MENORAH: true,
   FX_DONUT: true,
+  FX_LATKE: true,
 
   SUBJECT: "You won a Chanukah Fest raffle prize",
   MESSAGE:
@@ -438,14 +439,14 @@ h1 {
   height: 178%; aspect-ratio: 1; width: auto;
   border-radius: 50%; background: currentColor;
 }
-.arm.l { left: -19%; bottom: 50%; transform-origin: right center; transform: rotate(20deg); }
-.arm.r { right: -19%; bottom: 50%; transform-origin: left center;  transform: rotate(-20deg); }
+.arm.l { left: -19%; bottom: 50%; transform-origin: right center; transform: rotate(-18deg); }
+.arm.r { right: -19%; bottom: 50%; transform-origin: left center;  transform: rotate(18deg); }
 .arm.l::after { left: 0;  transform: translate(-34%, -50%); }
 .arm.r::after { right: 0; transform: translate(34%, -50%); }
 .scenery.cheer .arm.l { animation: wavel .25s ease-in-out 8 alternate; }
 .scenery.cheer .arm.r { animation: waver .25s ease-in-out 8 alternate; }
-@keyframes wavel { from { transform: rotate(16deg) }  to { transform: rotate(-58deg) } }
-@keyframes waver { from { transform: rotate(-16deg) } to { transform: rotate(58deg) } }
+@keyframes wavel { from { transform: rotate(-14deg) } to { transform: rotate(62deg) } }
+@keyframes waver { from { transform: rotate(14deg) }  to { transform: rotate(-62deg) } }
 
 @keyframes hop {
   0%, 100% { transform: translateY(0) }
@@ -466,6 +467,7 @@ h1 {
 }
 .dr-in { position: absolute; inset: 0; perspective: 520px; }
 .scenery.cheer .dr-in { animation: hop .44s ease-in-out 4; }
+.scenery.cheer .lt-in { animation: hop .44s ease-in-out 4; }
 .dr-spin {
   position: absolute; inset: 0; transform-style: preserve-3d;
   animation: sevivon var(--spin) linear infinite;
@@ -496,6 +498,36 @@ h1 {
 .scenery.cheer .dn-spin { animation-play-state: paused; }
 .dn-face { position: absolute; inset: 0; }
 .dn-spin svg, .dn-face svg { width: 100%; height: 100%; display: block; }
+
+/* ---------------- latke ----------------
+   It does not roll, it bounces, with a squash on the landing. Every few
+   bounces it tosses itself over, which is the other thing a latke does.
+   Four nested boxes: travel, cheer-hop, bounce, flip. */
+.lt {
+  position: absolute; left: 0; bottom: var(--b);
+  width: var(--sz); height: calc(var(--sz) * .76); opacity: var(--op);
+  animation: drift var(--dur) linear var(--delay) infinite;
+  color: #D79A45;
+}
+.lt-in { position: absolute; inset: 0; perspective: 620px; }
+.lt-bob { position: absolute; inset: 0; animation: bob var(--bounce) ease-in-out infinite; }
+@keyframes bob {
+  0%   { transform: translateY(0)    scale(1.07, .91) }
+  16%  { transform: translateY(-30%) scale(.97, 1.05) }
+  52%  { transform: translateY(-37%) scale(1, 1) }
+  100% { transform: translateY(0)    scale(1.07, .91) }
+}
+.lt-flip {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  animation: flip var(--flip) ease-in-out infinite;
+}
+@keyframes flip {
+  0%, 60%   { transform: rotateX(0deg) }
+  86%, 100% { transform: rotateX(360deg) }
+}
+.scenery.cheer .lt-flip { animation: none; transform: rotateX(0deg); }
+.lt-flip svg { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; }
+.lt-under { transform: rotateX(180deg); }
 
 /* ---------------- menorah ---------------- */
 .mn {
@@ -703,6 +735,9 @@ h1 {
           <label style="display:flex;align-items:center;gap:7px;color:var(--text);font-size:.9rem">
             <input type="checkbox" id="fxDon" style="width:16px;height:16px;accent-color:#F0B429"> Doughnut
           </label>
+          <label style="display:flex;align-items:center;gap:7px;color:var(--text);font-size:.9rem">
+            <input type="checkbox" id="fxLat" style="width:16px;height:16px;accent-color:#F0B429"> Latke
+          </label>
         </div>
       </div>
 
@@ -852,7 +887,8 @@ function save() {
       auto: CONFIG.AUTO, autoFrom: CONFIG.AUTO_FROM,
       autoUntil: CONFIG.AUTO_UNTIL, autoEvery: CONFIG.AUTO_EVERY,
       fx: CONFIG.FX, fxDre: CONFIG.FX_DREIDELS,
-      fxMen: CONFIG.FX_MENORAH, fxDon: CONFIG.FX_DONUT
+      fxMen: CONFIG.FX_MENORAH, fxDon: CONFIG.FX_DONUT,
+      fxLat: CONFIG.FX_LATKE
     }));
   } catch (e) {}
 }
@@ -879,6 +915,7 @@ function restore() {
     if (typeof d.fxDre === "boolean") CONFIG.FX_DREIDELS = d.fxDre;
     if (typeof d.fxMen === "boolean") CONFIG.FX_MENORAH = d.fxMen;
     if (typeof d.fxDon === "boolean") CONFIG.FX_DONUT = d.fxDon;
+    if (typeof d.fxLat === "boolean") CONFIG.FX_LATKE = d.fxLat;
   } catch (e) {}
 }
 
@@ -1492,6 +1529,72 @@ function buildDonut() {
   return el;
 }
 
+/* ---------------- the latke ----------------
+   A bumpy rim rather than a clean circle, because a latke that came out
+   of a pan round would be a pancake. */
+function latke(rim, body, shred, shreds) {
+  var art = "";
+  // small, close-set bumps read as crisp; big ones read as petals
+  for (var i = 0; i < 24; i++) {
+    var a = (i / 24) * Math.PI * 2;
+    art += '<circle cx="' + (50 + Math.cos(a) * 42).toFixed(1) +
+           '" cy="' + (42 + Math.sin(a) * 25).toFixed(1) +
+           '" r="' + (4.1 + (i % 3) * 1.1).toFixed(1) + '" fill="' + rim + '"/>';
+  }
+  art += '<ellipse cx="50" cy="42" rx="42" ry="25" fill="' + rim + '"/>' +
+         '<ellipse cx="50" cy="40" rx="36" ry="20" fill="' + body + '"/>';
+  // grated potato, suggested rather than drawn
+  shreds.forEach(function (p) {
+    art += '<rect x="' + (p[0] - 8) + '" y="' + (p[1] - 1.7) +
+           '" width="16" height="3.4" rx="1.7" fill="' + shred +
+           '" transform="rotate(' + p[2] + ' ' + p[0] + ' ' + p[1] + ')"/>';
+  });
+  return art;
+}
+
+function latkeTop() {
+  // No topping. Shreds stay low and to the sides, clear of the face.
+  return latke("#B9721F", "#E3A954", "#F2C87C", [[26,51,15],[73,51,-13]]) +
+    '<circle class="eo" cx="41" cy="37" r="5"/>' +
+    '<circle class="eo" cx="59" cy="37" r="5"/>' +
+    '<path class="eh" d="M36 39.2 q5 -7.6 10 0"/>' +
+    '<path class="eh" d="M54 39.2 q5 -7.6 10 0"/>' +
+    '<path class="mouth" d="M41 48 q9 7.2 18 0"/>' +
+    '<ellipse class="mouth-o" cx="50" cy="50" rx="7.2" ry="5.8"/>';
+}
+
+function buildLatke() {
+  var el = document.createElement("div");
+  el.className = "lt";
+  el.id = "fxLatke";
+  el.style.setProperty("--b", "0px");
+  el.style.setProperty("--sz", "104px");
+  el.style.setProperty("--dur", "63s");
+  el.style.setProperty("--delay", "-29s");
+  el.style.setProperty("--bounce", "1.15s");
+  el.style.setProperty("--flip", "4.6s");
+  el.style.setProperty("--x1", "116vw");
+  el.style.setProperty("--x2", "-16vw");
+  el.style.setProperty("--op", ".55");
+
+  var inner = document.createElement("div"); inner.className = "lt-in";
+  var bob = document.createElement("div");   bob.className = "lt-bob";
+  var flip = document.createElement("div");  flip.className = "lt-flip";
+
+  flip.innerHTML =
+    '<svg viewBox="0 0 100 76">' + latkeTop() + '</svg>' +
+    '<svg class="lt-under" viewBox="0 0 100 76">' +
+      latke("#A3600F", "#C98B35", "#DDA75C",
+            [[30,34,22],[60,33,-14],[38,50,-8],[66,48,18],[48,41,6]]) + '</svg>';
+
+  bob.appendChild(flip);
+  inner.appendChild(bob);
+  inner.appendChild(arm("l"));
+  inner.appendChild(arm("r"));
+  el.appendChild(inner);
+  return el;
+}
+
 /* ---------------- the menorah ----------------
    Eight lights and a raised shamash. The wax shrinks from the bottom
    up and the flame sinks by exactly what the wax loses, so the flame
@@ -1573,6 +1676,7 @@ function buildScenery() {
   SCENE.appendChild(buildDreidels());
   SCENE.appendChild(buildMenorah());
   SCENE.appendChild(buildDonut());
+  SCENE.appendChild(buildLatke());
   applyFx();
 }
 
@@ -1582,6 +1686,7 @@ function applyFx() {
   show("fxDreidels", CONFIG.FX_DREIDELS);
   show("fxMenorah", CONFIG.FX_MENORAH);
   show("fxDonut", CONFIG.FX_DONUT);
+  show("fxLatke", CONFIG.FX_LATKE);
 }
 
 /* Everybody looks up and cheers for a couple of seconds. */
@@ -1771,6 +1876,7 @@ function showAdmin() {
   $("fxDre").checked = CONFIG.FX_DREIDELS;
   $("fxMen").checked = CONFIG.FX_MENORAH;
   $("fxDon").checked = CONFIG.FX_DONUT;
+  $("fxLat").checked = CONFIG.FX_LATKE;
   showAutoMath();
   $("adminStatus").textContent = lastStatus;
   $("adminDiag").textContent = CONFIG.FILE_VERSION +
@@ -1820,6 +1926,7 @@ $("applyBtn").onclick = function () {
   CONFIG.FX_DREIDELS = $("fxDre").checked;
   CONFIG.FX_MENORAH = $("fxMen").checked;
   CONFIG.FX_DONUT = $("fxDon").checked;
+  CONFIG.FX_LATKE = $("fxLat").checked;
   applyFx();
   resetAuto();
 

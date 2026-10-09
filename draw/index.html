@@ -15,7 +15,7 @@ var CONFIG = {
 
   // Shown in the admin panel. If this is not the version Claude last
   // sent, you are opening an older download.
-  FILE_VERSION: "Draw screen v15 (quiet attack, sound switch)",
+  FILE_VERSION: "Draw screen v16 (everyone stays on screen)",
 
   // Your Apps Script address. Same one the entry form uses.
   ENDPOINT: "https://script.google.com/macros/s/AKfycbzwDkEPx2ioKaDoiBkkZNm37rI4ox4MiVe8v3fk138SWPDx66XJy5BD4TErWS3eLhJ5/exec",
@@ -462,11 +462,16 @@ h1 {
   position: absolute; left: 0; top: var(--y);
   width: var(--sz); height: calc(var(--sz) * 1.474);
   opacity: var(--op);
-  animation: drift var(--dur) linear var(--delay) infinite;
+  animation: cross var(--dur) ease-in-out var(--delay) infinite;
 }
-@keyframes drift {
-  from { transform: translateX(var(--x1)) }
-  to   { transform: translateX(var(--x2)) }
+/* Out to the far edge and back again. The ends are eased, so each one
+   slows, turns and sets off the other way rather than snapping round.
+   --x1 and --x2 are set in script from the real window width, so nobody
+   ever has half of themselves past the edge. */
+@keyframes cross {
+  0%   { transform: translateX(var(--x1)) }
+  50%  { transform: translateX(var(--x2)) }
+  100% { transform: translateX(var(--x1)) }
 }
 .dr-in { position: absolute; inset: 0; perspective: 520px; }
 .scenery.cheer .dr-in { animation: hop .44s ease-in-out 4; }
@@ -491,13 +496,23 @@ h1 {
 .dn {
   position: absolute; left: 0; bottom: var(--b);
   width: var(--sz); height: var(--sz); opacity: var(--op);
-  animation: drift var(--dur) linear var(--delay) infinite;
+  animation: cross var(--dur) ease-in-out var(--delay) infinite;
   color: #E8B06A;
 }
 .dn-in { position: absolute; inset: 0; }
 .scenery.cheer .dn-in { animation: hop .4s ease-in-out 5; }
-.dn-spin { position: absolute; inset: 0; animation: roll var(--spin) linear infinite; }
-@keyframes roll { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+/* The roll runs on the same clock and the same easing as the travel, so
+   the moment it turns round at the edge it starts rolling the other way.
+   On its own timer it would have spent half its life sliding backwards. */
+.dn-spin {
+  position: absolute; inset: 0;
+  animation: roll var(--dur) ease-in-out var(--delay) infinite;
+}
+@keyframes roll {
+  0%   { transform: rotate(0deg) }
+  50%  { transform: rotate(var(--turn)) }
+  100% { transform: rotate(0deg) }
+}
 .scenery.cheer .dn-spin { animation-play-state: paused; }
 .dn-face { position: absolute; inset: 0; }
 .dn-spin svg, .dn-face svg { width: 100%; height: 100%; display: block; }
@@ -506,10 +521,13 @@ h1 {
    It does not roll, it bounces, with a squash on the landing. Every few
    bounces it tosses itself over, which is the other thing a latke does.
    Four nested boxes: travel, cheer-hop, bounce, flip. */
+/* The latke has nowhere in particular to be. Script picks it a new spot
+   every few seconds and it hops over; the transition does the travelling
+   and the bounce underneath does the hopping. */
 .lt {
-  position: absolute; left: 0; bottom: var(--b);
+  position: absolute; left: 0; top: 0;
   width: var(--sz); height: calc(var(--sz) * .76); opacity: var(--op);
-  animation: drift var(--dur) linear var(--delay) infinite;
+  transition: transform 2.4s cubic-bezier(.4,.05,.4,1);
   color: #D79A45;
 }
 .lt-in { position: absolute; inset: 0; perspective: 620px; }
@@ -1458,10 +1476,10 @@ function dreidelBack(letter, shade) {
 
 /* The four faces of a sevivon: nun, gimel, hey, shin. */
 var DR_SET = [
-  { color: "#F0B429", shade: "#C2860F", letter: "\u05E0", y: "2vh",  sz: 88,  dur: 54, spin: 1.15, delay: -6,  x1: "-16vw", x2: "116vw", op: .5  },
-  { color: "#3EE8B5", shade: "#1F9D77", letter: "\u05D2", y: "61vh", sz: 100, dur: 68, spin: 1.5,  delay: -30, x1: "118vw", x2: "-18vw", op: .5  },
-  { color: "#8F7BFF", shade: "#6450C9", letter: "\u05D4", y: "76vh", sz: 76,  dur: 59, spin: .95,  delay: -14, x1: "118vw", x2: "-18vw", op: .46 },
-  { color: "#D9376E", shade: "#9C1C47", letter: "\u05E9", y: "67vh", sz: 64,  dur: 87, spin: 1.8,  delay: -52, x1: "116vw", x2: "-16vw", op: .4  }
+  { color: "#F0B429", shade: "#C2860F", letter: "\u05E0", y: "2vh",  sz: 88,  dur: 54, spin: 1.15, delay: -6,  rtl: 0, op: .5  },
+  { color: "#3EE8B5", shade: "#1F9D77", letter: "\u05D2", y: "61vh", sz: 100, dur: 68, spin: 1.5,  delay: -30, rtl: 1, op: .5  },
+  { color: "#8F7BFF", shade: "#6450C9", letter: "\u05D4", y: "76vh", sz: 76,  dur: 59, spin: .95,  delay: -14, rtl: 1, op: .46 },
+  { color: "#D9376E", shade: "#9C1C47", letter: "\u05E9", y: "67vh", sz: 64,  dur: 87, spin: 1.8,  delay: -52, rtl: 0, op: .4  }
 ];
 
 function buildDreidels() {
@@ -1477,9 +1495,8 @@ function buildDreidels() {
     el.style.setProperty("--dur", d.dur + "s");
     el.style.setProperty("--spin", d.spin + "s");
     el.style.setProperty("--delay", d.delay + "s");
-    el.style.setProperty("--x1", d.x1);
-    el.style.setProperty("--x2", d.x2);
     el.style.setProperty("--op", d.op);
+    el.dataset.rtl = d.rtl ? "1" : "0";
 
     var inner = document.createElement("div");
     inner.className = "dr-in";
@@ -1541,12 +1558,12 @@ function buildDonut() {
   el.id = "fxDonut";
   el.style.setProperty("--b", "0px");
   el.style.setProperty("--sz", "86px");
-  el.style.setProperty("--dur", "47s");
-  el.style.setProperty("--spin", "3.4s");
-  el.style.setProperty("--delay", "-11s");
-  el.style.setProperty("--x1", "-14vw");
-  el.style.setProperty("--x2", "114vw");
+  el.style.setProperty("--dur", "38s");
+  el.style.setProperty("--delay", "-9s");
+  // roughly one turn per circumference travelled, so it reads as rolling
+  el.style.setProperty("--turn", "-2160deg");
   el.style.setProperty("--op", ".58");
+  el.dataset.rtl = "1";              // starts at the right, rolls left
 
   var inner = document.createElement("div");
   inner.className = "dn-in";
@@ -1605,14 +1622,9 @@ function buildLatke() {
   var el = document.createElement("div");
   el.className = "lt";
   el.id = "fxLatke";
-  el.style.setProperty("--b", "0px");
   el.style.setProperty("--sz", "104px");
-  el.style.setProperty("--dur", "63s");
-  el.style.setProperty("--delay", "-29s");
   el.style.setProperty("--bounce", "1.15s");
   el.style.setProperty("--flip", "4.6s");
-  el.style.setProperty("--x1", "116vw");
-  el.style.setProperty("--x2", "-16vw");
   el.style.setProperty("--op", ".55");
 
   var inner = document.createElement("div"); inner.className = "lt-in";
@@ -1715,7 +1727,99 @@ function buildScenery() {
   SCENE.appendChild(buildMenorah());
   SCENE.appendChild(buildDonut());
   SCENE.appendChild(buildLatke());
+  placeRanges();
   applyFx();
+  roam();
+}
+
+/* How wide a character's own width is, read from the setting rather than
+   measured, because a character that is switched off measures zero. */
+function ownWidth(el, fallback) {
+  var v = parseFloat(getComputedStyle(el).getPropertyValue("--sz"));
+  return v || el.offsetWidth || fallback || 90;
+}
+
+/* The two ends of each character's patrol, in real pixels. Worked out
+   from the window rather than written into the stylesheet, so nobody
+   walks off the edge on a projector of a size I have not seen. */
+function placeRanges() {
+  var pad = 8;
+  var keepOut = menorahBox();
+
+  var walkers = SCENE.querySelectorAll(".dr, .dn");
+  Array.prototype.forEach.call(walkers, function (el) {
+    var w = ownWidth(el);
+    var left = pad;
+
+    /* A patrol turns round at its ends, which means it spends longer
+       there than anywhere else. The menorah stands in one of those
+       corners, so anyone whose path crosses it starts further along
+       instead of parking on top of it. */
+    var r = el.getBoundingClientRect();
+    if (keepOut && r.height && r.bottom > keepOut.top + 10 &&
+        keepOut.right + 14 + w < innerWidth - pad) {
+      left = keepOut.right + 14;
+    }
+
+    var right = Math.max(left, innerWidth - w - pad);
+    var rtl = el.dataset.rtl === "1";
+    el.style.setProperty("--x1", (rtl ? right : left) + "px");
+    el.style.setProperty("--x2", (rtl ? left : right) + "px");
+  });
+}
+
+/* Where the menorah is standing, or null when it is switched off. */
+function menorahBox() {
+  var m = $("fxMenorah");
+  if (!m || m.hidden || SCENE.hidden) return null;
+  var r = m.getBoundingClientRect();
+  return r.width ? r : null;
+}
+
+addEventListener("resize", placeRanges);
+
+/* ---------------- the latke wanders ----------------
+   No fixed route. It picks somewhere else to be, hops over, has a think,
+   then picks again. It is kept below the ticket so that whatever else it
+   does, it can never end up sitting on the winner's name. */
+var roamTimer, roamAt = null;
+
+function roam() {
+  clearTimeout(roamTimer);
+  var el = $("fxLatke");
+  if (!el) return;
+
+  if (el.hidden || SCENE.hidden) {        // switched off; look again shortly
+    roamTimer = setTimeout(roam, 1500);
+    return;
+  }
+
+  var w = ownWidth(el, 104), h = w * .76;
+  var pad = 10;
+  var top = innerHeight * .5;
+  var bottom = innerHeight - h - pad;
+  var keepOut = menorahBox();
+  var x, y, tries = 0;
+
+  // Pick a spot; if it has landed on the menorah, pick again.
+  do {
+    x = pad + Math.random() * Math.max(0, innerWidth - w - pad * 2);
+    y = top + Math.random() * Math.max(0, bottom - top);
+    tries++;
+  } while (keepOut && tries < 12 &&
+           x < keepOut.right + 10 && x + w > keepOut.left - 10 &&
+           y < keepOut.bottom && y + h > keepOut.top);
+
+  if (!roamAt) roamAt = { x: x, y: bottom };   // first appearance
+
+  var far = Math.sqrt(Math.pow(x - roamAt.x, 2) + Math.pow(y - roamAt.y, 2));
+  var secs = Math.min(4.5, Math.max(1.5, far / 165));
+
+  el.style.transitionDuration = secs.toFixed(2) + "s";
+  el.style.transform = "translate(" + Math.round(x) + "px," + Math.round(y) + "px)";
+  roamAt = { x: x, y: y };
+
+  roamTimer = setTimeout(roam, secs * 1000 + 500 + Math.random() * 1100);
 }
 
 function applyFx() {
@@ -1725,6 +1829,7 @@ function applyFx() {
   show("fxMenorah", CONFIG.FX_MENORAH);
   show("fxDonut", CONFIG.FX_DONUT);
   show("fxLatke", CONFIG.FX_LATKE);
+  placeRanges();
 }
 
 /* Everybody looks up and cheers for a couple of seconds. */

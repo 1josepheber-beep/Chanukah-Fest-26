@@ -15,7 +15,7 @@ var CONFIG = {
 
   // Shown in the admin panel. If this is not the version Claude last
   // sent, you are opening an older download.
-  FILE_VERSION: "Draw screen v17 (dreidels wander too)",
+  FILE_VERSION: "Draw screen v18 (the menorah tumbles)",
 
   // Your Apps Script address. Same one the entry form uses.
   ENDPOINT: "https://script.google.com/macros/s/AKfycbzwDkEPx2ioKaDoiBkkZNm37rI4ox4MiVe8v3fk138SWPDx66XJy5BD4TErWS3eLhJ5/exec",
@@ -551,14 +551,22 @@ h1 {
 .lt-under { transform: rotateX(180deg); }
 
 /* ---------------- menorah ---------------- */
+/* The travel is on the outer box and the flipping on the inner one.
+   translate comes before scale here, so the distance stays in real
+   screen pixels and does not have to be divided by the scale. */
 .mn {
   position: absolute; left: 34px; bottom: 6px;
   width: 300px; height: 250px;
-  transform-origin: left bottom; transform: scale(var(--mn, .92));
+  transform-origin: left bottom;
+  transform: translateX(var(--mx, 0px)) scale(var(--mn, .92));
   opacity: var(--op); color: #E6B23A;
+  transition: transform 2.4s cubic-bezier(.33,0,.3,1);
 }
-.mn-in { position: absolute; inset: 0; }
-.scenery.cheer .mn-in { animation: hop .46s ease-in-out 4; }
+.mn-in {
+  position: absolute; inset: 0;
+  transform-origin: 50% 58%;
+  transition: transform 2.4s cubic-bezier(.33,0,.3,1);
+}
 .mn-frame { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mn .arm { width: 42px; aspect-ratio: 3.6 / 1; bottom: 84px; color: #E6B23A; }
 .mn .arm.l { left: -26px; }
@@ -1309,6 +1317,7 @@ function reveal(w, slot) {
   fanfare();
   confetti();
   cheer();
+  tumble();
 
   announceEmail(w, prizeNum);
 
@@ -1752,39 +1761,85 @@ function ownWidth(el, fallback) {
    walks off the edge on a projector of a size I have not seen. */
 function placeRanges() {
   var pad = 8;
-  var keepOut = menorahBox();
+  var spots = menorahSpots();
 
   var walkers = SCENE.querySelectorAll(".dn");
   Array.prototype.forEach.call(walkers, function (el) {
     var w = ownWidth(el);
     var left = pad;
+    var right = Math.max(pad, innerWidth - w - pad);
 
-    /* A patrol turns round at its ends, which means it spends longer
-       there than anywhere else. The menorah stands in one of those
-       corners, so anyone whose path crosses it starts further along
-       instead of parking on top of it. */
+    /* A patrol turns round at its ends, so that is where it lingers.
+       The menorah now tumbles between the two bottom corners, which are
+       exactly those ends, so the doughnut rolls in the stretch between
+       them instead — unless the screen is too narrow for that to leave
+       it any room, in which case a rare overlap beats no journey. */
     var r = el.getBoundingClientRect();
-    if (keepOut && r.height && r.bottom > keepOut.top + 10 &&
-        keepOut.right + 14 + w < innerWidth - pad) {
-      left = keepOut.right + 14;
+    if (spots.length && r.height && r.bottom > spots[0].top + 10) {
+      var inner = spots[0].right + 14;
+      var outer = spots[1].left - 14 - w;
+      if (outer - inner > 150) { left = inner; right = outer; }
     }
 
-    var right = Math.max(left, innerWidth - w - pad);
     var rtl = el.dataset.rtl === "1";
     el.style.setProperty("--x1", (rtl ? right : left) + "px");
     el.style.setProperty("--x2", (rtl ? left : right) + "px");
   });
 }
 
-/* Where the menorah is standing, or null when it is switched off. */
-function menorahBox() {
+/* Both ends of the menorah's floor, worked out from its own geometry
+   rather than measured — mid-tumble it is rotated, and a rotated element
+   measures bigger than it is. */
+function menorahSpots() {
   var m = $("fxMenorah");
-  if (!m || m.hidden || SCENE.hidden) return null;
-  var r = m.getBoundingClientRect();
-  return r.width ? r : null;
+  if (!shown(m)) return [];
+  var scale = parseFloat(getComputedStyle(m).getPropertyValue("--mn")) || .92;
+  var w = 300 * scale, h = 250 * scale;
+  var bottom = innerHeight - 6, top = bottom - h;
+  var away = Math.max(MN_HOME, innerWidth - w - MN_HOME);
+  return [
+    { left: MN_HOME, right: MN_HOME + w, top: top, bottom: bottom },
+    { left: away,    right: away + w,    top: top, bottom: bottom }
+  ];
 }
 
-addEventListener("resize", function () { placeRanges(); reinWander(); });
+var MN_HOME = 34;
+var mnAway = false, mnSpin = 0;
+
+/* Three flips across the floor on every winner, going the other way each
+   time, so it ends up back where it started after two. */
+function tumble() {
+  var el = $("fxMenorah");
+  if (!shown(el)) return;
+  var inner = el.querySelector(".mn-in");
+  if (!inner) return;
+
+  var spots = menorahSpots();
+  if (!spots.length) return;
+
+  mnAway = !mnAway;
+  mnSpin += (mnAway ? 1 : -1) * 1080;
+  el.style.setProperty("--mx", Math.round(spots[1].left - MN_HOME) * (mnAway ? 1 : 0) + "px");
+  inner.style.transform = "rotate(" + mnSpin + "deg)";
+
+  // where it is standing changes who may stand where
+  setTimeout(placeRanges, 2500);
+}
+
+/* If the window changes while it is parked at the far end, move it. */
+function restMenorah() {
+  var el = $("fxMenorah");
+  if (!shown(el) || !mnAway) return;
+  var spots = menorahSpots();
+  if (!spots.length) return;
+  var was = el.style.transitionDuration;
+  el.style.transitionDuration = "0s";
+  el.style.setProperty("--mx", Math.round(spots[1].left - MN_HOME) + "px");
+  void el.offsetWidth;
+  el.style.transitionDuration = was;
+}
+
+addEventListener("resize", function () { restMenorah(); placeRanges(); reinWander(); });
 
 /* ---------------- wandering ----------------
    A wanderer has no route at all. It picks somewhere else to be, travels
@@ -1808,33 +1863,46 @@ function keepOuts() {
   var out = [];
   var t = $("ticket");
   if (t) { var r = t.getBoundingClientRect(); if (r.width) out.push(grow(r, 16)); }
-  var m = menorahBox();
-  if (m) out.push(grow(m, 10));
+  // both ends, not just where it is now — otherwise somebody settles in
+  // the spot the menorah is about to tumble into
+  menorahSpots().forEach(function (b) { out.push(grow(b, 10)); });
   return out;
 }
 
-function clashes(x, y, w, h, boxes) {
+/* How much of a spot sits on something it should not. Zero is a clean
+   spot; anything else is a measure of how bad it is. */
+function overlap(x, y, w, h, boxes) {
+  var total = 0;
   for (var i = 0; i < boxes.length; i++) {
     var b = boxes[i];
-    if (x < b.right && x + w > b.left && y < b.bottom && y + h > b.top) return true;
+    var across = Math.min(x + w, b.right) - Math.max(x, b.left);
+    var down = Math.min(y + h, b.bottom) - Math.max(y, b.top);
+    if (across > 0 && down > 0) total += across * down;
   }
-  return false;
+  return total;
 }
 
+/* Take the first clean spot. On a screen small enough that the ticket
+   and the menorah's two ends leave barely anywhere to stand, there may
+   not be one — so keep the least bad of everything tried rather than
+   whatever the last throw happened to be. The name is the one thing on
+   this screen that must not be covered. */
 function pickSpot(w, h, band, boxes) {
   var pad = 10;
   var acrossMax = Math.max(0, innerWidth - w - pad * 2);
   var top = innerHeight * band[0];
   var bottom = Math.min(innerHeight - h - pad, innerHeight * band[1]);
   var down = Math.max(0, bottom - top);
-  var x = pad, y = top;
+  var best = { x: pad, y: top }, least = Infinity;
 
-  for (var i = 0; i < 26; i++) {
-    x = pad + Math.random() * acrossMax;
-    y = top + Math.random() * down;
-    if (!clashes(x, y, w, h, boxes)) return { x: x, y: y };
+  for (var i = 0; i < 40; i++) {
+    var x = pad + Math.random() * acrossMax;
+    var y = top + Math.random() * down;
+    var bad = overlap(x, y, w, h, boxes);
+    if (!bad) return { x: x, y: y };
+    if (bad < least) { least = bad; best = { x: x, y: y }; }
   }
-  return { x: x, y: y };   // 26 misses on a crowded screen: it is only scenery
+  return best;
 }
 
 function wander(it) {

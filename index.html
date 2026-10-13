@@ -385,7 +385,7 @@
   margin: 0 auto;
   padding: 18px 22px;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0,1fr);
   gap: 28px;
   align-items: center;
 }
@@ -400,7 +400,7 @@
 
 .cf26 .cf26-apps-links {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0,1fr));
   gap: 10px;
 }
 
@@ -440,7 +440,7 @@
 
 .cf26 .cf26-about-grid {
   display: grid;
-  grid-template-columns: 1.55fr 1fr;
+  grid-template-columns: minmax(0,1.55fr) minmax(0,1fr);
   gap: 52px;
   align-items: start;
 }
@@ -491,7 +491,7 @@
 .cf26 .cf26-slot {
   position: relative;
   display: grid;
-  grid-template-columns: 116px 1fr;
+  grid-template-columns: 116px minmax(0,1fr);
   gap: 22px;
   padding: 22px 0 22px 26px;
 }
@@ -600,7 +600,7 @@
 
 .cf26 .cf26-two {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
   gap: 26px;
   margin-top: 36px;
 }
@@ -694,7 +694,7 @@
 
 .cf26 .cf26-loc-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
   gap: 40px;
   margin-top: 30px;
   align-items: start;
@@ -735,7 +735,7 @@
 
 .cf26 .cf26-qs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
   gap: 28px 44px;
   margin-top: 32px;
 }
@@ -795,7 +795,7 @@
   .cf26 .cf26-two,
   .cf26 .cf26-loc-grid,
   .cf26 .cf26-qs {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0,1fr);
     gap: 26px;
   }
   .cf26 .cf26-map { min-height: 210px; }
@@ -823,7 +823,7 @@
 
   .cf26 h2 { font-size: 27px; }
   .cf26 .cf26-apps-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0,1fr);
     gap: 12px;
     padding: 16px 18px;
   }
@@ -833,7 +833,7 @@
   .cf26 .cf26-apps-name { font-size: 13.5px; }
   .cf26 .cf26-apps-due { font-size: 11.5px; }
   .cf26 .cf26-slot {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0,1fr);
     gap: 4px;
     padding: 18px 0 18px 20px;
   }
@@ -983,6 +983,7 @@ label.cf-bad {
 }
 
 .cf-sink { display: none; width: 0; height: 0; border: 0; }
+
 
 </style>
 

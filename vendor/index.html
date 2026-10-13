@@ -165,7 +165,7 @@
   margin: 0 auto;
   padding: 18px 22px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0,1fr));
   gap: 18px;
 }
 
@@ -191,7 +191,7 @@
 .vf26 .vf26-tiers {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
   gap: 16px;
   margin-top: 26px;
 }
@@ -347,8 +347,8 @@
   width: 100%;
 }
 
-.vf26 .vf26-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.vf26 .vf26-row-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
+.vf26 .vf26-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 16px; }
+.vf26 .vf26-row-3 { display: grid; grid-template-columns: minmax(0,2fr) minmax(0,1fr) minmax(0,1fr); gap: 16px; }
 
 .vf26 .vf26-field { margin-bottom: 16px; }
 
@@ -454,7 +454,7 @@
 
 .vf26 .vf26-steps {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0,1fr));
   gap: 20px;
   margin-top: 26px;
   counter-reset: step;
@@ -513,9 +513,9 @@
 
 /* ============================ RESPONSIVE ============================ */
 @media (max-width: 860px) {
-  .vf26 .vf26-facts-inner { grid-template-columns: 1fr 1fr; gap: 14px; }
-  .vf26 .vf26-tiers { grid-template-columns: 1fr; }
-  .vf26 .vf26-steps { grid-template-columns: 1fr; }
+  .vf26 .vf26-facts-inner { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 14px; }
+  .vf26 .vf26-tiers { grid-template-columns: minmax(0,1fr); }
+  .vf26 .vf26-steps { grid-template-columns: minmax(0,1fr); }
 }
 
 @media (max-width: 640px) {
@@ -528,7 +528,7 @@
   .vf26 .vf26-pdf { font-size: 13.5px; padding: 11px 14px; }
   .vf26 h2 { font-size: 23px; }
   .vf26 .vf26-facts-inner { padding: 16px 18px; }
-  .vf26 .vf26-row, .vf26 .vf26-row-3 { grid-template-columns: 1fr; gap: 0; }
+  .vf26 .vf26-row, .vf26 .vf26-row-3 { grid-template-columns: minmax(0,1fr); gap: 0; }
   .vf26 .vf26-total { padding: 16px 18px; }
   .vf26 .vf26-total-amount::after { font-size: 24px; }
   .vf26 .vf26-tier { padding: 16px; }
@@ -607,7 +607,7 @@
 
 .vf26 .vf26-other-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0,1fr));
   gap: 16px;
   margin-top: 22px;
 }
@@ -638,7 +638,7 @@
 }
 
 @media (max-width: 760px) {
-  .vf26 .vf26-other-grid { grid-template-columns: 1fr; }
+  .vf26 .vf26-other-grid { grid-template-columns: minmax(0,1fr); }
 }
 
 /* ---- added for the hosted version ----------------------------------
@@ -765,6 +765,7 @@ label.cf-bad {
 .cf-done-more a:hover { color: var(--gold) !important; border-bottom-color: var(--gold); }
 
 .cf-sink { display: none; width: 0; height: 0; border: 0; }
+
 
 </style>
 

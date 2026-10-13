@@ -33,13 +33,22 @@
     el.textContent = value;
   }
 
+  /* Emptying a field has to take the element with it. A placeholder is
+     a highlighted box with a dashed underline; cleared of its text it
+     would otherwise sit there as a small coloured stub. */
+  function setText(el, v) {
+    text(el, v);
+    if (String(v).trim() === "") el.setAttribute("data-cf-blank", "");
+    else el.removeAttribute("data-cf-blank");
+  }
+
   function applyFields(data) {
     if (!data) return;
     var by = data.fields || {};
 
     each("[data-cf]", function (el) {
       var v = by[el.getAttribute("data-cf")];
-      if (v != null) text(el, v);
+      if (v != null) setText(el, v);
     });
     each("[data-cf-href]", function (el) {
       var v = by[el.getAttribute("data-cf-href")];
@@ -86,7 +95,13 @@
     if (document.getElementById("cf-hide")) return;
     var tag = document.createElement("style");
     tag.id = "cf-hide";
-    tag.textContent = "[data-cf-sec][hidden]{display:none !important}";
+    /* Someone will type a sentence into a box built for two words. A
+       flex or grid child refuses to shrink below its content unless it
+       is told it may, which is what pushes the whole page sideways. */
+    tag.textContent =
+      "[data-cf-sec][hidden]{display:none !important}" +
+      "[data-cf][data-cf-blank]{display:none !important}" +
+      "[data-cf]{min-width:0;overflow-wrap:break-word}";
     (document.head || document.documentElement).appendChild(tag);
   }
 
@@ -116,11 +131,31 @@
     order.forEach(function (o) { parent.appendChild(o.el); });
   }
 
+  /* A price is set not to wrap, and a flex item will not shrink below
+     its own content — both right for the wording these pages were built
+     with, both able to push the page sideways when someone types a
+     sentence into a box meant for two words. Forcing either everywhere
+     would change the layout of pages nobody has edited, so this only
+     intervenes once the page has actually gone too wide, and only then. */
+  function keepItInside() {
+    var html = document.documentElement;
+    if (html.scrollWidth <= html.clientWidth + 2) return;
+    if (document.getElementById("cf-fit")) return;
+    var tag = document.createElement("style");
+    tag.id = "cf-fit";
+    tag.textContent = "[data-cf-sec] *{min-width:0}" +
+                      "[data-cf]{white-space:normal;overflow-wrap:break-word}";
+    document.head.appendChild(tag);
+  }
+
   function applyAll(data) {
     if (!data) return;
+    try { hideRule(); } catch (e) {}
     try { applyFields(data); } catch (e) {}
     try { applyColours(data); } catch (e) {}
     try { applySections(data); } catch (e) {}
+    // after layout has settled
+    try { requestAnimationFrame(keepItInside); } catch (e) { keepItInside(); }
   }
 
   function each(sel, fn) {

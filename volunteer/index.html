@@ -196,7 +196,7 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
 .req { color: var(--bad); }
 .opt { font-size: 13.5px; font-weight: 600; color: var(--muted); }
 
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.row { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 14px; align-items: start; }
 
 input[type=text], input[type=tel], input[type=email], select, textarea {
   width: 100%;
@@ -236,7 +236,7 @@ input:focus, select:focus, textarea:focus {
 .hp { position: absolute !important; left: -9999px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
 
 /* ------------------------ TEAMS AND SHIFTS ------------------------ */
-.picks { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.picks { position: relative; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; }
 
 .pick-cb { position: absolute; width: 1px; height: 1px; opacity: 0; }
 
@@ -412,8 +412,9 @@ input:focus, select:focus, textarea:focus {
 .contact a { color: var(--gold); font-weight: 700; }
 
 @media (max-width: 640px) {
-  .row, .picks { grid-template-columns: 1fr; }
+  .row, .picks { grid-template-columns: minmax(0,1fr); }
 }
+
 </style>
 <script src="/Chanukah-Fest-26/assets/content.js" defer></script>
 </head>

@@ -172,7 +172,7 @@
      "sec": "hero",
      "type": "text",
      "tag": "div",
-     "label": "&#160;",
+     "label": "31st Annual Grand Menorah Lighting at Houston City Hall › &#160;",
      "value": "&#160;"
     },
     {
@@ -180,7 +180,7 @@
      "sec": "hero",
      "type": "text",
      "tag": "h1",
-     "label": "Chanukah Fest 2026",
+     "label": "31st Annual Grand Menorah Lighting at Houston City Hall › Chanukah Fest 2026",
      "value": "Chanukah Fest 2026"
     },
     {
@@ -188,7 +188,7 @@
      "sec": "hero",
      "type": "text",
      "tag": "p",
-     "label": "Four hours of music, food and family activities in downto...",
+     "label": "31st Annual Grand Menorah Lighting at Houston City Hall › Four hours of music, food and family activities in downto...",
      "value": "Four hours of music, food and family activities in downtown Houston, ending with the menorah lit and fireworks over City Hall."
     },
     {
@@ -204,7 +204,7 @@
      "sec": "hero",
      "type": "text",
      "tag": "span",
-     "label": "3:00 – 7:00 PM",
+     "label": "Sunday, December 6 › 3:00 – 7:00 PM",
      "value": "3:00 – 7:00 PM"
     },
     {
@@ -212,7 +212,7 @@
      "sec": "hero",
      "type": "text",
      "tag": "span",
-     "label": "Houston City Hall",
+     "label": "Sunday, December 6 › Houston City Hall",
      "value": "Houston City Hall"
     },
     {
@@ -220,7 +220,7 @@
      "sec": "hero",
      "type": "text",
      "tag": "span",
-     "label": "Free admission",
+     "label": "Sunday, December 6 › Free admission",
      "value": "Free admission"
     },
     {
@@ -236,7 +236,7 @@
      "sec": "hero",
      "type": "text",
      "tag": "a",
-     "label": "Become a sponsor",
+     "label": "Plan your visit › Become a sponsor",
      "value": "Become a sponsor"
     },
     {
@@ -259,7 +259,7 @@
      "sec": "nav",
      "type": "text",
      "tag": "a",
-     "label": "Schedule",
+     "label": "About › Schedule",
      "value": "Schedule"
     },
     {
@@ -267,7 +267,7 @@
      "sec": "nav",
      "type": "text",
      "tag": "a",
-     "label": "On stage",
+     "label": "About › On stage",
      "value": "On stage"
     },
     {
@@ -275,7 +275,7 @@
      "sec": "nav",
      "type": "text",
      "tag": "a",
-     "label": "Food &amp; booths",
+     "label": "About › Food &amp; booths",
      "value": "Food &amp; booths"
     },
     {
@@ -283,7 +283,7 @@
      "sec": "nav",
      "type": "text",
      "tag": "a",
-     "label": "Raffle",
+     "label": "About › Raffle",
      "value": "Raffle"
     },
     {
@@ -291,7 +291,7 @@
      "sec": "nav",
      "type": "text",
      "tag": "span",
-     "label": "Get involved",
+     "label": "About › Get involved",
      "value": "Get involved"
     },
     {
@@ -299,7 +299,7 @@
      "sec": "nav",
      "type": "text",
      "tag": "a",
-     "label": "Location",
+     "label": "About › Location",
      "value": "Location"
     },
     {
@@ -307,7 +307,7 @@
      "sec": "nav",
      "type": "text",
      "tag": "a",
-     "label": "Questions",
+     "label": "About › Questions",
      "value": "Questions"
     },
     {
@@ -346,7 +346,7 @@
      "sec": "apps",
      "type": "text",
      "tag": "span",
-     "label": "[[ DATE ]]",
+     "label": "Sponsor › [[ DATE ]]",
      "value": "[[ DATE ]]"
     },
     {
@@ -377,7 +377,7 @@
      "sec": "apps",
      "type": "text",
      "tag": "span",
-     "label": "[[ DATE ]]",
+     "label": "Vendor booth › [[ DATE ]]",
      "value": "[[ DATE ]]"
     },
     {
@@ -400,7 +400,7 @@
      "sec": "apps",
      "type": "text",
      "tag": "span",
-     "label": "Pick your shifts",
+     "label": "Volunteer › Pick your shifts",
      "value": "Pick your shifts"
     },
     {
@@ -416,7 +416,7 @@
      "sec": "about",
      "type": "text",
      "tag": "p",
-     "label": "The menorah has gone up outside Houston City Hall every C...",
+     "label": "Thirty-one years of light at City Hall › The menorah has gone up outside Houston City Hall every C...",
      "value": "The menorah has gone up outside Houston City Hall every Chanukah since 1995. This year it happens on the third night."
     },
     {
@@ -432,7 +432,7 @@
      "sec": "about",
      "type": "text",
      "tag": "p",
-     "label": "Chanukah Fest 2026 falls on Sunday, December 6, the third...",
+     "label": "What began as a public lighting has grown into one of the... › Chanukah Fest 2026 falls on Sunday, December 6, the third...",
      "value": "Chanukah Fest 2026 falls on Sunday, December 6, the third night of Chanukah. The afternoon runs as a festival: live music, more than twenty activity and craft booths, kosher food, strolling performers, a digital raffle and a toy drive. At six o'clock everything stops for the ceremony, and the evening closes with fireworks behind the Grand Menorah."
     },
     {
@@ -440,7 +440,7 @@
      "sec": "about",
      "type": "text",
      "tag": "p",
-     "label": "Admission is free. Food, merchandise and VIP seating are ...",
+     "label": "What began as a public lighting has grown into one of the... › Admission is free. Food, merchandise and VIP seating are ...",
      "value": "Admission is free. Food, merchandise and VIP seating are available for purchase."
     },
     {
@@ -464,7 +464,7 @@
      "sec": "about",
      "type": "text",
      "tag": "span",
-     "label": "Sunday, December 6, 2026",
+     "label": "Date › Sunday, December 6, 2026",
      "value": "Sunday, December 6, 2026"
     },
     {
@@ -480,7 +480,7 @@
      "sec": "about",
      "type": "text",
      "tag": "span",
-     "label": "Third night of Chanukah",
+     "label": "Hebrew date › Third night of Chanukah",
      "value": "Third night of Chanukah"
     },
     {
@@ -496,7 +496,7 @@
      "sec": "about",
      "type": "text",
      "tag": "span",
-     "label": "3:00 PM – 7:00 PM",
+     "label": "Hours › 3:00 PM – 7:00 PM",
      "value": "3:00 PM – 7:00 PM"
     },
     {
@@ -512,7 +512,7 @@
      "sec": "about",
      "type": "text",
      "tag": "span",
-     "label": "6:00 PM",
+     "label": "Menorah lighting › 6:00 PM",
      "value": "6:00 PM"
     },
     {
@@ -528,7 +528,7 @@
      "sec": "about",
      "type": "text",
      "tag": "span",
-     "label": "Houston City Hall, Downtown",
+     "label": "Where › Houston City Hall, Downtown",
      "value": "Houston City Hall, Downtown"
     },
     {
@@ -544,7 +544,7 @@
      "sec": "about",
      "type": "text",
      "tag": "span",
-     "label": "Free and open to the public",
+     "label": "Admission › Free and open to the public",
      "value": "Free and open to the public"
     },
     {
@@ -560,7 +560,7 @@
      "sec": "about",
      "type": "text",
      "tag": "span",
-     "label": "[[ ADD NUMBER ]]",
+     "label": "Expected attendance › [[ ADD NUMBER ]]",
      "value": "[[ ADD NUMBER ]]"
     },
     {
@@ -576,7 +576,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "p",
-     "label": "The festival opens in daylight and closes after dark. Com...",
+     "label": "Schedule › The festival opens in daylight and closes after dark. Com...",
      "value": "The festival opens in daylight and closes after dark. Come any time — the ceremony is at six."
     },
     {
@@ -600,7 +600,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "p",
-     "label": "The Vendor &amp; Activity Village opens: over twenty boot...",
+     "label": "Gates open › The Vendor &amp; Activity Village opens: over twenty boot...",
      "value": "The Vendor &amp; Activity Village opens: over twenty booths with Judaica, Chanukah crafts, educational displays, photo booths and community exhibits. Food stands open at the same time."
     },
     {
@@ -624,7 +624,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHICH SCHOOLS, AND HOW LONG EACH SET RUNS ]]",
+     "label": "School choirs and bands › [[ WHICH SCHOOLS, AND HOW LONG EACH SET RUNS ]]",
      "value": "[[ WHICH SCHOOLS, AND HOW LONG EACH SET RUNS ]]"
     },
     {
@@ -648,7 +648,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "p",
-     "label": "Israeli pop vocalist, live on the main stage.",
+     "label": "Itzik Dadya › Israeli pop vocalist, live on the main stage.",
      "value": "Israeli pop vocalist, live on the main stage."
     },
     {
@@ -672,7 +672,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "span",
-     "label": "[[ SET LENGTH / ANY DETAIL ]]",
+     "label": "8th Day › [[ SET LENGTH / ANY DETAIL ]]",
      "value": "[[ SET LENGTH / ANY DETAIL ]]"
     },
     {
@@ -696,7 +696,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "p",
-     "label": "The third candle is lit alongside city, state and nationa...",
+     "label": "Grand Menorah Lighting › The third candle is lit alongside city, state and nationa...",
      "value": "The third candle is lit alongside city, state and national officials, followed by a fireworks display behind the Grand Menorah."
     },
     {
@@ -720,7 +720,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "span",
-     "label": "[[ HOW TO ENTER, PRIZES, WHETHER YOU MUST BE PRESENT ]]",
+     "label": "Digital raffle drawing › [[ HOW TO ENTER, PRIZES, WHETHER YOU MUST BE PRESENT ]]",
      "value": "[[ HOW TO ENTER, PRIZES, WHETHER YOU MUST BE PRESENT ]]"
     },
     {
@@ -744,7 +744,7 @@
      "sec": "sched",
      "type": "text",
      "tag": "p",
-     "label": "Booths and food stands shut down.",
+     "label": "Festival closes › Booths and food stands shut down.",
      "value": "Booths and food stands shut down."
     },
     {
@@ -760,7 +760,7 @@
      "sec": "stage",
      "type": "text",
      "tag": "p",
-     "label": "Live music all afternoon, plus strolling performers movin...",
+     "label": "On stage › Live music all afternoon, plus strolling performers movin...",
      "value": "Live music all afternoon, plus strolling performers moving through the crowd."
     },
     {
@@ -784,7 +784,7 @@
      "sec": "stage",
      "type": "text",
      "tag": "h3",
-     "label": "Itzik Dadya",
+     "label": "Headliner › Itzik Dadya",
      "value": "Itzik Dadya"
     },
     {
@@ -800,7 +800,7 @@
      "sec": "stage",
      "type": "text",
      "tag": "span",
-     "label": "[[ ONE OR TWO LINES OF BIO ]]",
+     "label": "Headliner › [[ ONE OR TWO LINES OF BIO ]]",
      "value": "[[ ONE OR TWO LINES OF BIO ]]"
     },
     {
@@ -824,7 +824,7 @@
      "sec": "stage",
      "type": "text",
      "tag": "h3",
-     "label": "8th Day",
+     "label": "Headliner › 8th Day",
      "value": "8th Day"
     },
     {
@@ -832,7 +832,7 @@
      "sec": "stage",
      "type": "text",
      "tag": "span",
-     "label": "[[ ONE OR TWO LINES OF BIO ]]",
+     "label": "Headliner › [[ ONE OR TWO LINES OF BIO ]]",
      "value": "[[ ONE OR TWO LINES OF BIO ]]"
     },
     {
@@ -856,7 +856,7 @@
      "sec": "stage",
      "type": "text",
      "tag": "h3",
-     "label": "School choirs and bands",
+     "label": "Community › School choirs and bands",
      "value": "School choirs and bands"
     },
     {
@@ -872,7 +872,7 @@
      "sec": "stage",
      "type": "text",
      "tag": "span",
-     "label": "[[ SCHOOL NAMES ]]",
+     "label": "Community › [[ SCHOOL NAMES ]]",
      "value": "[[ SCHOOL NAMES ]]"
     },
     {
@@ -888,7 +888,7 @@
      "sec": "food",
      "type": "text",
      "tag": "p",
-     "label": "Everything on site is kosher.",
+     "label": "Food and booths › Everything on site is kosher.",
      "value": "Everything on site is kosher."
     },
     {
@@ -904,7 +904,7 @@
      "sec": "food",
      "type": "text",
      "tag": "p",
-     "label": "Fresh hot latkes, gourmet sufganiot and kosher festival f...",
+     "label": "Food and concessions › Fresh hot latkes, gourmet sufganiot and kosher festival f...",
      "value": "Fresh hot latkes, gourmet sufganiot and kosher festival food, served from 3:00 PM until the festival closes."
     },
     {
@@ -920,7 +920,7 @@
      "sec": "food",
      "type": "text",
      "tag": "span",
-     "label": "Casa",
+     "label": "Laykie's › Casa",
      "value": "Casa"
     },
     {
@@ -928,7 +928,7 @@
      "sec": "food",
      "type": "text",
      "tag": "span",
-     "label": "Saba's",
+     "label": "Laykie's › Saba's",
      "value": "Saba's"
     },
     {
@@ -936,7 +936,7 @@
      "sec": "food",
      "type": "text",
      "tag": "span",
-     "label": "[[ PRICES, PAYMENT METHOD, AND WHETHER FOOD TICKETS ARE P...",
+     "label": "Food and concessions › [[ PRICES, PAYMENT METHOD, AND WHETHER FOOD TICKETS ARE P...",
      "value": "[[ PRICES, PAYMENT METHOD, AND WHETHER FOOD TICKETS ARE PRE-SOLD ]]"
     },
     {
@@ -952,7 +952,7 @@
      "sec": "food",
      "type": "text",
      "tag": "p",
-     "label": "More than twenty booths run the length of the plaza: Juda...",
+     "label": "Vendor &amp; Activity Village › More than twenty booths run the length of the plaza: Juda...",
      "value": "More than twenty booths run the length of the plaza: Judaica, hands-on Chanukah crafts for children, educational displays, photo booths and community organization exhibits."
     },
     {
@@ -968,7 +968,7 @@
      "sec": "food",
      "type": "text",
      "tag": "span",
-     "label": "Kids' crafts",
+     "label": "Judaica › Kids' crafts",
      "value": "Kids' crafts"
     },
     {
@@ -976,7 +976,7 @@
      "sec": "food",
      "type": "text",
      "tag": "span",
-     "label": "Photo booths",
+     "label": "Judaica › Photo booths",
      "value": "Photo booths"
     },
     {
@@ -984,7 +984,7 @@
      "sec": "food",
      "type": "text",
      "tag": "span",
-     "label": "Community exhibits",
+     "label": "Judaica › Community exhibits",
      "value": "Community exhibits"
     },
     {
@@ -1000,7 +1000,7 @@
      "sec": "food",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHAT TO BRING AND WHERE IT GOES ]]",
+     "label": "Vendor &amp; Activity Village › [[ WHAT TO BRING AND WHERE IT GOES ]]",
      "value": "[[ WHAT TO BRING AND WHERE IT GOES ]]"
     },
     {
@@ -1016,7 +1016,7 @@
      "sec": "raffle",
      "type": "text",
      "tag": "h2",
-     "label": "Win a prize at the festival",
+     "label": "FREE TO ENTER › Win a prize at the festival",
      "value": "Win a prize at the festival"
     },
     {
@@ -1024,7 +1024,7 @@
      "sec": "raffle",
      "type": "text",
      "tag": "p",
-     "label": "Enter the raffle before you come, or scan the code at the...",
+     "label": "FREE TO ENTER › Enter the raffle before you come, or scan the code at the...",
      "value": "Enter the raffle before you come, or scan the code at the information booth. Everyone in your group is entered separately, so each person has their own chance."
     },
     {
@@ -1032,7 +1032,7 @@
      "sec": "raffle",
      "type": "text",
      "tag": "a",
-     "label": "Enter the raffle",
+     "label": "FREE TO ENTER › Enter the raffle",
      "value": "Enter the raffle"
     },
     {
@@ -1055,7 +1055,7 @@
      "sec": "involved",
      "type": "text",
      "tag": "p",
-     "label": "Chanukah Fest runs on sponsors and volunteers from across...",
+     "label": "Get involved › Chanukah Fest runs on sponsors and volunteers from across...",
      "value": "Chanukah Fest runs on sponsors and volunteers from across the Houston community."
     },
     {
@@ -1071,7 +1071,7 @@
      "sec": "involved",
      "type": "text",
      "tag": "p",
-     "label": "Put your business in front of thousands of Houston famili...",
+     "label": "Sponsor the festival › Put your business in front of thousands of Houston famili...",
      "value": "Put your business in front of thousands of Houston families and underwrite the stage, the fireworks or the children's village."
     },
     {
@@ -1079,7 +1079,7 @@
      "sec": "involved",
      "type": "text",
      "tag": "a",
-     "label": "See sponsorship levels",
+     "label": "Sponsor the festival › See sponsorship levels",
      "value": "See sponsorship levels"
     },
     {
@@ -1102,7 +1102,7 @@
      "sec": "involved",
      "type": "text",
      "tag": "p",
-     "label": "Bring your business or organization into the Vendor &amp;...",
+     "label": "Reserve a booth › Bring your business or organization into the Vendor &amp;...",
      "value": "Bring your business or organization into the Vendor &amp; Activity Village for the full four hours."
     },
     {
@@ -1110,7 +1110,7 @@
      "sec": "involved",
      "type": "text",
      "tag": "a",
-     "label": "Apply as a vendor",
+     "label": "Reserve a booth › Apply as a vendor",
      "value": "Apply as a vendor"
     },
     {
@@ -1133,7 +1133,7 @@
      "sec": "involved",
      "type": "text",
      "tag": "p",
-     "label": "Help with setup, registration, food service, info booths,...",
+     "label": "Volunteer › Help with setup, registration, food service, info booths,...",
      "value": "Help with setup, registration, food service, info booths, Mivtzoyim or teardown. Shifts available before, during and after."
     },
     {
@@ -1141,7 +1141,7 @@
      "sec": "involved",
      "type": "text",
      "tag": "a",
-     "label": "Sign up to volunteer",
+     "label": "Volunteer › Sign up to volunteer",
      "value": "Sign up to volunteer"
     },
     {
@@ -1164,7 +1164,7 @@
      "sec": "loc",
      "type": "text",
      "tag": "p",
-     "label": "Houston City Hall, in the heart of downtown.",
+     "label": "Getting there › Houston City Hall, in the heart of downtown.",
      "value": "Houston City Hall, in the heart of downtown."
     },
     {
@@ -1188,7 +1188,7 @@
      "sec": "loc",
      "type": "text",
      "tag": "span",
-     "label": "[[ CONFIRM EXACT ADDRESS AND WHICH SIDE OF CITY HALL ]]",
+     "label": "Address › [[ CONFIRM EXACT ADDRESS AND WHICH SIDE OF CITY HALL ]]",
      "value": "[[ CONFIRM EXACT ADDRESS AND WHICH SIDE OF CITY HALL ]]"
     },
     {
@@ -1204,7 +1204,7 @@
      "sec": "loc",
      "type": "text",
      "tag": "span",
-     "label": "[[ GARAGE NAMES, RATES, WHETHER PARKING IS VALIDATED OR F...",
+     "label": "Parking › [[ GARAGE NAMES, RATES, WHETHER PARKING IS VALIDATED OR F...",
      "value": "[[ GARAGE NAMES, RATES, WHETHER PARKING IS VALIDATED OR FREE ]]"
     },
     {
@@ -1220,7 +1220,7 @@
      "sec": "loc",
      "type": "text",
      "tag": "span",
-     "label": "[[ DROP-OFF POINT, STROLLER AND WHEELCHAIR ACCESS, STREET...",
+     "label": "Drop-off and accessibility › [[ DROP-OFF POINT, STROLLER AND WHEELCHAIR ACCESS, STREET...",
      "value": "[[ DROP-OFF POINT, STROLLER AND WHEELCHAIR ACCESS, STREET CLOSURES ]]"
     },
     {
@@ -1228,7 +1228,7 @@
      "sec": "loc",
      "type": "text",
      "tag": "a",
-     "label": "Full location details",
+     "label": "Address › Full location details",
      "value": "Full location details"
     },
     {
@@ -1236,7 +1236,7 @@
      "sec": "loc",
      "type": "text",
      "tag": "div",
-     "label": "[[ MAP IMAGE OR GOOGLE MAPS EMBED GOES HERE ]]",
+     "label": "Address › [[ MAP IMAGE OR GOOGLE MAPS EMBED GOES HERE ]]",
      "value": "[[ MAP IMAGE OR GOOGLE MAPS EMBED GOES HERE ]]"
     },
     {
@@ -1260,7 +1260,7 @@
      "sec": "faq",
      "type": "text",
      "tag": "p",
-     "label": "No. Admission is free and open to everyone. VIP seating, ...",
+     "label": "Do I need a ticket? › No. Admission is free and open to everyone. VIP seating, ...",
      "value": "No. Admission is free and open to everyone. VIP seating, food and merchandise are the only things you pay for."
     },
     {
@@ -1276,7 +1276,7 @@
      "sec": "faq",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHAT IT INCLUDES, PRICE, AND WHERE TO BUY ]]",
+     "label": "How does VIP seating work? › [[ WHAT IT INCLUDES, PRICE, AND WHERE TO BUY ]]",
      "value": "[[ WHAT IT INCLUDES, PRICE, AND WHERE TO BUY ]]"
     },
     {
@@ -1292,7 +1292,7 @@
      "sec": "faq",
      "type": "text",
      "tag": "span",
-     "label": "[[ RAIN POLICY — RAIN OR SHINE? WHERE WILL UPDATES BE POS...",
+     "label": "What if it rains? › [[ RAIN POLICY — RAIN OR SHINE? WHERE WILL UPDATES BE POS...",
      "value": "[[ RAIN POLICY — RAIN OR SHINE? WHERE WILL UPDATES BE POSTED? ]]"
     },
     {
@@ -1308,7 +1308,7 @@
      "sec": "faq",
      "type": "text",
      "tag": "p",
-     "label": "Yes. A large share of the booths are hands-on crafts and ...",
+     "label": "Is it good for young children? › Yes. A large share of the booths are hands-on crafts and ...",
      "value": "Yes. A large share of the booths are hands-on crafts and activities built for kids, and strolling performers work the crowd all afternoon."
     },
     {
@@ -1324,7 +1324,7 @@
      "sec": "faq",
      "type": "text",
      "tag": "span",
-     "label": "[[ SCHOOL AND SHUL GROUPS — IS THERE A HEADS-UP FORM OR C...",
+     "label": "Can I bring a group? › [[ SCHOOL AND SHUL GROUPS — IS THERE A HEADS-UP FORM OR C...",
      "value": "[[ SCHOOL AND SHUL GROUPS — IS THERE A HEADS-UP FORM OR CONTACT? ]]"
     },
     {
@@ -1348,7 +1348,7 @@
      "sec": "faq",
      "type": "text",
      "tag": "span",
-     "label": "[[ NAME THE CERTIFYING AGENCY ]]",
+     "label": "Is the food kosher? › [[ NAME THE CERTIFYING AGENCY ]]",
      "value": "[[ NAME THE CERTIFYING AGENCY ]]"
     },
     {
@@ -1364,7 +1364,7 @@
      "sec": "close",
      "type": "text",
      "tag": "p",
-     "label": "Sunday, December 6, 2026 — from three in the afternoon un...",
+     "label": "See you at City Hall › Sunday, December 6, 2026 — from three in the afternoon un...",
      "value": "Sunday, December 6, 2026 — from three in the afternoon until the fireworks."
     },
     {
@@ -1387,7 +1387,7 @@
      "sec": "close",
      "type": "text",
      "tag": "a",
-     "label": "Volunteer",
+     "label": "Become a sponsor › Volunteer",
      "value": "Volunteer"
     },
     {
@@ -1426,7 +1426,7 @@
      "sec": "close",
      "type": "text",
      "tag": "a",
-     "label": "713-774-0300",
+     "label": "Chabad Outreach of Houston › 713-774-0300",
      "value": "713-774-0300"
     },
     {
@@ -1441,7 +1441,7 @@
      "sec": "close",
      "type": "text",
      "tag": "a",
-     "label": "[[ ADD EVENT EMAIL ]]",
+     "label": "Chabad Outreach of Houston › [[ ADD EVENT EMAIL ]]",
      "value": "[[ ADD EVENT EMAIL ]]"
     },
     {
@@ -1515,7 +1515,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Sponsor",
+     "label": "Chanukah Fest 2026 › Sponsor",
      "value": "Sponsor"
     },
     {
@@ -1530,7 +1530,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Vendor",
+     "label": "Chanukah Fest 2026 › Vendor",
      "value": "Vendor"
     },
     {
@@ -1545,7 +1545,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Volunteer",
+     "label": "Chanukah Fest 2026 › Volunteer",
      "value": "Volunteer"
     },
     {
@@ -1560,7 +1560,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Location",
+     "label": "Chanukah Fest 2026 › Location",
      "value": "Location"
     },
     {
@@ -1583,7 +1583,7 @@
      "sec": "head",
      "type": "text",
      "tag": "h1",
-     "label": "Chanukah Fest Raffle",
+     "label": "FREE TO ENTER › Chanukah Fest Raffle",
      "value": "Chanukah Fest Raffle"
     },
     {
@@ -1591,7 +1591,7 @@
      "sec": "head",
      "type": "text",
      "tag": "p",
-     "label": "Enter once. We draw winners throughout the afternoon.",
+     "label": "FREE TO ENTER › Enter once. We draw winners throughout the afternoon.",
      "value": "Enter once. We draw winners throughout the afternoon."
     },
     {
@@ -1615,7 +1615,7 @@
      "sec": "prizes",
      "type": "text",
      "tag": "span",
-     "label": "[[ PRIZE 2 ]]",
+     "label": "[[ PRIZE 1 ]] › [[ PRIZE 2 ]]",
      "value": "[[ PRIZE 2 ]]"
     },
     {
@@ -1623,7 +1623,7 @@
      "sec": "prizes",
      "type": "text",
      "tag": "span",
-     "label": "[[ PRIZE 3 ]]",
+     "label": "[[ PRIZE 1 ]] › [[ PRIZE 3 ]]",
      "value": "[[ PRIZE 3 ]]"
     },
     {
@@ -1647,7 +1647,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "p",
-     "label": "Takes about thirty seconds. One form per household.",
+     "label": "Enter the raffle › Takes about thirty seconds. One form per household.",
      "value": "Takes about thirty seconds. One form per household."
     },
     {
@@ -1663,7 +1663,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "h2",
-     "label": "Thank you!",
+     "label": "YOU'RE IN › Thank you!",
      "value": "Thank you!"
     },
     {
@@ -1671,7 +1671,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "a",
-     "label": "Back to Chanukah Fest 2026",
+     "label": "YOU'RE IN › Back to Chanukah Fest 2026",
      "value": "Back to Chanukah Fest 2026"
     },
     {
@@ -1701,7 +1701,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "a",
-     "label": "Reserve a booth",
+     "label": "Sponsor the festival › Reserve a booth",
      "value": "Reserve a booth"
     },
     {
@@ -1716,7 +1716,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "a",
-     "label": "Getting there",
+     "label": "Sponsor the festival › Getting there",
      "value": "Getting there"
     },
     {
@@ -1763,7 +1763,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please enter your last name.",
+     "label": "Please enter your first name. › Please enter your last name.",
      "value": "Please enter your last name."
     },
     {
@@ -1779,7 +1779,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "— optional",
+     "label": "Company › — optional",
      "value": "— optional"
     },
     {
@@ -1803,7 +1803,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please enter a phone number with at least 10 digits.",
+     "label": "This is how we reach you if you win. › Please enter a phone number with at least 10 digits.",
      "value": "Please enter a phone number with at least 10 digits."
     },
     {
@@ -1819,7 +1819,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please enter a valid email address.",
+     "label": "Company › Please enter a valid email address.",
      "value": "Please enter a valid email address."
     },
     {
@@ -1843,7 +1843,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Only needed if a prize has to be mailed to you.",
+     "label": "— optional › Only needed if a prize has to be mailed to you.",
      "value": "Only needed if a prize has to be mailed to you."
     },
     {
@@ -1867,7 +1867,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "strong",
-     "label": "each person gets their own chance to win.",
+     "label": "Coming with family? › each person gets their own chance to win.",
      "value": "each person gets their own chance to win."
     },
     {
@@ -1875,7 +1875,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "button",
-     "label": "+ Add a family member",
+     "label": "Coming with family? › + Add a family member",
      "value": "+ Add a family member"
     },
     {
@@ -1883,7 +1883,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "button",
-     "label": "Enter the raffle",
+     "label": "Company › Enter the raffle",
      "value": "Enter the raffle"
     },
     {
@@ -1891,7 +1891,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "p",
-     "label": "Your confirmation appears right here — you won't leave th...",
+     "label": "Company › Your confirmation appears right here — you won't leave th...",
      "value": "Your confirmation appears right here — you won't leave this page."
     },
     {
@@ -1915,7 +1915,7 @@
      "sec": "rules",
      "type": "text",
      "tag": "li",
-     "label": "One form per household, but everyone you add is entered s...",
+     "label": "No purchase necessary. Entry is completely free and no do... › One form per household, but everyone you add is entered s...",
      "value": "One form per household, but everyone you add is entered separately and can win on their own. The same phone number or email address cannot be submitted twice."
     },
     {
@@ -1931,7 +1931,7 @@
      "sec": "rules",
      "type": "text",
      "tag": "span",
-     "label": "[[ MUST WINNERS BE PRESENT TO CLAIM? ]]",
+     "label": "No purchase necessary. Entry is completely free and no do... › [[ MUST WINNERS BE PRESENT TO CLAIM? ]]",
      "value": "[[ MUST WINNERS BE PRESENT TO CLAIM? ]]"
     },
     {
@@ -1947,7 +1947,7 @@
      "sec": "rules",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHEN? ]]",
+     "label": "No purchase necessary. Entry is completely free and no do... › [[ WHEN? ]]",
      "value": "[[ WHEN? ]]"
     },
     {
@@ -1955,7 +1955,7 @@
      "sec": "rules",
      "type": "text",
      "tag": "span",
-     "label": "[[ AGE RULE — e.g. entrants must be 18+, or a parent ente...",
+     "label": "No purchase necessary. Entry is completely free and no do... › [[ AGE RULE — e.g. entrants must be 18+, or a parent ente...",
      "value": "[[ AGE RULE — e.g. entrants must be 18+, or a parent enters on a child's behalf ]]"
     },
     {
@@ -1971,7 +1971,7 @@
      "sec": "rules",
      "type": "text",
      "tag": "span",
-     "label": "[[ WILL YOU ADD ENTRANTS TO YOUR MAILING LIST? SAY SO HER...",
+     "label": "No purchase necessary. Entry is completely free and no do... › [[ WILL YOU ADD ENTRANTS TO YOUR MAILING LIST? SAY SO HER...",
      "value": "[[ WILL YOU ADD ENTRANTS TO YOUR MAILING LIST? SAY SO HERE IF YES. ]]"
     },
     {
@@ -1987,7 +1987,7 @@
      "sec": "contact",
      "type": "text",
      "tag": "a",
-     "label": "713-774-0300",
+     "label": "Chanukah Fest 2026 › 713-774-0300",
      "value": "713-774-0300"
     },
     {
@@ -2034,7 +2034,7 @@
      "sec": "block6",
      "type": "text",
      "tag": "div",
-     "label": "Please enter a last name.",
+     "label": "Please enter a first name. › Please enter a last name.",
      "value": "Please enter a last name."
     },
     {
@@ -2050,7 +2050,7 @@
      "sec": "block6",
      "type": "text",
      "tag": "span",
-     "label": "— optional",
+     "label": "Remove › — optional",
      "value": "— optional"
     }
    ]
@@ -2145,7 +2145,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Sponsor",
+     "label": "Chanukah Fest 2026 › Sponsor",
      "value": "Sponsor"
     },
     {
@@ -2160,7 +2160,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Vendor",
+     "label": "Chanukah Fest 2026 › Vendor",
      "value": "Vendor"
     },
     {
@@ -2175,7 +2175,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Raffle",
+     "label": "Chanukah Fest 2026 › Raffle",
      "value": "Raffle"
     },
     {
@@ -2190,7 +2190,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Volunteer",
+     "label": "Chanukah Fest 2026 › Volunteer",
      "value": "Volunteer"
     },
     {
@@ -2205,7 +2205,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Location",
+     "label": "Chanukah Fest 2026 › Location",
      "value": "Location"
     },
     {
@@ -2228,7 +2228,7 @@
      "sec": "head",
      "type": "text",
      "tag": "h1",
-     "label": "Sponsor Chanukah Fest 2026",
+     "label": "31st Annual Grand Menorah Lighting at Houston City Hall › Sponsor Chanukah Fest 2026",
      "value": "Sponsor Chanukah Fest 2026"
     },
     {
@@ -2236,7 +2236,7 @@
      "sec": "head",
      "type": "text",
      "tag": "p",
-     "label": "Sunday, December 6, 2026. Downtown Houston.",
+     "label": "31st Annual Grand Menorah Lighting at Houston City Hall › Sunday, December 6, 2026. Downtown Houston.",
      "value": "Sunday, December 6, 2026. Downtown Houston."
     },
     {
@@ -2252,7 +2252,7 @@
      "sec": "case",
      "type": "text",
      "tag": "p",
-     "label": "Chanukah Fest is one of the largest Jewish community gath...",
+     "label": "Why businesses partner with us › Chanukah Fest is one of the largest Jewish community gath...",
      "value": "Chanukah Fest is one of the largest Jewish community gatherings in Greater Houston, and the only one that brings families, business leaders and elected officials to City Hall on the same afternoon."
     },
     {
@@ -2268,7 +2268,7 @@
      "sec": "case",
      "type": "text",
      "tag": "span",
-     "label": "years at City Hall",
+     "label": "31 › years at City Hall",
      "value": "years at City Hall"
     },
     {
@@ -2284,7 +2284,7 @@
      "sec": "case",
      "type": "text",
      "tag": "span",
-     "label": "people attend",
+     "label": "[[ N ]] › people attend",
      "value": "people attend"
     },
     {
@@ -2300,7 +2300,7 @@
      "sec": "case",
      "type": "text",
      "tag": "span",
-     "label": "[[ EMAIL LIST / SOCIAL REACH ]]",
+     "label": "[[ N ]] › [[ EMAIL LIST / SOCIAL REACH ]]",
      "value": "[[ EMAIL LIST / SOCIAL REACH ]]"
     },
     {
@@ -2316,7 +2316,7 @@
      "sec": "case",
      "type": "text",
      "tag": "span",
-     "label": "[[ MEDIA OUTLETS COVERING ]]",
+     "label": "[[ N ]] › [[ MEDIA OUTLETS COVERING ]]",
      "value": "[[ MEDIA OUTLETS COVERING ]]"
     },
     {
@@ -2324,7 +2324,7 @@
      "sec": "case",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHO ATTENDS — neighborhoods, family income bracket, ag...",
+     "label": "Why businesses partner with us › [[ WHO ATTENDS — neighborhoods, family income bracket, ag...",
      "value": "[[ WHO ATTENDS — neighborhoods, family income bracket, age mix, anything you can say about the audience a business is buying access to ]]"
     },
     {
@@ -2340,7 +2340,7 @@
      "sec": "form",
      "type": "text",
      "tag": "h2",
-     "label": "Thank you",
+     "label": "RECEIVED › Thank you",
      "value": "Thank you"
     },
     {
@@ -2348,7 +2348,7 @@
      "sec": "form",
      "type": "text",
      "tag": "p",
-     "label": "We have your sponsorship details. Someone will be in touc...",
+     "label": "RECEIVED › We have your sponsorship details. Someone will be in touc...",
      "value": "We have your sponsorship details. Someone will be in touch to confirm your level and send payment details."
     },
     {
@@ -2356,7 +2356,7 @@
      "sec": "form",
      "type": "text",
      "tag": "a",
-     "label": "Back to Chanukah Fest 2026",
+     "label": "RECEIVED › Back to Chanukah Fest 2026",
      "value": "Back to Chanukah Fest 2026"
     },
     {
@@ -2386,7 +2386,7 @@
      "sec": "form",
      "type": "text",
      "tag": "a",
-     "label": "Enter the raffle",
+     "label": "Reserve a booth › Enter the raffle",
      "value": "Enter the raffle"
     },
     {
@@ -2425,7 +2425,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ DATE ]]",
+     "label": "Partnership levels › [[ DATE ]]",
      "value": "[[ DATE ]]"
     },
     {
@@ -2441,7 +2441,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "$50,000",
+     "label": "Presenting Sponsor › $50,000",
      "value": "$50,000"
     },
     {
@@ -2449,7 +2449,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ HOW MANY AVAILABLE? ]]",
+     "label": "Presenting Sponsor › [[ HOW MANY AVAILABLE? ]]",
      "value": "[[ HOW MANY AVAILABLE? ]]"
     },
     {
@@ -2457,7 +2457,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ LIST 4–6 BENEFITS ]]",
+     "label": "Presenting Sponsor › [[ LIST 4–6 BENEFITS ]]",
      "value": "[[ LIST 4–6 BENEFITS ]]"
     },
     {
@@ -2473,7 +2473,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "$36,000",
+     "label": "VIP Reception Sponsor › $36,000",
      "value": "$36,000"
     },
     {
@@ -2481,7 +2481,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ HOW MANY AVAILABLE? ]]",
+     "label": "VIP Reception Sponsor › [[ HOW MANY AVAILABLE? ]]",
      "value": "[[ HOW MANY AVAILABLE? ]]"
     },
     {
@@ -2489,7 +2489,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ LIST 4–6 BENEFITS ]]",
+     "label": "VIP Reception Sponsor › [[ LIST 4–6 BENEFITS ]]",
      "value": "[[ LIST 4–6 BENEFITS ]]"
     },
     {
@@ -2505,7 +2505,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "$25,000",
+     "label": "Platinum Sponsor › $25,000",
      "value": "$25,000"
     },
     {
@@ -2513,7 +2513,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ LIST 3–5 BENEFITS ]]",
+     "label": "Platinum Sponsor › [[ LIST 3–5 BENEFITS ]]",
      "value": "[[ LIST 3–5 BENEFITS ]]"
     },
     {
@@ -2529,7 +2529,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "$18,000",
+     "label": "Gold Sponsor › $18,000",
      "value": "$18,000"
     },
     {
@@ -2537,7 +2537,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ LIST 3–5 BENEFITS ]]",
+     "label": "Gold Sponsor › [[ LIST 3–5 BENEFITS ]]",
      "value": "[[ LIST 3–5 BENEFITS ]]"
     },
     {
@@ -2553,7 +2553,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "$10,000",
+     "label": "Silver Sponsor › $10,000",
      "value": "$10,000"
     },
     {
@@ -2561,7 +2561,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ LIST 3–5 BENEFITS ]]",
+     "label": "Silver Sponsor › [[ LIST 3–5 BENEFITS ]]",
      "value": "[[ LIST 3–5 BENEFITS ]]"
     },
     {
@@ -2577,7 +2577,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "$5,000",
+     "label": "Bronze Sponsor › $5,000",
      "value": "$5,000"
     },
     {
@@ -2585,7 +2585,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ LIST 3–5 BENEFITS ]]",
+     "label": "Bronze Sponsor › [[ LIST 3–5 BENEFITS ]]",
      "value": "[[ LIST 3–5 BENEFITS ]]"
     },
     {
@@ -2601,7 +2601,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "You choose",
+     "label": "Another amount, or build me a custom package › You choose",
      "value": "You choose"
     },
     {
@@ -2609,7 +2609,7 @@
      "sec": "form",
      "type": "text",
      "tag": "li",
-     "label": "Tell us what you have in mind and we'll put a package tog...",
+     "label": "Another amount, or build me a custom package › Tell us what you have in mind and we'll put a package tog...",
      "value": "Tell us what you have in mind and we'll put a package together."
     },
     {
@@ -2625,7 +2625,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "&#160;",
+     "label": "Your sponsorship › &#160;",
      "value": "&#160;"
     },
     {
@@ -2633,7 +2633,7 @@
      "sec": "form",
      "type": "text",
      "tag": "label",
-     "label": "If you chose a custom amount, how much?",
+     "label": "Partnership levels › If you chose a custom amount, how much?",
      "value": "If you chose a custom amount, how much?"
     },
     {
@@ -2665,7 +2665,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Leave off \"LLC\" or \"Inc.\" if you don't want it printed.",
+     "label": "Your organization › Leave off \"LLC\" or \"Inc.\" if you don't want it printed.",
      "value": "Leave off \"LLC\" or \"Inc.\" if you don't want it printed."
     },
     {
@@ -2720,7 +2720,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Where your tax receipt should be sent.",
+     "label": "Your organization › Where your tax receipt should be sent.",
      "value": "Where your tax receipt should be sent."
     },
     {
@@ -2784,7 +2784,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Credit card",
+     "label": "Invoice me › Credit card",
      "value": "Credit card"
     },
     {
@@ -2800,7 +2800,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Call me first",
+     "label": "Invoice me › Call me first",
      "value": "Call me first"
     },
     {
@@ -2832,7 +2832,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "category exclusivity",
+     "label": "Anything else › category exclusivity",
      "value": "category exclusivity"
     },
     {
@@ -2848,7 +2848,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Billing requirements, how you'd like to be recognized, or...",
+     "label": "Notes or requests › Billing requirements, how you'd like to be recognized, or...",
      "value": "Billing requirements, how you'd like to be recognized, or questions for us."
     },
     {
@@ -2856,7 +2856,7 @@
      "sec": "form",
      "type": "text",
      "tag": "button",
-     "label": "Send sponsorship inquiry",
+     "label": "Partnership levels › Send sponsorship inquiry",
      "value": "Send sponsorship inquiry"
     },
     {
@@ -2880,7 +2880,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ EIN ]]",
+     "label": "Partnership levels › [[ EIN ]]",
      "value": "[[ EIN ]]"
     },
     {
@@ -2911,7 +2911,7 @@
      "sec": "other",
      "type": "text",
      "tag": "span",
-     "label": "Sell or exhibit in the Vendor &amp; Activity Village.",
+     "label": "Reserve a vendor booth › Sell or exhibit in the Vendor &amp; Activity Village.",
      "value": "Sell or exhibit in the Vendor &amp; Activity Village."
     },
     {
@@ -2934,7 +2934,7 @@
      "sec": "other",
      "type": "text",
      "tag": "span",
-     "label": "Setup, registration, food, info booths, Mivtzoyim or tear...",
+     "label": "Volunteer › Setup, registration, food, info booths, Mivtzoyim or tear...",
      "value": "Setup, registration, food, info booths, Mivtzoyim or teardown."
     },
     {
@@ -2957,7 +2957,7 @@
      "sec": "other",
      "type": "text",
      "tag": "span",
-     "label": "Address, parking, drop-off and accessibility.",
+     "label": "Getting there › Address, parking, drop-off and accessibility.",
      "value": "Address, parking, drop-off and accessibility."
     },
     {
@@ -2973,7 +2973,7 @@
      "sec": "contact",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHO HANDLES SPONSORSHIPS — name and direct line ]]",
+     "label": "Prefer to talk it through? › [[ WHO HANDLES SPONSORSHIPS — name and direct line ]]",
      "value": "[[ WHO HANDLES SPONSORSHIPS — name and direct line ]]"
     },
     {
@@ -3012,7 +3012,7 @@
      "sec": "contact",
      "type": "text",
      "tag": "a",
-     "label": "mendy@chabadoutreach.org",
+     "label": "713-774-0300 › mendy@chabadoutreach.org",
      "value": "mendy@chabadoutreach.org"
     },
     {
@@ -3138,7 +3138,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Sponsor",
+     "label": "Chanukah Fest 2026 › Sponsor",
      "value": "Sponsor"
     },
     {
@@ -3153,7 +3153,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Vendor",
+     "label": "Chanukah Fest 2026 › Vendor",
      "value": "Vendor"
     },
     {
@@ -3168,7 +3168,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Raffle",
+     "label": "Chanukah Fest 2026 › Raffle",
      "value": "Raffle"
     },
     {
@@ -3183,7 +3183,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Volunteer",
+     "label": "Chanukah Fest 2026 › Volunteer",
      "value": "Volunteer"
     },
     {
@@ -3198,7 +3198,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Location",
+     "label": "Chanukah Fest 2026 › Location",
      "value": "Location"
     },
     {
@@ -3221,7 +3221,7 @@
      "sec": "head",
      "type": "text",
      "tag": "h1",
-     "label": "2026 Vendor Application",
+     "label": "31st Annual Chanukah Fest &amp; Grand Menorah Lighting › 2026 Vendor Application",
      "value": "2026 Vendor Application"
     },
     {
@@ -3229,7 +3229,7 @@
      "sec": "head",
      "type": "text",
      "tag": "p",
-     "label": "Reserve a booth at Houston City Hall on Sunday, December 6.",
+     "label": "31st Annual Chanukah Fest &amp; Grand Menorah Lighting › Reserve a booth at Houston City Hall on Sunday, December 6.",
      "value": "Reserve a booth at Houston City Hall on Sunday, December 6."
     },
     {
@@ -3252,7 +3252,7 @@
      "sec": "head",
      "type": "text",
      "tag": "a",
-     "label": "City of Houston health permit info (PDF)",
+     "label": "Vendor rules &amp; guidelines (PDF) › City of Houston health permit info (PDF)",
      "value": "City of Houston health permit info (PDF)"
     },
     {
@@ -3275,7 +3275,7 @@
      "sec": "facts",
      "type": "text",
      "tag": "span",
-     "label": "Sun, Dec 6, 2026",
+     "label": "Festival date › Sun, Dec 6, 2026",
      "value": "Sun, Dec 6, 2026"
     },
     {
@@ -3291,7 +3291,7 @@
      "sec": "facts",
      "type": "text",
      "tag": "span",
-     "label": "3:00 – 7:00 PM",
+     "label": "Booth hours › 3:00 – 7:00 PM",
      "value": "3:00 – 7:00 PM"
     },
     {
@@ -3307,7 +3307,7 @@
      "sec": "facts",
      "type": "text",
      "tag": "span",
-     "label": "[[ DEADLINE ]]",
+     "label": "Apply by › [[ DEADLINE ]]",
      "value": "[[ DEADLINE ]]"
     },
     {
@@ -3323,7 +3323,7 @@
      "sec": "facts",
      "type": "text",
      "tag": "span",
-     "label": "Nov 15, 2026",
+     "label": "Insurance due › Nov 15, 2026",
      "value": "Nov 15, 2026"
     },
     {
@@ -3339,7 +3339,7 @@
      "sec": "band",
      "type": "text",
      "tag": "p",
-     "label": "Pick as many as you need. The total updates as you select.",
+     "label": "Choose your booth › Pick as many as you need. The total updates as you select.",
      "value": "Pick as many as you need. The total updates as you select."
     },
     {
@@ -3363,7 +3363,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "$1,500",
+     "label": "Food vendor › $1,500",
      "value": "$1,500"
     },
     {
@@ -3371,7 +3371,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "Kosher certified concessions. Requires health and fire pe...",
+     "label": "Food vendor › Kosher certified concessions. Requires health and fire pe...",
      "value": "Kosher certified concessions. Requires health and fire permits."
     },
     {
@@ -3379,7 +3379,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHAT'S INCLUDED ]]",
+     "label": "Food vendor › [[ WHAT'S INCLUDED ]]",
      "value": "[[ WHAT'S INCLUDED ]]"
     },
     {
@@ -3403,7 +3403,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "$1,000",
+     "label": "Artisan, merchandise or Judaica › $1,000",
      "value": "$1,000"
     },
     {
@@ -3411,7 +3411,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "Retail sales of goods, gifts or Judaica.",
+     "label": "Artisan, merchandise or Judaica › Retail sales of goods, gifts or Judaica.",
      "value": "Retail sales of goods, gifts or Judaica."
     },
     {
@@ -3419,7 +3419,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHAT'S INCLUDED ]]",
+     "label": "Artisan, merchandise or Judaica › [[ WHAT'S INCLUDED ]]",
      "value": "[[ WHAT'S INCLUDED ]]"
     },
     {
@@ -3443,7 +3443,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "$750",
+     "label": "Non-profit, school or synagogue › $750",
      "value": "$750"
     },
     {
@@ -3451,7 +3451,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "Outreach and information booth. No retail sales.",
+     "label": "Non-profit, school or synagogue › Outreach and information booth. No retail sales.",
      "value": "Outreach and information booth. No retail sales."
     },
     {
@@ -3459,7 +3459,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHAT'S INCLUDED ]]",
+     "label": "Non-profit, school or synagogue › [[ WHAT'S INCLUDED ]]",
      "value": "[[ WHAT'S INCLUDED ]]"
     },
     {
@@ -3483,7 +3483,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "$550",
+     "label": "Family activity or craft station › $550",
      "value": "$550"
     },
     {
@@ -3491,7 +3491,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "Hands-on activity for children in the Activity Village.",
+     "label": "Family activity or craft station › Hands-on activity for children in the Activity Village.",
      "value": "Hands-on activity for children in the Activity Village."
     },
     {
@@ -3499,7 +3499,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHAT'S INCLUDED ]]",
+     "label": "Family activity or craft station › [[ WHAT'S INCLUDED ]]",
      "value": "[[ WHAT'S INCLUDED ]]"
     },
     {
@@ -3515,7 +3515,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "&#160;",
+     "label": "Booth total › &#160;",
      "value": "&#160;"
     },
     {
@@ -3531,7 +3531,7 @@
      "sec": "band",
      "type": "text",
      "tag": "span",
-     "label": "[[ CONFIRM PRICES — these are from the current live page ]]",
+     "label": "Choose your booth › [[ CONFIRM PRICES — these are from the current live page ]]",
      "value": "[[ CONFIRM PRICES — these are from the current live page ]]"
     },
     {
@@ -3555,7 +3555,7 @@
      "sec": "form",
      "type": "text",
      "tag": "h2",
-     "label": "Application received",
+     "label": "RECEIVED › Application received",
      "value": "Application received"
     },
     {
@@ -3563,7 +3563,7 @@
      "sec": "form",
      "type": "text",
      "tag": "p",
-     "label": "The committee reviews your products and menu against the ...",
+     "label": "RECEIVED › The committee reviews your products and menu against the ...",
      "value": "The committee reviews your products and menu against the festival standards, then confirms your booth and sends payment details."
     },
     {
@@ -3571,7 +3571,7 @@
      "sec": "form",
      "type": "text",
      "tag": "a",
-     "label": "Back to Chanukah Fest 2026",
+     "label": "RECEIVED › Back to Chanukah Fest 2026",
      "value": "Back to Chanukah Fest 2026"
     },
     {
@@ -3601,7 +3601,7 @@
      "sec": "form",
      "type": "text",
      "tag": "a",
-     "label": "Enter the raffle",
+     "label": "Sponsor the festival › Enter the raffle",
      "value": "Enter the raffle"
     },
     {
@@ -3632,7 +3632,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Exactly as it should appear in the festival program and o...",
+     "label": "Business and contact › Exactly as it should appear in the festival program and o...",
      "value": "Exactly as it should appear in the festival program and on signage."
     },
     {
@@ -3701,7 +3701,7 @@
      "sec": "form",
      "type": "text",
      "tag": "label",
-     "label": "Texas sales tax ID or EIN",
+     "label": "Website or social media page › Texas sales tax ID or EIN",
      "value": "Texas sales tax ID or EIN"
     },
     {
@@ -3757,7 +3757,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "List everything you intend to sell or display. The commit...",
+     "label": "What you'll be selling or doing › List everything you intend to sell or display. The commit...",
      "value": "List everything you intend to sell or display. The committee reviews this before approving."
     },
     {
@@ -3789,7 +3789,7 @@
      "sec": "form",
      "type": "text",
      "tag": "option",
-     "label": "This is my first year",
+     "label": "Select one › This is my first year",
      "value": "This is my first year"
     },
     {
@@ -3797,7 +3797,7 @@
      "sec": "form",
      "type": "text",
      "tag": "option",
-     "label": "Yes, I've vended before",
+     "label": "Select one › Yes, I've vended before",
      "value": "Yes, I've vended before"
     },
     {
@@ -3821,7 +3821,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ INCLUDED, OR $__ EXTRA? ]]",
+     "label": "10' x 10' canopy tent › [[ INCLUDED, OR $__ EXTRA? ]]",
      "value": "[[ INCLUDED, OR $__ EXTRA? ]]"
     },
     {
@@ -3837,7 +3837,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "[[ INCLUDED, OR $__ EXTRA? ]]",
+     "label": "Standard electrical outlet (110V / 20A) › [[ INCLUDED, OR $__ EXTRA? ]]",
      "value": "[[ INCLUDED, OR $__ EXTRA? ]]"
     },
     {
@@ -3853,7 +3853,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "I'm bringing my own generator",
+     "label": "10' x 10' canopy tent › I'm bringing my own generator",
      "value": "I'm bringing my own generator"
     },
     {
@@ -3869,7 +3869,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "List your equipment and total amps. Food vendors: fryers,...",
+     "label": "Total power needed, if more than one standard outlet › List your equipment and total amps. Food vendors: fryers,...",
      "value": "List your equipment and total amps. Food vendors: fryers, warmers, refrigeration."
     },
     {
@@ -3893,7 +3893,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "If I am a food vendor, I will obtain and display all requ...",
+     "label": "All food and beverage items I sell or distribute will com... › If I am a food vendor, I will obtain and display all requ...",
      "value": "If I am a food vendor, I will obtain and display all required City of Houston health and fire permits."
     },
     {
@@ -3901,7 +3901,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "I will submit a Certificate of Insurance naming Chabad Ou...",
+     "label": "All food and beverage items I sell or distribute will com... › I will submit a Certificate of Insurance naming Chabad Ou...",
      "value": "I will submit a Certificate of Insurance naming Chabad Outreach of Houston and the City of Houston as additional insured by November 15, 2026."
     },
     {
@@ -3925,7 +3925,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Pay by credit card once approved",
+     "label": "Email me an invoice › Pay by credit card once approved",
      "value": "Pay by credit card once approved"
     },
     {
@@ -3941,7 +3941,7 @@
      "sec": "form",
      "type": "text",
      "tag": "span",
-     "label": "Mail a check",
+     "label": "Email me an invoice › Mail a check",
      "value": "Mail a check"
     },
     {
@@ -3949,7 +3949,7 @@
      "sec": "form",
      "type": "text",
      "tag": "button",
-     "label": "Submit vendor application",
+     "label": "Business and contact › Submit vendor application",
      "value": "Submit vendor application"
     },
     {
@@ -3957,7 +3957,7 @@
      "sec": "form",
      "type": "text",
      "tag": "p",
-     "label": "You'll get a confirmation email right away. Nothing is ch...",
+     "label": "Business and contact › You'll get a confirmation email right away. Nothing is ch...",
      "value": "You'll get a confirmation email right away. Nothing is charged at this stage."
     },
     {
@@ -3989,7 +3989,7 @@
      "sec": "next",
      "type": "text",
      "tag": "span",
-     "label": "[[ HOW LONG? ]]",
+     "label": "We review it › [[ HOW LONG? ]]",
      "value": "[[ HOW LONG? ]]"
     },
     {
@@ -4005,7 +4005,7 @@
      "sec": "next",
      "type": "text",
      "tag": "p",
-     "label": "We confirm your booth and send payment details by your ch...",
+     "label": "You're approved and invoiced › We confirm your booth and send payment details by your ch...",
      "value": "We confirm your booth and send payment details by your chosen method."
     },
     {
@@ -4029,7 +4029,7 @@
      "sec": "next",
      "type": "text",
      "tag": "span",
-     "label": "[[ WHEN? ]]",
+     "label": "Paperwork and load-in › [[ WHEN? ]]",
      "value": "[[ WHEN? ]]"
     },
     {
@@ -4060,7 +4060,7 @@
      "sec": "other",
      "type": "text",
      "tag": "span",
-     "label": "Put your business in front of thousands of Houston families.",
+     "label": "Sponsor the festival › Put your business in front of thousands of Houston families.",
      "value": "Put your business in front of thousands of Houston families."
     },
     {
@@ -4083,7 +4083,7 @@
      "sec": "other",
      "type": "text",
      "tag": "span",
-     "label": "Setup, registration, food, info booths, Mivtzoyim or tear...",
+     "label": "Volunteer › Setup, registration, food, info booths, Mivtzoyim or tear...",
      "value": "Setup, registration, food, info booths, Mivtzoyim or teardown."
     },
     {
@@ -4106,7 +4106,7 @@
      "sec": "other",
      "type": "text",
      "tag": "span",
-     "label": "Address, parking, drop-off and accessibility.",
+     "label": "Getting there › Address, parking, drop-off and accessibility.",
      "value": "Address, parking, drop-off and accessibility."
     },
     {
@@ -4153,7 +4153,7 @@
      "sec": "contact",
      "type": "text",
      "tag": "a",
-     "label": "mendy@chabadoutreach.org",
+     "label": "713-774-0300 › mendy@chabadoutreach.org",
      "value": "mendy@chabadoutreach.org"
     },
     {
@@ -4219,7 +4219,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Sponsor",
+     "label": "Chanukah Fest 2026 › Sponsor",
      "value": "Sponsor"
     },
     {
@@ -4234,7 +4234,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Vendor",
+     "label": "Chanukah Fest 2026 › Vendor",
      "value": "Vendor"
     },
     {
@@ -4249,7 +4249,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Raffle",
+     "label": "Chanukah Fest 2026 › Raffle",
      "value": "Raffle"
     },
     {
@@ -4264,7 +4264,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Volunteer",
+     "label": "Chanukah Fest 2026 › Volunteer",
      "value": "Volunteer"
     },
     {
@@ -4279,7 +4279,7 @@
      "sec": "subnav",
      "type": "text",
      "tag": "a",
-     "label": "Location",
+     "label": "Chanukah Fest 2026 › Location",
      "value": "Location"
     },
     {
@@ -4302,7 +4302,7 @@
      "sec": "head",
      "type": "text",
      "tag": "h1",
-     "label": "Join the volunteer team",
+     "label": "31st Annual Grand Menorah Lighting &middot; Sunday, Decem... › Join the volunteer team",
      "value": "Join the volunteer team"
     },
     {
@@ -4310,7 +4310,7 @@
      "sec": "head",
      "type": "text",
      "tag": "p",
-     "label": "Setup, greeting, children's activities, food, the VIP ten...",
+     "label": "31st Annual Grand Menorah Lighting &middot; Sunday, Decem... › Setup, greeting, children's activities, food, the VIP ten...",
      "value": "Setup, greeting, children's activities, food, the VIP tent and teardown. Pick the jobs and hours that suit you."
     },
     {
@@ -4326,7 +4326,7 @@
      "sec": "notes",
      "type": "text",
      "tag": "li",
-     "label": "Every volunteer gets an official Chanukah Fest staff T-sh...",
+     "label": "Volunteers must be 16 or older. Under 18 needs a parent's... › Every volunteer gets an official Chanukah Fest staff T-sh...",
      "value": "Every volunteer gets an official Chanukah Fest staff T-shirt and a meal voucher."
     },
     {
@@ -4334,7 +4334,7 @@
      "sec": "notes",
      "type": "text",
      "tag": "li",
-     "label": "Choose every team and shift you could cover &mdash; the m...",
+     "label": "Volunteers must be 16 or older. Under 18 needs a parent's... › Choose every team and shift you could cover &mdash; the m...",
      "value": "Choose every team and shift you could cover &mdash; the more you pick, the easier you are to place."
     },
     {
@@ -4350,7 +4350,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "h2",
-     "label": "Thank you!",
+     "label": "SIGNED UP › Thank you!",
      "value": "Thank you!"
     },
     {
@@ -4358,7 +4358,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "a",
-     "label": "Back to Chanukah Fest 2026",
+     "label": "SIGNED UP › Back to Chanukah Fest 2026",
      "value": "Back to Chanukah Fest 2026"
     },
     {
@@ -4388,7 +4388,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "a",
-     "label": "Getting there",
+     "label": "Enter the raffle › Getting there",
      "value": "Getting there"
     },
     {
@@ -4443,7 +4443,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please enter your last name.",
+     "label": "Please enter your first name. › Please enter your last name.",
      "value": "Please enter your last name."
     },
     {
@@ -4475,7 +4475,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please enter a phone number with at least 10 digits.",
+     "label": "Please enter a valid email address. › Please enter a phone number with at least 10 digits.",
      "value": "Please enter a phone number with at least 10 digits."
     },
     {
@@ -4499,7 +4499,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Youth S",
+     "label": "Select a size › Youth S",
      "value": "Youth S"
     },
     {
@@ -4507,7 +4507,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Youth M",
+     "label": "Select a size › Youth M",
      "value": "Youth M"
     },
     {
@@ -4515,7 +4515,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Youth L",
+     "label": "Select a size › Youth L",
      "value": "Youth L"
     },
     {
@@ -4523,7 +4523,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Adult S",
+     "label": "Select a size › Adult S",
      "value": "Adult S"
     },
     {
@@ -4531,7 +4531,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Adult M",
+     "label": "Select a size › Adult M",
      "value": "Adult M"
     },
     {
@@ -4539,7 +4539,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Adult L",
+     "label": "Select a size › Adult L",
      "value": "Adult L"
     },
     {
@@ -4547,7 +4547,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Adult XL",
+     "label": "Select a size › Adult XL",
      "value": "Adult XL"
     },
     {
@@ -4555,7 +4555,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Adult 2XL",
+     "label": "Select a size › Adult 2XL",
      "value": "Adult 2XL"
     },
     {
@@ -4563,7 +4563,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "Adult 3XL",
+     "label": "Select a size › Adult 3XL",
      "value": "Adult 3XL"
     },
     {
@@ -4571,7 +4571,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please choose a size.",
+     "label": "Select a size › Please choose a size.",
      "value": "Please choose a size."
     },
     {
@@ -4595,7 +4595,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "16 or 17 (parent's consent needed)",
+     "label": "Select one › 16 or 17 (parent's consent needed)",
      "value": "16 or 17 (parent's consent needed)"
     },
     {
@@ -4603,7 +4603,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "18 to 24",
+     "label": "Select one › 18 to 24",
      "value": "18 to 24"
     },
     {
@@ -4611,7 +4611,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "25 to 34",
+     "label": "Select one › 25 to 34",
      "value": "25 to 34"
     },
     {
@@ -4619,7 +4619,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "35 to 49",
+     "label": "Select one › 35 to 49",
      "value": "35 to 49"
     },
     {
@@ -4627,7 +4627,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "50 to 64",
+     "label": "Select one › 50 to 64",
      "value": "50 to 64"
     },
     {
@@ -4635,7 +4635,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "option",
-     "label": "65 or older",
+     "label": "Select one › 65 or older",
      "value": "65 or older"
     },
     {
@@ -4643,7 +4643,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please choose an age group.",
+     "label": "Select one › Please choose an age group.",
      "value": "Please choose an age group."
     },
     {
@@ -4659,7 +4659,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "p",
-     "label": "Pick as many as you like.",
+     "label": "Which teams could you help with › Pick as many as you like.",
      "value": "Pick as many as you like."
     },
     {
@@ -4675,7 +4675,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "Signage, tables, tents and staging, before the gates open.",
+     "label": "Setup &amp; logistics › Signage, tables, tents and staging, before the gates open.",
      "value": "Signage, tables, tents and staging, before the gates open."
     },
     {
@@ -4691,7 +4691,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "Welcome people, hand out programs and maps, keep the crow...",
+     "label": "Greeting &amp; guest info › Welcome people, hand out programs and maps, keep the crow...",
      "value": "Welcome people, hand out programs and maps, keep the crowd moving."
     },
     {
@@ -4707,7 +4707,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "Crafts, carnival games, bounce houses and the activity bo...",
+     "label": "Children's zone › Crafts, carnival games, bounce houses and the activity bo...",
      "value": "Crafts, carnival games, bounce houses and the activity booths."
     },
     {
@@ -4723,7 +4723,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "Check in guests, dignitaries and sponsors at the VIP tent.",
+     "label": "VIP reception host › Check in guests, dignitaries and sponsors at the VIP tent.",
      "value": "Check in guests, dignitaries and sponsors at the VIP tent."
     },
     {
@@ -4739,7 +4739,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "Concessions, sufganiot and the water stations.",
+     "label": "Food &amp; hospitality › Concessions, sufganiot and the water stations.",
      "value": "Concessions, sufganiot and the water stations."
     },
     {
@@ -4755,7 +4755,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "Load-out, packing supplies and clearing the site afterwards.",
+     "label": "Teardown &amp; clean up › Load-out, packing supplies and clearing the site afterwards.",
      "value": "Load-out, packing supplies and clearing the site afterwards."
     },
     {
@@ -4763,7 +4763,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please choose at least one team.",
+     "label": "Which teams could you help with › Please choose at least one team.",
      "value": "Please choose at least one team."
     },
     {
@@ -4779,7 +4779,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "p",
-     "label": "Sunday, December 6. Pick every shift you could cover.",
+     "label": "When could you be there › Sunday, December 6. Pick every shift you could cover.",
      "value": "Sunday, December 6. Pick every shift you could cover."
     },
     {
@@ -4795,7 +4795,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "9:00 AM &ndash; 1:00 PM",
+     "label": "Morning setup › 9:00 AM &ndash; 1:00 PM",
      "value": "9:00 AM &ndash; 1:00 PM"
     },
     {
@@ -4811,7 +4811,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "1:00 PM &ndash; 5:00 PM",
+     "label": "Event shift A › 1:00 PM &ndash; 5:00 PM",
      "value": "1:00 PM &ndash; 5:00 PM"
     },
     {
@@ -4827,7 +4827,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "span",
-     "label": "4:30 PM &ndash; 8:30 PM",
+     "label": "Event shift B &amp; lighting › 4:30 PM &ndash; 8:30 PM",
      "value": "4:30 PM &ndash; 8:30 PM"
     },
     {
@@ -4835,7 +4835,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please choose at least one shift.",
+     "label": "When could you be there › Please choose at least one shift.",
      "value": "Please choose at least one shift."
     },
     {
@@ -4875,7 +4875,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "Please enter a phone number with at least 10 digits.",
+     "label": "Please enter a name. › Please enter a phone number with at least 10 digits.",
      "value": "Please enter a phone number with at least 10 digits."
     },
     {
@@ -4899,7 +4899,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "div",
-     "label": "First aid certified, security background, crowd managemen...",
+     "label": "&mdash; optional › First aid certified, security background, crowd managemen...",
      "value": "First aid certified, security background, crowd management, anything useful."
     },
     {
@@ -4907,7 +4907,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "button",
-     "label": "Sign up to volunteer",
+     "label": "Company › Sign up to volunteer",
      "value": "Sign up to volunteer"
     },
     {
@@ -4915,7 +4915,7 @@
      "sec": "form-band",
      "type": "text",
      "tag": "p",
-     "label": "Your confirmation appears right here &mdash; you won't le...",
+     "label": "Company › Your confirmation appears right here &mdash; you won't le...",
      "value": "Your confirmation appears right here &mdash; you won't leave this page."
     },
     {
@@ -4954,7 +4954,7 @@
      "sec": "contact",
      "type": "text",
      "tag": "a",
-     "label": "mendy@chabadoutreach.org",
+     "label": "713-774-0300 › mendy@chabadoutreach.org",
      "value": "mendy@chabadoutreach.org"
     },
     {

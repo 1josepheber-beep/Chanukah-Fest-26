@@ -9,6 +9,25 @@
 </head>
 <body>
 <style type="text/css">
+:root {
+  --gold:      #F0B429;   /* Main gold */
+  --gold-dark: #DDA31C;   /* Gold, pressed */
+  --gold-deep: #8A6A1E;   /* Gold, text on pale */
+  --navy:      #0A1E38;   /* Dark sections */
+  --navy-2:    #06142A;   /* Darkest bands */
+  --ink:       #16202E;   /* Headings */
+  --page:      #F4F6F9;   /* Page background */
+  --link:      #1B6FA8;   /* Links */
+  --body-txt:  #46566A;   /* Body text */
+  --muted:     #6B7C90;   /* Quiet text */
+  --soft:      #C9DAEC;   /* Text on dark */
+  --line:      #DDE5EE;   /* Borders */
+  --line-2:    #E3E9F0;   /* Borders, alternate */
+  --mint:      #3EE8B5;   /* Confirmations */
+  --bad:       #C2410C;
+  --bad-bg:    #FEF6F3;
+}
+
 /* Two imports, not one. Combining both families into a single Google
    Fonts URL requires an ampersand to join them, and the Chabad system
    parses this page as XML, where a bare ampersand starts an entity
@@ -29,8 +48,8 @@
 
 .cf26 {
   margin: 0;
-  background-color: #F4F6F9 !important;
-  color: #16202E !important;
+  background-color: var(--page) !important;
+  color: var(--ink) !important;
   font-family: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   font-size: 17px;
   line-height: 1.55;
@@ -44,12 +63,12 @@
 
 .cf26 a {
   text-decoration: none !important;
-  color: #1B6FA8 !important;
+  color: var(--link) !important;
 }
 
 .cf26 a:focus-visible,
 .cf26 .cf26-navlink:focus-visible {
-  outline: 3px solid #F0B429;
+  outline: 3px solid var(--gold);
   outline-offset: 3px;
 }
 
@@ -68,7 +87,7 @@
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
   margin-bottom: 10px;
 }
 
@@ -77,7 +96,7 @@
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
 }
 
 .cf26 .cf26-lede {
@@ -111,10 +130,10 @@
 
 /* ============================ HERO ============================ */
 .cf26 .cf26-hero {
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   background-image:
     radial-gradient(900px 420px at 50% 112%, rgba(240,180,41,0.30) 0%, rgba(240,180,41,0) 66%),
-    linear-gradient(180deg, #06142A 0%, #0A1E38 58%, #123152 100%) !important;
+    linear-gradient(180deg, var(--navy-2) 0%, var(--navy) 58%, #123152 100%) !important;
   color: #FFFFFF !important;
   padding: 56px 0 60px;
   text-align: center;
@@ -126,7 +145,7 @@
   font-size: 13.5px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: #F0B429 !important;
+  color: var(--gold) !important;
   margin-bottom: 30px;
 }
 
@@ -176,10 +195,10 @@
   inset: 0;
   background-repeat: no-repeat;
   background-image:
-    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, #F0B429 48%, #D97706 100%),
-    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, #F0B429 48%, #D97706 100%),
-    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, #F0B429 48%, #D97706 100%),
-    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, #F0B429 48%, #D97706 100%),
+    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, var(--gold) 48%, #D97706 100%),
+    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, var(--gold) 48%, #D97706 100%),
+    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, var(--gold) 48%, #D97706 100%),
+    radial-gradient(ellipse at 50% 72%, #FFF6DC 0%, var(--gold) 48%, #D97706 100%),
     radial-gradient(circle, rgba(240,180,41,.40) 0%, rgba(240,180,41,0) 70%),
     radial-gradient(circle, rgba(240,180,41,.34) 0%, rgba(240,180,41,0) 70%),
     radial-gradient(circle, rgba(240,180,41,.34) 0%, rgba(240,180,41,0) 70%),
@@ -215,7 +234,7 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 20px;
   line-height: 1.55;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   max-width: 44ch;
   margin: 0 auto 32px;
 }
@@ -262,9 +281,9 @@
 }
 
 .cf26 .cf26-btn-gold {
-  background-color: #F0B429 !important;
-  color: #16202E !important;
-  border-color: #F0B429;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
+  border-color: var(--gold);
 }
 
 .cf26 .cf26-btn-ghost {
@@ -274,14 +293,14 @@
 }
 
 .cf26 .cf26-btn-solid {
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   color: #FFFFFF !important;
-  border-color: #0A1E38;
+  border-color: var(--navy);
 }
 
 .cf26 .cf26-btn-outline {
   background-color: #FFFFFF !important;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
   border-color: #C4D2E0;
 }
 
@@ -291,7 +310,7 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  background-color: #06142A !important;
+  background-color: var(--navy-2) !important;
   border-bottom: 1px solid rgba(255,255,255,0.10);
 }
 
@@ -325,7 +344,7 @@
 
 .cf26 .cf26-navlink:hover {
   color: #FFFFFF !important;
-  border-bottom-color: #F0B429;
+  border-bottom-color: var(--gold);
 }
 
 /* the one action item in the bar */
@@ -340,14 +359,14 @@
   border-radius: 999px;
   background-color: rgba(240,180,41,0.14) !important;
   border: 1px solid rgba(240,180,41,0.45);
-  color: #F0B429 !important;
+  color: var(--gold) !important;
   font-weight: 700;
 }
 
 .cf26 .cf26-navlink-go:hover span {
-  background-color: #F0B429 !important;
-  border-color: #F0B429;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  border-color: var(--gold);
+  color: var(--ink) !important;
 }
 
 .cf26 .cf26-anchor {
@@ -398,14 +417,14 @@
   display: block;
   font-size: 15px;
   font-weight: 700;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
 }
 
 .cf26 .cf26-apps-due {
   display: block;
   font-size: 12.5px;
   font-weight: 600;
-  color: #8A6A1E !important;
+  color: var(--gold-deep) !important;
   margin-top: 2px;
 }
 
@@ -415,7 +434,7 @@
 /* ============================ ABOUT ============================ */
 .cf26 .cf26-about {
   background-color: #FFFFFF !important;
-  border-bottom: 1px solid #E3E9F0;
+  border-bottom: 1px solid var(--line-2);
 }
 
 .cf26 .cf26-about-grid {
@@ -426,8 +445,8 @@
 }
 
 .cf26 .cf26-sidecard {
-  background-color: #F4F6F9 !important;
-  border: 1px solid #DDE5EE;
+  background-color: var(--page) !important;
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 26px;
 }
@@ -447,7 +466,7 @@
   display: block;
   font-size: 12.5px;
   font-weight: 600;
-  color: #6B7C90 !important;
+  color: var(--muted) !important;
   margin-bottom: 3px;
 }
 
@@ -455,11 +474,11 @@
   display: block;
   font-size: 16.5px;
   font-weight: 700;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
 }
 
 /* ============================ SCHEDULE ============================ */
-.cf26 .cf26-sched { background-color: #F4F6F9 !important; }
+.cf26 .cf26-sched { background-color: var(--page) !important; }
 
 .cf26 .cf26-timeline {
   margin-top: 36px;
@@ -484,14 +503,14 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: #F4F6F9 !important;
+  background-color: var(--page) !important;
   border: 2px solid #A9BACB;
 }
 
 .cf26 .cf26-time {
   font-size: 15px;
   font-weight: 700;
-  color: #1B6FA8 !important;
+  color: var(--link) !important;
   padding-top: 2px;
 }
 
@@ -499,14 +518,14 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 17px;
   line-height: 1.65;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
   margin-top: 6px;
   max-width: 56ch;
 }
 
 /* the peak: 6 PM lighting */
 .cf26 .cf26-slot-peak {
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   background-image: radial-gradient(620px 280px at 22% 118%, rgba(240,180,41,0.26) 0%, rgba(240,180,41,0) 70%) !important;
   border-radius: 12px;
   margin: 12px 0 12px -2px;
@@ -518,12 +537,12 @@
   top: 38px;
   width: 14px;
   height: 14px;
-  background-color: #F0B429 !important;
-  border-color: #F0B429;
+  background-color: var(--gold) !important;
+  border-color: var(--gold);
   box-shadow: 0 0 0 5px rgba(240,180,41,0.22);
 }
 
-.cf26 .cf26-slot-peak .cf26-time { color: #F0B429 !important; }
+.cf26 .cf26-slot-peak .cf26-time { color: var(--gold) !important; }
 .cf26 .cf26-slot-peak h3 { color: #FFFFFF !important; font-size: 23px; }
 .cf26 .cf26-slot-peak p { color: #C4D6E8 !important; }
 
@@ -538,7 +557,7 @@
 }
 
 .cf26 .cf26-act {
-  border: 1px solid #DDE5EE;
+  border: 1px solid var(--line);
   border-radius: 10px;
   overflow: hidden;
   background-color: #FFFFFF !important;
@@ -555,7 +574,7 @@
   font-size: 13px;
   font-weight: 600;
   color: #8496A9 !important;
-  border-bottom: 1px solid #DDE5EE;
+  border-bottom: 1px solid var(--line);
 }
 
 .cf26 .cf26-act-body { padding: 20px 22px 24px; }
@@ -563,7 +582,7 @@
 .cf26 .cf26-act-role {
   font-size: 12.5px;
   font-weight: 600;
-  color: #1B6FA8 !important;
+  color: var(--link) !important;
   margin-bottom: 5px;
 }
 
@@ -571,12 +590,12 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 16.5px;
   line-height: 1.65;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
   margin-top: 8px;
 }
 
 /* ============================ FOOD AND BOOTHS ============================ */
-.cf26 .cf26-food { background-color: #F4F6F9 !important; }
+.cf26 .cf26-food { background-color: var(--page) !important; }
 
 .cf26 .cf26-two {
   display: grid;
@@ -587,7 +606,7 @@
 
 .cf26 .cf26-panel {
   background-color: #FFFFFF !important;
-  border: 1px solid #DDE5EE;
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 30px;
 }
@@ -598,7 +617,7 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 17px;
   line-height: 1.7;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
 }
 
 .cf26 .cf26-tags {
@@ -621,7 +640,7 @@
 /* ============================ GET INVOLVED ============================ */
 .cf26 .cf26-involved {
   background-color: #FFFFFF !important;
-  border-top: 1px solid #E3E9F0;
+  border-top: 1px solid var(--line-2);
 }
 
 .cf26 .cf26-actions {
@@ -634,20 +653,20 @@
 .cf26 .cf26-action {
   display: flex;
   flex-direction: column;
-  border: 1px solid #DDE5EE;
-  border-top: 4px solid #0A1E38;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--navy);
   border-radius: 10px;
   padding: 26px 24px 24px;
   background-color: #FFFFFF !important;
 }
 
-.cf26 .cf26-action-gold { border-top-color: #F0B429; }
+.cf26 .cf26-action-gold { border-top-color: var(--gold); }
 
 .cf26 .cf26-action p {
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 16.5px;
   line-height: 1.65;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
   margin-top: 9px;
   flex: 1 1 auto;
 }
@@ -660,17 +679,17 @@
   border-radius: 7px;
   font-size: 14.5px;
   font-weight: 700;
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   color: #FFFFFF !important;
 }
 
 .cf26 .cf26-action-gold .cf26-action-btn {
-  background-color: #F0B429 !important;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
 }
 
 /* ============================ LOCATION ============================ */
-.cf26 .cf26-loc { background-color: #F4F6F9 !important; }
+.cf26 .cf26-loc { background-color: var(--page) !important; }
 
 .cf26 .cf26-loc-grid {
   display: grid;
@@ -686,7 +705,7 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 17px;
   line-height: 1.7;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
 }
 
 .cf26 .cf26-loc-block + .cf26-loc-block { margin-top: 26px; }
@@ -710,7 +729,7 @@
 /* ============================ FAQ ============================ */
 .cf26 .cf26-faq {
   background-color: #FFFFFF !important;
-  border-top: 1px solid #E3E9F0;
+  border-top: 1px solid var(--line-2);
 }
 
 .cf26 .cf26-qs {
@@ -729,12 +748,12 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 16.5px;
   line-height: 1.7;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
 }
 
 /* ============================ CLOSING ============================ */
 .cf26 .cf26-close {
-  background-color: #06142A !important;
+  background-color: var(--navy-2) !important;
   background-image: radial-gradient(760px 340px at 50% 118%, rgba(240,180,41,0.24) 0%, rgba(240,180,41,0) 68%) !important;
   color: #FFFFFF !important;
   text-align: center;
@@ -751,7 +770,7 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 19px;
   line-height: 1.6;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   max-width: 50ch;
   margin: 0 auto 30px;
 }
@@ -765,7 +784,7 @@
   line-height: 1.9;
 }
 
-.cf26 .cf26-contact a { color: #F0B429 !important; font-weight: 600; }
+.cf26 .cf26-contact a { color: var(--gold) !important; font-weight: 600; }
 
 .cf26 .cf26-contact strong { color: #FFFFFF !important; }
 
@@ -825,7 +844,7 @@
 
 /* ---- raffle band ---- */
 .cf26 .cf26-raffle {
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   background-image: radial-gradient(680px 300px at 50% 120%, rgba(240,180,41,0.24) 0%, rgba(240,180,41,0) 70%) !important;
   color: #FFFFFF !important;
   text-align: center;
@@ -833,8 +852,8 @@
 
 .cf26 .cf26-raffle-badge {
   display: inline-block;
-  background-color: #F0B429 !important;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
   font-size: 12.5px;
   font-weight: 800;
   letter-spacing: 0.03em;
@@ -849,22 +868,22 @@
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 18px;
   line-height: 1.6;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   max-width: 48ch;
   margin: 0 auto 26px;
 }
 
 .cf26 .cf26-raffle-btn {
   display: inline-block;
-  background-color: #F0B429 !important;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
   font-size: 17px;
   font-weight: 800;
   padding: 17px 38px;
   border-radius: 9px;
 }
 
-.cf26 .cf26-raffle-btn:hover { background-color: #DDA31C !important; }
+.cf26 .cf26-raffle-btn:hover { background-color: var(--gold-dark) !important; }
 
 @media (max-width: 640px) {
   .cf26 .cf26-raffle-btn { display: block; padding: 17px 20px; }
@@ -928,7 +947,7 @@ label.cf-bad {
 
 .cf-done {
   display: none;
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   background-image: radial-gradient(520px 260px at 50% 118%, rgba(240,180,41,.22) 0%, rgba(240,180,41,0) 70%);
   border-radius: 14px;
   padding: 34px 26px 30px;
@@ -941,8 +960,8 @@ label.cf-bad {
 
 .cf-done-badge {
   display: inline-block;
-  background-color: #F0B429 !important;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
   font-size: 12.5px;
   font-weight: 800;
   letter-spacing: .03em;
@@ -957,7 +976,7 @@ label.cf-bad {
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 17.5px;
   line-height: 1.6;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   max-width: 46ch;
   margin: 0 auto;
 }

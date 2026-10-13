@@ -14,20 +14,24 @@
    because people choose by reading what the job involves. */
 
 :root {
-  --navy:     #0A1E38;
-  --navy-2:   #06142A;
-  --gold:     #F0B429;
-  --mint:     #3EE8B5;
-  --ink:      #16202E;
-  --body-txt: #46566A;
-  --muted:    #6B7C90;
-  --line:     #DDE5EE;
-  --page:     #F4F6F9;
-  --bad:      #C2410C;
-  --bad-bg:   #FEF6F3;
-  --sans: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --serif: "Newsreader", Georgia, "Times New Roman", serif;
-  color-scheme: light;
+  --gold:      #F0B429;   /* Main gold */
+  --gold-dark: #DDA31C;   /* Gold, pressed */
+  --gold-deep: #8A6A1E;   /* Gold, text on pale */
+  --navy:      #0A1E38;   /* Dark sections */
+  --navy-2:    #06142A;   /* Darkest bands */
+  --ink:       #16202E;   /* Headings */
+  --page:      #F4F6F9;   /* Page background */
+  --link:      #1B6FA8;   /* Links */
+  --body-txt:  #46566A;   /* Body text */
+  --muted:     #6B7C90;   /* Quiet text */
+  --soft:      #C9DAEC;   /* Text on dark */
+  --line:      #DDE5EE;   /* Borders */
+  --line-2:    #E3E9F0;   /* Borders, alternate */
+  --mint:      #3EE8B5;   /* Confirmations */
+  --bad:       #C2410C;
+  --bad-bg:    #FEF6F3;
+  --sans:      "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif:     "Newsreader", Georgia, "Times New Roman", serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,7 +45,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: #1B6FA8; text-decoration: none; }
+a { color: var(--link); text-decoration: none; }
 
 :is(a, input, button, select, textarea, summary):focus-visible {
   outline: 3px solid var(--gold);
@@ -137,7 +141,7 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
   font-family: var(--serif);
   font-size: 18px;
   line-height: 1.55;
-  color: #C9DAEC;
+  color: var(--soft);
   max-width: 44ch;
   margin: 0 auto;
 }
@@ -171,10 +175,10 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
 .step-label {
   font-size: 13px;
   font-weight: 700;
-  color: #1B6FA8;
+  color: var(--link);
   padding-bottom: 8px;
   margin-bottom: 18px;
-  border-bottom: 2px solid #E3E9F0;
+  border-bottom: 2px solid var(--line-2);
 }
 
 .hint { font-size: 13.5px; font-weight: 400; color: var(--muted); margin-bottom: 7px; }
@@ -286,7 +290,7 @@ input:focus, select:focus, textarea:focus {
   margin-top: 4px;
 }
 
-.pick-time { display: block; font-size: 14.5px; font-weight: 600; color: #1B6FA8; margin-top: 3px; }
+.pick-time { display: block; font-size: 14.5px; font-weight: 600; color: var(--link); margin-top: 3px; }
 
 .picks.bad-picks {
   border: 1px solid var(--bad);
@@ -321,7 +325,7 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
 }
 
-.submit:hover { background: #DDA31C; }
+.submit:hover { background: var(--gold-dark); }
 .submit[disabled] { opacity: .6; cursor: default; }
 
 .summary {
@@ -372,7 +376,7 @@ input:focus, select:focus, textarea:focus {
   font-family: var(--serif);
   font-size: 17.5px;
   line-height: 1.6;
-  color: #C9DAEC;
+  color: var(--soft);
   max-width: 46ch;
   margin: 0 auto;
 }
@@ -388,14 +392,14 @@ input:focus, select:focus, textarea:focus {
   font-weight: 800;
 }
 
-.done-next:hover { background: #DDA31C; }
+.done-next:hover { background: var(--gold-dark); }
 
 .done-more { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; margin-top: 18px; }
 
 .done-more a {
   font-size: 14.5px;
   font-weight: 600;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   border-bottom: 1px solid rgba(201,218,236,.35);
   padding-bottom: 2px;
 }

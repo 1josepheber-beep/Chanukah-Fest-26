@@ -20,19 +20,24 @@
    ============================================================ */
 
 :root {
-  --navy:     #0A1E38;
-  --navy-2:   #06142A;
-  --gold:     #F0B429;
-  --ink:      #16202E;
-  --body-txt: #46566A;
-  --muted:    #6B7C90;
-  --line:     #DDE5EE;
-  --page:     #F4F6F9;
-  --bad:      #C2410C;
-  --bad-bg:   #FEF6F3;
-  --sans: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --serif: "Newsreader", Georgia, "Times New Roman", serif;
-  color-scheme: light;
+  --gold:      #F0B429;   /* Main gold */
+  --gold-dark: #DDA31C;   /* Gold, pressed */
+  --gold-deep: #8A6A1E;   /* Gold, text on pale */
+  --navy:      #0A1E38;   /* Dark sections */
+  --navy-2:    #06142A;   /* Darkest bands */
+  --ink:       #16202E;   /* Headings */
+  --page:      #F4F6F9;   /* Page background */
+  --link:      #1B6FA8;   /* Links */
+  --body-txt:  #46566A;   /* Body text */
+  --muted:     #6B7C90;   /* Quiet text */
+  --soft:      #C9DAEC;   /* Text on dark */
+  --line:      #DDE5EE;   /* Borders */
+  --line-2:    #E3E9F0;   /* Borders, alternate */
+  --mint:      #3EE8B5;   /* Confirmations */
+  --bad:       #C2410C;
+  --bad-bg:    #FEF6F3;
+  --sans:      "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif:     "Newsreader", Georgia, "Times New Roman", serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,7 +51,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: #1B6FA8; text-decoration: none; }
+a { color: var(--link); text-decoration: none; }
 
 :is(a, input, button, summary):focus-visible {
   outline: 3px solid var(--gold);
@@ -141,7 +146,7 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
   font-weight: 800;
 }
 
-.done-next:hover { background: #DDA31C; }
+.done-next:hover { background: var(--gold-dark); }
 
 .done-more {
   display: flex;
@@ -154,7 +159,7 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
 .done-more a {
   font-size: 14.5px;
   font-weight: 600;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   border-bottom: 1px solid rgba(201,218,236,.35);
   padding-bottom: 2px;
 }
@@ -196,7 +201,7 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
   font-family: var(--serif);
   font-size: 17.5px;
   line-height: 1.55;
-  color: #C9DAEC;
+  color: var(--soft);
   max-width: 34ch;
   margin: 0 auto;
 }
@@ -207,7 +212,7 @@ h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
 .prizes-label {
   font-size: 12.5px;
   font-weight: 700;
-  color: #8A6A1E;
+  color: var(--gold-deep);
   margin-bottom: 8px;
 }
 
@@ -289,7 +294,7 @@ input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10,30,56,.10
 .hp { position: absolute !important; left: -9999px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
 
 /* ------------------------ FAMILY MEMBERS ------------------------ */
-.fam { margin-top: 26px; padding-top: 22px; border-top: 1px solid #E3E9F0; }
+.fam { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line-2); }
 
 .fam-row {
   margin-top: 12px;
@@ -338,14 +343,14 @@ input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10,30,56,.10
   border: 2px dashed #C4D2E0;
   border-radius: 8px;
   background: #FBFCFD;
-  color: #1B6FA8;
+  color: var(--link);
   font-family: inherit;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
 }
 
-.add:hover { border-color: #1B6FA8; background: #F4F9FD; }
+.add:hover { border-color: var(--link); background: #F4F9FD; }
 .add[disabled] { opacity: .5; cursor: default; border-style: solid; }
 
 /* ---------------------------- SUBMIT ---------------------------- */
@@ -364,7 +369,7 @@ input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10,30,56,.10
   cursor: pointer;
 }
 
-.submit:hover { background: #DDA31C; }
+.submit:hover { background: var(--gold-dark); }
 .submit[disabled] { opacity: .6; cursor: default; }
 
 .summary {
@@ -406,7 +411,7 @@ input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10,30,56,.10
   font-family: var(--serif);
   font-size: 17.5px;
   line-height: 1.6;
-  color: #C9DAEC;
+  color: var(--soft);
   max-width: 44ch;
   margin: 0 auto;
 }

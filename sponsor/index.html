@@ -10,6 +10,25 @@
 </head>
 <body>
 <style type="text/css">
+:root {
+  --gold:      #F0B429;   /* Main gold */
+  --gold-dark: #DDA31C;   /* Gold, pressed */
+  --gold-deep: #8A6A1E;   /* Gold, text on pale */
+  --navy:      #0A1E38;   /* Dark sections */
+  --navy-2:    #06142A;   /* Darkest bands */
+  --ink:       #16202E;   /* Headings */
+  --page:      #F4F6F9;   /* Page background */
+  --link:      #1B6FA8;   /* Links */
+  --body-txt:  #46566A;   /* Body text */
+  --muted:     #6B7C90;   /* Quiet text */
+  --soft:      #C9DAEC;   /* Text on dark */
+  --line:      #DDE5EE;   /* Borders */
+  --line-2:    #E3E9F0;   /* Borders, alternate */
+  --mint:      #3EE8B5;   /* Confirmations */
+  --bad:       #C2410C;
+  --bad-bg:    #FEF6F3;
+}
+
 /* Two imports, not one. Combining both families into a single Google
    Fonts URL requires an ampersand to join them, and the Chabad system
    parses this page as XML, where a bare ampersand starts an entity
@@ -31,8 +50,8 @@
 
 .sp26 {
   margin: 0;
-  background-color: #F4F6F9 !important;
-  color: #16202E !important;
+  background-color: var(--page) !important;
+  color: var(--ink) !important;
   font-family: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   font-size: 17px;
   line-height: 1.55;
@@ -40,14 +59,14 @@
   text-align: left;
 }
 
-.sp26 a { text-decoration: none !important; color: #1B6FA8 !important; }
+.sp26 a { text-decoration: none !important; color: var(--link) !important; }
 
 .sp26 a:focus-visible,
 .sp26 input:focus-visible,
 .sp26 textarea:focus-visible,
 .sp26 button:focus-visible,
 .sp26 .sp26-radio:focus-visible + label {
-  outline: 3px solid #F0B429;
+  outline: 3px solid var(--gold);
   outline-offset: 2px;
 }
 
@@ -59,17 +78,17 @@
   line-height: 1.12;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
   margin-bottom: 8px;
 }
 
-.sp26 h3 { font-size: 18px; font-weight: 700; color: #0A1E38 !important; }
+.sp26 h3 { font-size: 18px; font-weight: 700; color: var(--navy) !important; }
 
 .sp26 .sp26-lede {
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 18px;
   line-height: 1.7;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
   max-width: 62ch;
 }
 
@@ -83,10 +102,10 @@
 
 /* ============================ HEADER ============================ */
 .sp26 .sp26-head {
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   background-image:
     radial-gradient(760px 340px at 50% 118%, rgba(240,180,41,0.24) 0%, rgba(240,180,41,0) 68%),
-    linear-gradient(180deg, #06142A 0%, #0A1E38 100%) !important;
+    linear-gradient(180deg, var(--navy-2) 0%, var(--navy) 100%) !important;
   color: #FFFFFF !important;
   padding: 46px 0 42px;
   text-align: center;
@@ -95,7 +114,7 @@
 .sp26 .sp26-head-kicker {
   font-size: 13px;
   font-weight: 600;
-  color: #F0B429 !important;
+  color: var(--gold) !important;
   margin-bottom: 14px;
 }
 
@@ -111,13 +130,13 @@
 .sp26 .sp26-head-sub {
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 18px;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   max-width: 48ch;
   margin: 0 auto;
 }
 
 /* ============================ THE CASE ============================ */
-.sp26 .sp26-case { background-color: #FFFFFF !important; border-bottom: 1px solid #E3E9F0; }
+.sp26 .sp26-case { background-color: #FFFFFF !important; border-bottom: 1px solid var(--line-2); }
 
 .sp26 .sp26-stats {
   display: grid;
@@ -127,7 +146,7 @@
 }
 
 .sp26 .sp26-stat {
-  border-top: 3px solid #F0B429;
+  border-top: 3px solid var(--gold);
   padding-top: 14px;
 }
 
@@ -136,14 +155,14 @@
   font-size: 30px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
   line-height: 1.05;
 }
 
 .sp26 .sp26-stat-l {
   display: block;
   font-size: 14px;
-  color: #6B7C90 !important;
+  color: var(--muted) !important;
   margin-top: 5px;
 }
 
@@ -168,7 +187,7 @@
 .sp26 .sp26-level {
   display: block;
   background-color: #FFFFFF !important;
-  border: 1px solid #DDE5EE;
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 22px;
   cursor: pointer;
@@ -185,13 +204,13 @@
   border-bottom: 1px solid #EAF0F6;
 }
 
-.sp26 .sp26-level-name { font-size: 17px; font-weight: 700; color: #0A1E38 !important; }
+.sp26 .sp26-level-name { font-size: 17px; font-weight: 700; color: var(--navy) !important; }
 
 .sp26 .sp26-level-price {
   font-size: 23px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
   white-space: nowrap;
 }
 
@@ -199,7 +218,7 @@
   display: block;
   font-size: 12.5px;
   font-weight: 600;
-  color: #1B6FA8 !important;
+  color: var(--link) !important;
   margin-top: 10px;
 }
 
@@ -207,7 +226,7 @@
 
 .sp26 .sp26-level-benefits li {
   font-size: 14.5px;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
   padding: 4px 0 4px 17px;
   position: relative;
 }
@@ -220,33 +239,33 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #F0B429 !important;
+  background-color: var(--gold) !important;
 }
 
 /* the two flagship offerings */
 .sp26 .sp26-level-feature {
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   background-image: radial-gradient(500px 240px at 20% 118%, rgba(240,180,41,0.20) 0%, rgba(240,180,41,0) 70%) !important;
-  border-color: #0A1E38;
+  border-color: var(--navy);
 }
 
 .sp26 .sp26-level-feature .sp26-level-name,
 .sp26 .sp26-level-feature .sp26-level-price { color: #FFFFFF !important; }
-.sp26 .sp26-level-feature .sp26-level-price { color: #F0B429 !important; }
+.sp26 .sp26-level-feature .sp26-level-price { color: var(--gold) !important; }
 .sp26 .sp26-level-feature .sp26-level-top { border-bottom-color: rgba(255,255,255,0.18); }
 .sp26 .sp26-level-feature .sp26-level-benefits li { color: #C4D6E8 !important; }
-.sp26 .sp26-level-feature .sp26-level-avail { color: #F0B429 !important; }
+.sp26 .sp26-level-feature .sp26-level-avail { color: var(--gold) !important; }
 
 /* selected state */
 .sp26 .sp26-radio:checked + .sp26-level {
-  border-color: #0A1E38;
+  border-color: var(--navy);
   border-width: 2px;
   padding: 21px;
   box-shadow: 0 3px 14px rgba(10,30,56,0.13);
 }
 
 .sp26 .sp26-radio:checked + .sp26-level-feature {
-  border-color: #F0B429;
+  border-color: var(--gold);
 }
 
 .sp26 .sp26-level-other { grid-column: 1 / -1; }
@@ -260,7 +279,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   border-radius: 10px;
   padding: 20px 24px;
   margin-top: 4px;
@@ -279,16 +298,16 @@
 
 .sp26 .sp26-summary-value::after { content: "Nothing selected yet"; font-size: 15.5px; font-weight: 600; color: #7C93AB; }
 
-.sp26 #sp-presenting:checked ~ .sp26-summary .sp26-summary-value::after { content: "Presenting Sponsor — $50,000"; font-size: 21px; font-weight: 800; color: #F0B429; }
-.sp26 #sp-vip:checked ~ .sp26-summary .sp26-summary-value::after { content: "VIP Reception Sponsor — $36,000"; font-size: 21px; font-weight: 800; color: #F0B429; }
-.sp26 #sp-platinum:checked ~ .sp26-summary .sp26-summary-value::after { content: "Platinum Sponsor — $25,000"; font-size: 21px; font-weight: 800; color: #F0B429; }
-.sp26 #sp-gold:checked ~ .sp26-summary .sp26-summary-value::after { content: "Gold Sponsor — $18,000"; font-size: 21px; font-weight: 800; color: #F0B429; }
-.sp26 #sp-silver:checked ~ .sp26-summary .sp26-summary-value::after { content: "Silver Sponsor — $10,000"; font-size: 21px; font-weight: 800; color: #F0B429; }
-.sp26 #sp-bronze:checked ~ .sp26-summary .sp26-summary-value::after { content: "Bronze Sponsor — $5,000"; font-size: 21px; font-weight: 800; color: #F0B429; }
-.sp26 #sp-other:checked ~ .sp26-summary .sp26-summary-value::after { content: "Custom amount"; font-size: 21px; font-weight: 800; color: #F0B429; }
+.sp26 #sp-presenting:checked ~ .sp26-summary .sp26-summary-value::after { content: "Presenting Sponsor — $50,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
+.sp26 #sp-vip:checked ~ .sp26-summary .sp26-summary-value::after { content: "VIP Reception Sponsor — $36,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
+.sp26 #sp-platinum:checked ~ .sp26-summary .sp26-summary-value::after { content: "Platinum Sponsor — $25,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
+.sp26 #sp-gold:checked ~ .sp26-summary .sp26-summary-value::after { content: "Gold Sponsor — $18,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
+.sp26 #sp-silver:checked ~ .sp26-summary .sp26-summary-value::after { content: "Silver Sponsor — $10,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
+.sp26 #sp-bronze:checked ~ .sp26-summary .sp26-summary-value::after { content: "Bronze Sponsor — $5,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
+.sp26 #sp-other:checked ~ .sp26-summary .sp26-summary-value::after { content: "Custom amount"; font-size: 21px; font-weight: 800; color: var(--gold); }
 
 /* ============================ FORM ============================ */
-.sp26 .sp26-form { background-color: #FFFFFF !important; border-top: 1px solid #E3E9F0; }
+.sp26 .sp26-form { background-color: #FFFFFF !important; border-top: 1px solid var(--line-2); }
 
 .sp26 .sp26-fieldset { border: 0; margin-top: 32px; }
 .sp26 .sp26-fieldset:first-of-type { margin-top: 24px; }
@@ -296,10 +315,10 @@
 .sp26 .sp26-legend {
   font-size: 13px;
   font-weight: 700;
-  color: #1B6FA8 !important;
+  color: var(--link) !important;
   padding-bottom: 8px;
   margin-bottom: 18px;
-  border-bottom: 2px solid #E3E9F0;
+  border-bottom: 2px solid var(--line-2);
   width: 100%;
 }
 
@@ -312,7 +331,7 @@
   display: block;
   font-size: 14.5px;
   font-weight: 700;
-  color: #16202E !important;
+  color: var(--ink) !important;
   margin-bottom: 5px;
 }
 
@@ -322,7 +341,7 @@
   display: block;
   font-size: 13.5px;
   font-weight: 400;
-  color: #6B7C90 !important;
+  color: var(--muted) !important;
   margin-bottom: 7px;
 }
 
@@ -338,14 +357,14 @@
   border-radius: 7px;
   font-family: inherit !important;
   font-size: 16px;
-  color: #16202E !important;
+  color: var(--ink) !important;
   background-color: #FFFFFF !important;
 }
 
 .sp26 textarea { min-height: 96px; resize: vertical; }
 
 .sp26 input:focus, .sp26 textarea:focus {
-  border-color: #0A1E38;
+  border-color: var(--navy);
   box-shadow: 0 0 0 3px rgba(10,30,56,0.10);
 }
 
@@ -355,7 +374,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  border: 1px solid #DDE5EE;
+  border: 1px solid var(--line);
   border-radius: 8px;
   padding: 14px 16px;
   background-color: #FBFCFD !important;
@@ -372,11 +391,11 @@
   width: 19px;
   height: 19px;
   margin-top: 1px;
-  accent-color: #0A1E38;
+  accent-color: var(--navy);
   cursor: pointer;
 }
 
-.sp26 .sp26-opt-name { font-weight: 700; color: #16202E !important; }
+.sp26 .sp26-opt-name { font-weight: 700; color: var(--ink) !important; }
 
 .sp26 .sp26-submit {
   display: block;
@@ -385,30 +404,30 @@
   padding: 18px;
   border: 0;
   border-radius: 8px;
-  background-color: #F0B429 !important;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
   font-family: inherit !important;
   font-size: 17px;
   font-weight: 800;
   cursor: pointer;
 }
 
-.sp26 .sp26-submit:hover { background-color: #DDA31C !important; }
+.sp26 .sp26-submit:hover { background-color: var(--gold-dark) !important; }
 
 .sp26 .sp26-taxnote {
   margin-top: 16px;
-  background-color: #F4F6F9 !important;
-  border-left: 3px solid #1B6FA8;
+  background-color: var(--page) !important;
+  border-left: 3px solid var(--link);
   border-radius: 0 8px 8px 0;
   padding: 16px 18px;
   font-size: 14.5px;
   line-height: 1.6;
-  color: #46566A !important;
+  color: var(--body-txt) !important;
 }
 
 /* ============================ CONTACT ============================ */
 .sp26 .sp26-contact {
-  background-color: #06142A !important;
+  background-color: var(--navy-2) !important;
   color: #FFFFFF !important;
   text-align: center;
   padding: 44px 0;
@@ -419,12 +438,12 @@
 .sp26 .sp26-contact p {
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 17.5px;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   max-width: 48ch;
   margin: 8px auto 0;
 }
 
-.sp26 .sp26-contact a { color: #F0B429 !important; font-weight: 700; }
+.sp26 .sp26-contact a { color: var(--gold) !important; font-weight: 700; }
 
 /* ============================ RESPONSIVE ============================ */
 @media (max-width: 860px) {
@@ -454,7 +473,7 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  background-color: #06142A !important;
+  background-color: var(--navy-2) !important;
   border-bottom: 1px solid rgba(255,255,255,0.10);
 }
 
@@ -494,12 +513,12 @@
   content: "";
   width: 7px;
   height: 7px;
-  border-left: 2px solid #F0B429;
-  border-bottom: 2px solid #F0B429;
+  border-left: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
   transform: rotate(45deg);
 }
 
-.sp26 .sp26-subnav-home:hover { color: #F0B429 !important; }
+.sp26 .sp26-subnav-home:hover { color: var(--gold) !important; }
 
 .sp26 .sp26-subnav-link {
   flex: 0 0 auto;
@@ -513,10 +532,10 @@
 
 .sp26 .sp26-subnav-link:hover { color: #FFFFFF !important; border-bottom-color: rgba(240,180,41,0.55); }
 
-.sp26 .sp26-subnav-current { color: #F0B429 !important; border-bottom-color: #F0B429; }
+.sp26 .sp26-subnav-current { color: var(--gold) !important; border-bottom-color: var(--gold); }
 
 /* ============================ OTHER WAYS ============================ */
-.sp26 .sp26-other { background-color: #F4F6F9 !important; border-top: 1px solid #E3E9F0; }
+.sp26 .sp26-other { background-color: var(--page) !important; border-top: 1px solid var(--line-2); }
 
 .sp26 .sp26-other-grid {
   display: grid;
@@ -528,7 +547,7 @@
 .sp26 .sp26-other-card {
   display: block;
   background-color: #FFFFFF !important;
-  border: 1px solid #DDE5EE;
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 20px;
 }
@@ -539,7 +558,7 @@
   display: block;
   font-size: 16.5px;
   font-weight: 700;
-  color: #0A1E38 !important;
+  color: var(--navy) !important;
   margin-bottom: 4px;
 }
 
@@ -547,7 +566,7 @@
   display: block;
   font-size: 14.5px;
   line-height: 1.5;
-  color: #6B7C90 !important;
+  color: var(--muted) !important;
 }
 
 @media (max-width: 760px) {
@@ -612,7 +631,7 @@ label.cf-bad {
 
 .cf-done {
   display: none;
-  background-color: #0A1E38 !important;
+  background-color: var(--navy) !important;
   background-image: radial-gradient(520px 260px at 50% 118%, rgba(240,180,41,.22) 0%, rgba(240,180,41,0) 70%);
   border-radius: 14px;
   padding: 34px 26px 30px;
@@ -625,8 +644,8 @@ label.cf-bad {
 
 .cf-done-badge {
   display: inline-block;
-  background-color: #F0B429 !important;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
   font-size: 12.5px;
   font-weight: 800;
   letter-spacing: .03em;
@@ -641,7 +660,7 @@ label.cf-bad {
   font-family: "Newsreader", Georgia, serif !important;
   font-size: 17.5px;
   line-height: 1.6;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   max-width: 46ch;
   margin: 0 auto;
 }
@@ -651,13 +670,13 @@ label.cf-bad {
   margin-top: 24px;
   padding: 15px 30px;
   border-radius: 9px;
-  background-color: #F0B429 !important;
-  color: #16202E !important;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
   font-size: 16px;
   font-weight: 800;
 }
 
-.cf-done-next:hover { background-color: #DDA31C !important; }
+.cf-done-next:hover { background-color: var(--gold-dark) !important; }
 
 .cf-done-more {
   display: flex;
@@ -670,12 +689,12 @@ label.cf-bad {
 .cf-done-more a {
   font-size: 14.5px;
   font-weight: 600;
-  color: #C9DAEC !important;
+  color: var(--soft) !important;
   border-bottom: 1px solid rgba(201,218,236,.35);
   padding-bottom: 2px;
 }
 
-.cf-done-more a:hover { color: #F0B429 !important; border-bottom-color: #F0B429; }
+.cf-done-more a:hover { color: var(--gold) !important; border-bottom-color: var(--gold); }
 
 .cf-sink { display: none; width: 0; height: 0; border: 0; }
 

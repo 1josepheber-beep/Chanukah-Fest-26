@@ -1244,7 +1244,7 @@
      "type": "text",
      "tag": "p",
      "label": "Parking › Note underneath",
-     "value": "Parking is available through this garage."
+     "value": "Spaces can be reserved in advance."
     },
     {
      "key": "loc.map",

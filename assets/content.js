@@ -42,6 +42,32 @@
     else el.removeAttribute("data-cf-blank");
   }
 
+  /* The yellow box with the dashed underline means "someone still has to
+     write this". It lives on a class, so it stayed put once the words
+     were written. Anything that no longer reads [[ LIKE THIS ]] has been
+     filled in and stops being marked.
+
+     Set on the element, with important. The page says
+     `.cf26-fill { background-color: ... !important }`, which beats both
+     a plain inline style and any rule of ours appended to <head>, since
+     the page's own stylesheet sits later in the document. */
+  var UNMARK = [["background", "none"], ["color", "inherit"],
+                ["border-bottom", "0"], ["padding", "0"],
+                ["font-weight", "inherit"]];
+
+  function tidyHighlights() {
+    each("[class*='26-fill']", function (el) {
+      var stillBlank = /\[\[[\s\S]*\]\]/.test(el.textContent);
+      if (stillBlank) {
+        el.removeAttribute("data-cf-done");
+        UNMARK.forEach(function (d) { el.style.removeProperty(d[0]); });
+      } else {
+        el.setAttribute("data-cf-done", "");
+        UNMARK.forEach(function (d) { el.style.setProperty(d[0], d[1], "important"); });
+      }
+    });
+  }
+
   function applyFields(data) {
     if (!data) return;
     var by = data.fields || {};
@@ -100,8 +126,7 @@
        is told it may, which is what pushes the whole page sideways. */
     tag.textContent =
       "[data-cf-sec][hidden]{display:none !important}" +
-      "[data-cf][data-cf-blank]{display:none !important}" +
-      "[data-cf]{min-width:0;overflow-wrap:break-word}";
+      "[data-cf][data-cf-blank]{display:none !important}";
     (document.head || document.documentElement).appendChild(tag);
   }
 
@@ -144,7 +169,7 @@
     var tag = document.createElement("style");
     tag.id = "cf-fit";
     tag.textContent = "[data-cf-sec] *{min-width:0}" +
-                      "[data-cf]{white-space:normal;overflow-wrap:break-word}";
+                      "[data-cf]{min-width:0;white-space:normal;overflow-wrap:break-word}";
     document.head.appendChild(tag);
   }
 
@@ -152,6 +177,7 @@
     if (!data) return;
     try { hideRule(); } catch (e) {}
     try { applyFields(data); } catch (e) {}
+    try { tidyHighlights(); } catch (e) {}
     try { applyColours(data); } catch (e) {}
     try { applySections(data); } catch (e) {}
     // after layout has settled
@@ -174,18 +200,54 @@
     try { localStorage.setItem(CACHE, JSON.stringify(data)); } catch (e) {}
   }
 
-  function fetchLive() {
+  /* Two ways in. A plain fetch is cleaner, but an Apps Script answer
+     arrives via a redirect to a different Google host, and a browser
+     that objects to that leaves the page showing its built-in wording
+     for ever. A script tag is not subject to that, so it gets a turn
+     if the fetch has not landed. */
+  function fetchLive(after) {
     var url = API + "?action=content&t=" + Date.now();
-    if (!window.fetch) return;
-    fetch(url, { method: "GET" })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) {
-        if (!d || !d.ok) return;
-        remember(d);
-        applyAll(d);
-      })
-      .catch(function () { /* the baked-in wording is already correct */ });
+    var landed = false;
+
+    function land(d) {
+      if (landed || !d || !d.ok) return;
+      landed = true;
+      remember(d);
+      applyAll(d);
+      if (after) after(d);
+    }
+
+    function viaScript() {
+      if (landed) return;
+      var name = "cfContent" + Math.floor(Math.random() * 1e9);
+      var tag = document.createElement("script");
+      window[name] = function (d) {
+        land(d);
+        try { delete window[name]; } catch (e) { window[name] = undefined; }
+        if (tag.parentNode) tag.parentNode.removeChild(tag);
+      };
+      tag.src = url + "&callback=" + name;
+      tag.onerror = function () { if (tag.parentNode) tag.parentNode.removeChild(tag); };
+      (document.head || document.documentElement).appendChild(tag);
+    }
+
+    if (window.fetch) {
+      fetch(url, { method: "GET" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(land)
+        .catch(viaScript);
+      setTimeout(viaScript, 3500);      // fetch neither failed nor answered
+    } else {
+      viaScript();
+    }
   }
+
+  // so the editor and a person looking at the page can both ask
+  window.cfReload = fetchLive;
+  window.cfForget = function () {
+    try { localStorage.removeItem(CACHE); } catch (e) {}
+    location.reload();
+  };
 
   /* --------------------------------------------------- the admin preview */
 
@@ -200,15 +262,19 @@
 
   /* ---------------------------------------------------------------- go */
 
+  function tidyOnce() { try { hideRule(); tidyHighlights(); } catch (e) {} }
+
   applyAll(cached());          // before paint, from what we saw last time
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       applyAll(cached());      // again, now the whole page exists
+      tidyOnce();
       listenForPreview();
       fetchLive();
     });
   } else {
+    tidyOnce();
     listenForPreview();
     fetchLive();
   }

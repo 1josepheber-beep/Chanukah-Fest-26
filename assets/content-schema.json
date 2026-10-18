@@ -1200,14 +1200,6 @@
      "value": "Parking"
     },
     {
-     "key": "loc.3b97c6b8",
-     "sec": "loc",
-     "type": "text",
-     "tag": "span",
-     "label": "Parking › [[ GARAGE NAMES, RATES, WHETHER PARKING IS VALIDATED OR F...",
-     "value": "[[ GARAGE NAMES, RATES, WHETHER PARKING IS VALIDATED OR FREE ]]"
-    },
-    {
      "key": "loc.e89fbb4c",
      "sec": "loc",
      "type": "text",
@@ -1238,6 +1230,45 @@
      "tag": "div",
      "label": "Address › [[ MAP IMAGE OR GOOGLE MAPS EMBED GOES HERE ]]",
      "value": "[[ MAP IMAGE OR GOOGLE MAPS EMBED GOES HERE ]]"
+    },
+    {
+     "key": "loc.park-name",
+     "sec": "loc",
+     "type": "text",
+     "tag": "strong",
+     "label": "Parking › Garage name",
+     "value": "Theater District Garage (Tranquility 2)"
+    },
+    {
+     "key": "loc.park-address",
+     "sec": "loc",
+     "type": "text",
+     "tag": "span",
+     "label": "Parking › Garage address",
+     "value": "499 Rusk St., Houston, TX 77002"
+    },
+    {
+     "key": "loc.park-cta",
+     "sec": "loc",
+     "type": "text",
+     "tag": "span",
+     "label": "Parking › Button wording",
+     "value": "Reserve a space"
+    },
+    {
+     "key": "loc.park-link",
+     "sec": "loc",
+     "type": "link",
+     "label": "Parking › Booking link",
+     "value": "https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00"
+    },
+    {
+     "key": "loc.park-note",
+     "sec": "loc",
+     "type": "text",
+     "tag": "p",
+     "label": "Parking › Note underneath",
+     "value": "Parking is available through this garage."
     },
     {
      "key": "faq.4773b303",

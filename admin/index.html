@@ -227,6 +227,7 @@ iframe.phone { width: 400px; flex: 0 0 400px; }
   <h1>Chanukah Fest 2026</h1>
   <span class="pill" id="count">—</span>
   <span class="spacer"></span>
+  <button class="ghost" id="check">Check connection</button>
   <button class="ghost" id="revertAll">Undo all changes</button>
   <button class="go" id="save" disabled>Save and publish</button>
 </header>
@@ -581,6 +582,56 @@ $("save").onclick = function () {
       $("save").disabled = false;
       say("Could not save: " + err.message + ". Nothing was changed on the site.", "bad");
     });
+};
+
+/* Says, in plain words, whether the site can actually read what has
+   been saved — and clears this browser's copy, which is the one thing
+   that can make a page keep showing wording that was changed days ago. */
+$("check").onclick = function () {
+  say("Checking\u2026");
+  var url = CONFIG.ENDPOINT + "?action=content&t=" + Date.now();
+
+  var report = function (how, d) {
+    if (!d || !d.ok) {
+      say("Reached Google (" + how + ") but it did not return saved content. " +
+          "Check the deployment is set to Anyone.", "bad");
+      return;
+    }
+    var nf = Object.keys(d.fields || {}).length;
+    var nc = Object.keys(d.colours || {}).length;
+    var ns = 0;
+    for (var p in d.sections || {}) ns += Object.keys(d.sections[p]).length;
+    var cached = "none";
+    try {
+      var raw = localStorage.getItem("cf26-content-v1");
+      cached = raw ? Object.keys(JSON.parse(raw).fields || {}).length + " saved changes" : "none";
+    } catch (e) {}
+    say("Connected (" + how + "). The spreadsheet holds " + nf + " changed text" +
+        (nf === 1 ? "" : "s") + ", " + nc + " colour" + (nc === 1 ? "" : "s") +
+        " and " + ns + " block setting" + (ns === 1 ? "" : "s") +
+        ". This browser's copy: " + cached + ".",
+        nf + nc + ns ? "good" : "bad");
+  };
+
+  var answered = false;
+  fetch(url).then(function (r) { return r.json(); })
+    .then(function (d) { answered = true; report("direct", d); })
+    .catch(function () {
+      // the same second route the pages use
+      var name = "cfCheck" + Math.floor(Math.random() * 1e9);
+      var tag = document.createElement("script");
+      window[name] = function (d) { answered = true; report("fallback", d); tag.remove(); };
+      tag.src = url + "&callback=" + name;
+      tag.onerror = function () {
+        tag.remove();
+        say("Could not reach the script at all. Check the address, and that the " +
+            "deployment is set to Anyone.", "bad");
+      };
+      document.head.appendChild(tag);
+    });
+  setTimeout(function () {
+    if (!answered) say("No answer from Google after 8 seconds.", "bad");
+  }, 8000);
 };
 
 $("revertAll").onclick = function () {

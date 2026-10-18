@@ -711,6 +711,19 @@
 
 .cf26 .cf26-loc-block + .cf26-loc-block { margin-top: 26px; }
 
+.cf26 .cf26-park-link {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--link) !important;
+  border-bottom: 2px solid rgba(27,111,168,.35);
+}
+.cf26 .cf26-park-link:hover { border-bottom-color: var(--link); }
+.cf26 .cf26-park-note {
+  font-size: .92rem;
+  color: var(--muted) !important;
+  margin-top: 6px;
+}
+
 .cf26 .cf26-map {
   height: 100%;
   min-height: 280px;
@@ -1302,7 +1315,16 @@ label.cf-bad {
 
           <div class="cf26-loc-block">
             <h3 data-cf="loc.aef05c28">Parking</h3>
-            <p><span class="cf26-fill" data-cf="loc.3b97c6b8">[[ GARAGE NAMES, RATES, WHETHER PARKING IS VALIDATED OR FREE ]]</span></p>
+            <p>
+              <strong data-cf="loc.park-name">Theater District Garage (Tranquility 2)</strong><br />
+              <span data-cf="loc.park-address">499 Rusk St., Houston, TX 77002</span>
+            </p>
+            <p>
+              <a class="cf26-park-link" rel="noopener"
+                 href="https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00"
+                 data-cf-href="loc.park-link"><span data-cf="loc.park-cta">Reserve a space</span></a>
+            </p>
+            <p class="cf26-park-note" data-cf="loc.park-note">Parking is available through this garage.</p>
           </div>
 
           <div class="cf26-loc-block">

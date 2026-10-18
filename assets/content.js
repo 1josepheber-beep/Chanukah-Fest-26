@@ -36,10 +36,32 @@
   /* Emptying a field has to take the element with it. A placeholder is
      a highlighted box with a dashed underline; cleared of its text it
      would otherwise sit there as a small coloured stub. */
+  /* The line break beside an emptied line has to go with it. "Address"
+     is two lines with a <br> between them; clearing one of them left the
+     break behind, and with it a blank line where the writing used to be. */
+  function nextTag(el, back) {
+    var n = back ? el.previousSibling : el.nextSibling;
+    while (n && n.nodeType === 3 && !n.nodeValue.trim()) {
+      n = back ? n.previousSibling : n.nextSibling;
+    }
+    return n && n.nodeType === 1 ? n : null;
+  }
+
   function setText(el, v) {
     text(el, v);
     if (String(v).trim() === "") el.setAttribute("data-cf-blank", "");
     else el.removeAttribute("data-cf-blank");
+  }
+
+  /* Decided per break, not per line. Deciding it per line meant the
+     second line put back the break the first line had just taken away. */
+  function tidyBreaks() {
+    each("br", function (br) {
+      var before = nextTag(br, true), after = nextTag(br, false);
+      var dead = function (n) { return n && n.hasAttribute && n.hasAttribute("data-cf-blank"); };
+      if (dead(before) || dead(after)) br.setAttribute("data-cf-gone", "");
+      else br.removeAttribute("data-cf-gone");
+    });
   }
 
   /* The yellow box with the dashed underline means "someone still has to
@@ -239,6 +261,7 @@
     if (!data) return;
     try { hideRule(); } catch (e) {}
     try { applyFields(data); } catch (e) {}
+    try { tidyBreaks(); } catch (e) {}
     try { tidyHighlights(); } catch (e) {}
     try { applyColours(data); } catch (e) {}
     try { applySections(data); } catch (e) {}

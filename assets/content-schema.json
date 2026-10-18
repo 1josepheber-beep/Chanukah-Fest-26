@@ -1216,14 +1216,6 @@
      "value": "[[ DROP-OFF POINT, STROLLER AND WHEELCHAIR ACCESS, STREET CLOSURES ]]"
     },
     {
-     "key": "loc.b81dc9d1",
-     "sec": "loc",
-     "type": "text",
-     "tag": "a",
-     "label": "Address › Full location details",
-     "value": "Full location details"
-    },
-    {
      "key": "loc.park-name",
      "sec": "loc",
      "type": "text",

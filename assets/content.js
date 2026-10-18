@@ -84,6 +84,10 @@
       var v = by[el.getAttribute("data-cf-ph")];
       if (v != null) el.setAttribute("placeholder", v);
     });
+    each("[data-cf-map]", function (el) {
+      var v = by[el.getAttribute("data-cf-map")];
+      drawMap(el, v == null ? el.getAttribute("data-cf-map-was") : v);
+    });
     each("[data-cf-img]", function (el) {
       var v = by[el.getAttribute("data-cf-img")];
       if (v != null) el.setAttribute("src", v);
@@ -95,6 +99,51 @@
      in source order and would therefore beat a rule appended there. An
      inline custom property on :root sits above both. */
   var colourSet = [];
+  /* Whatever is typed here becomes a query, and the map address is
+     built from it. The pasted link is never used as the frame's address
+     directly: that would let anything at all be put in a frame on the
+     page, and a Google share link is not an embeddable address anyway. */
+  function mapQuery(text) {
+    text = String(text || "").trim();
+    if (!text) return "";
+
+    var at = text.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);       // ...@29.76,-95.37,17z
+    if (at) return at[1] + "," + at[2];
+
+    var place = text.match(/\/place\/([^\/?@]+)/);              // .../place/Houston+City+Hall/
+    if (place) return decodeURIComponent(place[1]).replace(/\+/g, " ");
+
+    var q = text.match(/[?&]q=([^&]+)/);
+    if (q) return decodeURIComponent(q[1]).replace(/\+/g, " ");
+
+    if (/^https?:\/\//i.test(text)) return "";                  // a link we cannot read
+    return text;                                                 // a plain address
+  }
+
+  function drawMap(el, text) {
+    if (!el.getAttribute("data-cf-map-was")) {
+      el.setAttribute("data-cf-map-was", el.textContent.trim());
+    }
+    var q = mapQuery(text);
+    if (!q) {                        // nothing usable: leave the empty box
+      el.classList.remove("cf26-map-on");
+      el.textContent = String(text || "").trim() ||
+                       el.getAttribute("data-cf-map-was") || "";
+      return;
+    }
+    var src = "https://www.google.com/maps?q=" + encodeURIComponent(q) + "&output=embed";
+    var frame = el.querySelector("iframe");
+    if (frame && frame.getAttribute("src") === src) return;
+    el.textContent = "";
+    frame = document.createElement("iframe");
+    frame.setAttribute("src", src);
+    frame.setAttribute("loading", "lazy");
+    frame.setAttribute("referrerpolicy", "no-referrer-when-downgrade");
+    frame.setAttribute("title", "Map");
+    el.appendChild(frame);
+    el.classList.add("cf26-map-on");
+  }
+
   function applyColours(data) {
     var c = (data && data.colours) || {};
     var root = document.documentElement;
@@ -127,7 +176,8 @@
     tag.textContent =
       "[data-cf-sec][hidden]{display:none !important}" +
       "[data-cf-gone]{display:none !important}" +
-      "[data-cf][data-cf-blank]{display:none !important}";
+      "[data-cf][data-cf-blank]{display:none !important}" +
+      "[data-cf]{overflow-wrap:anywhere}";
     (document.head || document.documentElement).appendChild(tag);
   }
 
@@ -274,7 +324,10 @@
 
   /* ---------------------------------------------------------------- go */
 
-  function tidyOnce() { try { hideRule(); tidyHighlights(); } catch (e) {} }
+  function tidyOnce() {
+    try { hideRule(); tidyHighlights(); } catch (e) {}
+    try { each("[data-cf-map]", function (el) { drawMap(el, el.textContent); }); } catch (e) {}
+  }
 
   applyAll(cached());          // before paint, from what we saw last time
 

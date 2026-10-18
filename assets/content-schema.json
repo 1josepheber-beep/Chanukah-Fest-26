@@ -1224,14 +1224,6 @@
      "value": "Full location details"
     },
     {
-     "key": "loc.fdde1768",
-     "sec": "loc",
-     "type": "text",
-     "tag": "div",
-     "label": "Address › [[ MAP IMAGE OR GOOGLE MAPS EMBED GOES HERE ]]",
-     "value": "[[ MAP IMAGE OR GOOGLE MAPS EMBED GOES HERE ]]"
-    },
-    {
      "key": "loc.park-name",
      "sec": "loc",
      "type": "text",
@@ -1269,6 +1261,14 @@
      "tag": "p",
      "label": "Parking › Note underneath",
      "value": "Parking is available through this garage."
+    },
+    {
+     "key": "loc.map",
+     "sec": "loc",
+     "type": "text",
+     "tag": "div",
+     "label": "Map › Place or address shown on the map",
+     "value": "Houston City Hall, 901 Bagby St, Houston, TX 77002"
     },
     {
      "key": "faq.4773b303",

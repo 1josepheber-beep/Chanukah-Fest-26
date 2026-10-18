@@ -126,6 +126,7 @@
        is told it may, which is what pushes the whole page sideways. */
     tag.textContent =
       "[data-cf-sec][hidden]{display:none !important}" +
+      "[data-cf-gone]{display:none !important}" +
       "[data-cf][data-cf-blank]{display:none !important}";
     (document.head || document.documentElement).appendChild(tag);
   }
@@ -139,6 +140,17 @@
       var rule = s[el.getAttribute("data-cf-sec")];
       if (rule && rule.hidden) el.setAttribute("hidden", "hidden");
       else el.removeAttribute("hidden");
+    });
+
+    /* Hiding a block has to take its jump link with it, or the menu is
+       left pointing at something that is no longer on the page. Most
+       anchors are named after their block; these three are not. */
+    var ALIAS = { schedule: "sched", location: "loc", questions: "faq" };
+    each('a[href^="#"]', function (a) {
+      var target = a.getAttribute("href").slice(1);
+      var rule = s[ALIAS[target] || target];
+      if (rule && rule.hidden) a.setAttribute("data-cf-gone", "");
+      else a.removeAttribute("data-cf-gone");
     });
 
     var order = [];

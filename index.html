@@ -1002,6 +1002,16 @@ label.cf-bad {
 .cf-sink { display: none; width: 0; height: 0; border: 0; }
 
 
+
+/* Belt and braces against sideways panning. Nothing on these pages
+   overflows — measured at 280 to 540px wide on three device profiles —
+   but if anything ever does, it must not become a page you can drag off
+   to one side and lose.
+
+   `clip`, not `hidden`: hidden makes the element a scroll container,
+   and the sticky sub-navigation would then stick to that container
+   instead of the screen. clip has no such side effect. */
+html, body { overflow-x: clip; max-width: 100%; }
 </style>
 
 <div class="cf26"><span data-cf="page.a10ad0a5">

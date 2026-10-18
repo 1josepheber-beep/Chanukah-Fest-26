@@ -129,6 +129,13 @@ main { flex: 1; display: grid; grid-template-columns: minmax(380px, 460px) 1fr; 
 .tab .n { opacity: .55; font-weight: 600; }
 
 .search { padding: 10px 12px; background: var(--panel); border-bottom: 1px solid var(--edge); }
+.search button.only {
+  width: 100%; margin-top: 7px; padding: 7px 10px;
+  font: 600 .82rem var(--sans); cursor: pointer; text-align: left;
+  background: var(--panel-2); color: var(--dim);
+  border: 1px solid var(--edge); border-radius: 8px;
+}
+.search button.only.on { background: var(--gold); color: #16202E; border-color: var(--gold); }
 .search input {
   width: 100%; padding: 9px 12px; font: .92rem var(--sans);
   background: #0E1A28; color: var(--text);
@@ -235,7 +242,10 @@ iframe.phone { width: 400px; flex: 0 0 400px; }
 <main>
   <div class="side">
     <div class="tabs" id="tabs"></div>
-    <div class="search"><input type="search" id="find" placeholder="Search all 605 pieces of text…"></div>
+    <div class="search">
+      <input type="search" id="find" placeholder="Search all 605 pieces of text…">
+      <button class="only" id="onlyChanged">Show only what has been changed</button>
+    </div>
     <div class="fields" id="fields"></div>
   </div>
 
@@ -348,7 +358,12 @@ function drawFields() {
 
   var p = pageOf(page);
   var bySec = {};
-  p.fields.forEach(function (f) { (bySec[f.sec] = bySec[f.sec] || []).push(f); });
+  p.fields.forEach(function (f) {
+    // "only changed" is how you find a stray note typed into a field
+    // months ago, which is otherwise one row among six hundred
+    if (onlyChanged && String(cur(f)) === String(f.value)) return;
+    (bySec[f.sec] = bySec[f.sec] || []).push(f);
+  });
 
   var order = p.sections.map(function (s) { return s.id; });
   Object.keys(bySec).forEach(function (s) { if (order.indexOf(s) === -1) order.push(s); });
@@ -391,8 +406,21 @@ function drawFields() {
   });
 
   if (!box.children.length) {
-    box.innerHTML = '<p style="color:var(--dim);padding:14px 2px">Nothing matches “' +
-                    esc(q) + '”.</p>';
+    box.innerHTML = '<p style="color:var(--dim);padding:14px 2px">' +
+      (onlyChanged ? "Nothing on this page has been changed."
+                   : "Nothing matches \u201c" + esc(q) + "\u201d.") + "</p>";
+  }
+
+  if (onlyChanged) {
+    var n = 0;
+    SCHEMA.pages.forEach(function (pg) {
+      pg.fields.forEach(function (f) { if (String(cur(f)) !== String(f.value)) n++; });
+    });
+    var head = document.createElement("p");
+    head.style.cssText = "color:var(--gold);font-size:.8rem;margin:0 2px 10px";
+    head.textContent = n + " field" + (n === 1 ? " has" : "s have") +
+                       " been changed across the whole site.";
+    box.insertBefore(head, box.firstChild);
   }
 }
 
@@ -640,6 +668,13 @@ $("revertAll").onclick = function () {
   edits = { fields: {}, colours: {}, sections: {} };
   touched(); drawFields(); showPreview();
   say("All unsaved changes undone.");
+};
+
+var onlyChanged = false;
+$("onlyChanged").onclick = function () {
+  onlyChanged = !onlyChanged;
+  $("onlyChanged").className = "only" + (onlyChanged ? " on" : "");
+  drawFields();
 };
 
 $("find").oninput = drawFields;

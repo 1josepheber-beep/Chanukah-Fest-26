@@ -405,7 +405,11 @@
 }
 
 .cf26 .cf26-apps-link {
-  display: block;
+  /* the cards are the same height, so a one-line label has to be
+     centred or it floats at the top beside two-line neighbours */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: #FFFFFF !important;
   border: 1px solid #EBD9A8;
   border-radius: 7px;

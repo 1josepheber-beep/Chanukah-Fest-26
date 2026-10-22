@@ -6,7 +6,7 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022d" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022e" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -148,6 +148,32 @@
 /* kept in the page for search engines and screen readers, not on screen —
    the artwork above already says Chanukah Fest, so showing the typed
    heading as well would say it twice */
+/* On a wide screen the chips and buttons sit on the lower part of the
+   artwork, where it is already dark, rather than stacking underneath it
+   and making the top of the page twice as tall as it needs to be.
+
+   A phone has no room for that — the banner is only about 130px tall
+   there — so below 900px the same block just flows under the image.
+   The markup is identical either way; only where it sits changes. */
+.cf-banner-hero { position: relative; max-width: 1024px; margin: 0 auto; }
+.cf-banner-over { padding: 16px 0 0; }
+
+@media (min-width: 900px) {
+  .cf-banner-over {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    /* the lettering in the artwork ends around 70% of the way down, so
+       everything here has to live in the bottom third and not a pixel
+       higher */
+    padding: 34px 24px 14px;
+    background: linear-gradient(180deg,
+      rgba(6,20,42,0) 0%, rgba(6,20,42,.55) 30%, rgba(6,20,42,.92) 100%);
+  }
+  .cf-banner-over .cf26-facts { margin-bottom: 10px; gap: 7px; }
+  .cf-banner-over .cf26-fact { padding: 5px 13px; font-size: 13.5px; }
+  .cf-banner-over .cf26-btn { padding: 11px 24px; font-size: 15px; }
+}
+
 .cf-banner {
   display: block;
   line-height: 0;
@@ -181,7 +207,9 @@
     radial-gradient(900px 420px at 50% 112%, rgba(240,180,41,0.30) 0%, rgba(240,180,41,0) 66%),
     linear-gradient(180deg, var(--navy-2) 0%, var(--navy) 58%, #123152 100%) !important;
   color: #FFFFFF !important;
-  padding: 0 0 60px;
+  /* the chips and buttons used to sit here and needed the room;
+     they are on the artwork now, so this is just breathing space */
+  padding: 0 0 30px;
   text-align: center;
   overflow: hidden;
 }
@@ -1068,15 +1096,9 @@ html, body { overflow-x: clip; max-width: 100%; }
 
   <!-- ==================== HERO ==================== -->
   </span><div class="cf26-hero" data-cf-sec="hero">
-    <div class="cf-banner"><img src="/Chanukah-Fest-26/images/banner-wide.jpg" alt="Houston Chanukah Fest" width="1024" height="348" /></div>
-    <div class="cf26-wrap">
-      <div class="cf26-kicker" data-cf="hero.23f60a5e">31st Annual Grand Menorah Lighting at Houston City Hall</div>
-
-      <h1 class="cf26-sr" data-cf="hero.645b2c16">Chanukah Fest 2026</h1>
-
-      <p class="cf26-hero-sub" data-cf="hero.9074814d">Four hours of music, food and family activities in downtown Houston, ending with the menorah lit and fireworks over City Hall.</p>
-
-      <div class="cf26-facts">
+    <div class="cf-banner cf-banner-hero"><img src="/Chanukah-Fest-26/images/banner-wide.jpg" alt="Houston Chanukah Fest" width="1024" height="348" />
+        <div class="cf-banner-over">
+          <div class="cf26-facts">
         <span class="cf26-fact" data-cf="hero.4f30495a">Sunday, December 6</span>
         <span class="cf26-fact" data-cf="hero.a075c3d3">3:00 – 7:00 PM</span>
         <span class="cf26-fact" data-cf="hero.9e847abd">Houston City Hall</span>
@@ -1087,6 +1109,16 @@ html, body { overflow-x: clip; max-width: 100%; }
         <a class="cf26-btn cf26-btn-gold" href="#location" data-cf="hero.ee79c420">Plan your visit</a>
         <a class="cf26-btn cf26-btn-ghost" href="/Chanukah-Fest-26/sponsor/" data-cf-href="hero.987469ad" data-cf="hero.8bb7dd5b">Become a sponsor</a>
       </div>
+        </div>
+      </div>
+    <div class="cf26-wrap">
+      <div class="cf26-kicker" data-cf="hero.23f60a5e">31st Annual Grand Menorah Lighting at Houston City Hall</div>
+
+      <h1 class="cf26-sr" data-cf="hero.645b2c16">Chanukah Fest 2026</h1>
+
+      <p class="cf26-hero-sub" data-cf="hero.9074814d">Four hours of music, food and family activities in downtown Houston, ending with the menorah lit and fireworks over City Hall.</p>
+
+      
     </div>
   </div><span data-cf="page.a6188c66">
 

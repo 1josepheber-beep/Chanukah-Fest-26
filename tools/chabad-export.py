@@ -28,7 +28,7 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
-BUILT = "22oct-1740-minisite"
+BUILT = "22oct-1805-colours-written-out"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
@@ -86,22 +86,79 @@ def plain_comments(css):
         lambda m: m.group(0).replace("<", "").replace(">", ""), css)
 
 
+RULE_HTML_BODY = re.compile(r"html\s*,\s*body\s*\{[^}]*\}", re.I)
+ROOT_RULE = re.compile(r":root\s*\{[^}]*\}", re.S)
+VAR_DEF = re.compile(r"(--[A-Za-z0-9_-]+)\s*:\s*([^;}]+)")
+VAR_USE = re.compile(r"var\(\s*(--[A-Za-z0-9_-]+)\s*\)")
+
+
+def flatten_vars(css):
+    """Write the colours out in full, and retire the custom properties.
+
+       Every colour on the site is named once in a :root block and then
+       used through var(--navy) and the like -- 88 times on the main page
+       alone. This editor is specified against HTML 4.01 and XHTML 1.0,
+       both of which predate custom properties by well over a decade, and
+       whatever reads the stylesheet there does not keep that block.
+
+       Each var() then resolves to nothing, and that is not evenly
+       damaging. A background falls back to transparent, so a navy band
+       turns white; text written as a literal #fff stays white. White
+       headings on a white band -- the section looks like a blank gap,
+       which is exactly how it came out.
+
+       Substituting the values here leaves nothing to resolve later."""
+    names = {}
+    for rule in ROOT_RULE.findall(css):
+        for name, value in VAR_DEF.findall(rule):
+            names[name] = value.strip()
+
+    # a colour may be defined in terms of another; settle those first
+    for _ in range(10):
+        after = {n: VAR_USE.sub(lambda m: names.get(m.group(1), m.group(0)), v)
+                 for n, v in names.items()}
+        if after == names:
+            break
+        names = after
+
+    css = ROOT_RULE.sub("", css)
+    for _ in range(10):
+        swapped = VAR_USE.sub(lambda m: names.get(m.group(1), m.group(0)), css)
+        if swapped == css:
+            break
+        css = swapped
+
+    # say so rather than ship a colour that resolves to nothing
+    left = re.findall(r"var\([^)]*\)", css)
+    if left:
+        raise SystemExit("  stylesheet still asks for " + left[0] +
+                         " and nothing defines it")
+    return css
+
+
 def one_stylesheet(html, body, nav_css):
     """Three of the pages keep their stylesheet in the head and two in the
        body, and nav.css is a file of its own. A pasted block has no head,
-       so all of it is gathered into a single <style> at the top."""
+       so all of it is gathered into a single <style> at the top.
+
+       Every block is gathered. An earlier version skipped any block that
+       set a background on html and body, so as not to paint over the
+       colour the CMS page already carries -- but it skipped the whole
+       block, and it only ever looked in the head. On the two pages that
+       keep their stylesheet there, that one small rule cost them the
+       entire design: volunteer and raffle went out with the header
+       styling and nothing else at all. Only the rule itself goes now,
+       and from wherever it happens to sit."""
     head = html[:html.index("<body>")]
     parts = []
     for css in STYLE.findall(head):
-        # their own template owns the page background; do not fight it
-        if "html,body{" in css.replace(" ", ""):
-            continue
-        parts.append(plain_comments(css.strip()))
+        parts.append(plain_comments(RULE_HTML_BODY.sub("", css).strip()))
     parts.append("/* ============== SITE HEADER ============== */\n" + plain_comments(nav_css.strip()))
     for css in STYLE.findall(body):
-        parts.append(plain_comments(css.strip()))
+        parts.append(plain_comments(RULE_HTML_BODY.sub("", css).strip()))
     body = STYLE.sub("", body).lstrip()
-    return '<style type="text/css">\n%s\n</style>\n\n%s' % ("\n\n".join(parts), body)
+    sheet = flatten_vars("\n\n".join(p for p in parts if p))
+    return '<style type="text/css">\n%s\n</style>\n\n%s' % (sheet, body)
 
 
 def drop_script_only_bits(body):

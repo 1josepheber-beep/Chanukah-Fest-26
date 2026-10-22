@@ -425,8 +425,27 @@ input:focus, select:focus, textarea:focus {
    and the sticky sub-navigation would then stick to that container
    instead of the screen. clip has no such side effect. */
 html, body { overflow-x: clip; max-width: 100%; }
+
+/* The sub-pages carried no artwork at all — a plain navy band with a
+   little gold glow. The banner is the shape of that band, and these
+   pages show the logo nowhere else, so the one inside it is welcome
+   rather than a repeat of the hero. */
+.cf-banner {
+  display: block;
+  line-height: 0;
+  background-color: #06142A;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.cf-banner img {
+  display: block;
+  width: 100%;
+  max-height: 190px;
+  object-fit: cover;
+  object-position: center 45%;
+}
+@media (max-width: 640px) { .cf-banner img { max-height: 132px; } }
 </style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022a" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022b" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Volunteer at Chanukah Fest 2026" />
@@ -453,7 +472,8 @@ html, body { overflow-x: clip; max-width: 100%; }
 </div>
 
 <div class="head" data-cf-sec="head">
-  <div class="wrap">
+  <a class="cf-banner" href="/Chanukah-Fest-26/"><img src="/Chanukah-Fest-26/images/banner-wide.jpg" alt="Houston Chanukah Fest" width="1024" height="348" /></a>
+        <div class="wrap">
     <div class="head-kicker" data-cf="head.0161651b">31st Annual Grand Menorah Lighting &middot; Sunday, December 6, 2026</div>
     <h1 data-cf="head.ddb7c39a">Join the volunteer team</h1>
     <p data-cf="head.157c8bd7">Setup, greeting, children's activities, food, the VIP tent and teardown. Pick the jobs and hours that suit you.</p>

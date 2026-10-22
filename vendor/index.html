@@ -6,8 +6,8 @@
 <title data-cf="page.1b6a4431">Chanukah Fest 2026 Vendor Application</title>
 <meta name="description" content="Reserve a booth at Chanukah Fest 2026, Houston City Hall.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/forms.js?v=20261022a" defer></script>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022a" defer></script>
+<script src="/Chanukah-Fest-26/assets/forms.js?v=20261022b" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022b" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Chanukah Fest 2026 Vendor Booths" />
@@ -785,6 +785,25 @@ label.cf-bad {
    and the sticky sub-navigation would then stick to that container
    instead of the screen. clip has no such side effect. */
 html, body { overflow-x: clip; max-width: 100%; }
+
+/* The sub-pages carried no artwork at all — a plain navy band with a
+   little gold glow. The banner is the shape of that band, and these
+   pages show the logo nowhere else, so the one inside it is welcome
+   rather than a repeat of the hero. */
+.cf-banner {
+  display: block;
+  line-height: 0;
+  background-color: #06142A;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.cf-banner img {
+  display: block;
+  width: 100%;
+  max-height: 190px;
+  object-fit: cover;
+  object-position: center 45%;
+}
+@media (max-width: 640px) { .cf-banner img { max-height: 132px; } }
 </style>
 
 <div class="vf26">
@@ -805,7 +824,8 @@ html, body { overflow-x: clip; max-width: 100%; }
 
   <!-- ==================== HEADER ==================== -->
   </span><div class="vf26-head" data-cf-sec="head">
-    <div class="vf26-wrap">
+    <a class="cf-banner" href="/Chanukah-Fest-26/"><img src="/Chanukah-Fest-26/images/banner-wide.jpg" alt="Houston Chanukah Fest" width="1024" height="348" /></a>
+        <div class="vf26-wrap">
       <div class="vf26-head-kicker" data-cf="head.ba75e8ae">31st Annual Chanukah Fest &amp; Grand Menorah Lighting</div>
       <h1 data-cf="head.69f47b3b">2026 Vendor Application</h1>
       <p class="vf26-head-sub" data-cf="head.23f45d39">Reserve a booth at Houston City Hall on Sunday, December 6.</p>

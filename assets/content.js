@@ -158,6 +158,7 @@
      nothing, a list item is a bullet on its own. Innermost first, so a
      list is judged after the items inside it have gone. */
   var EMPTY_HIDES = [[".cf26-act", ".cf26-act-body"], [".sp26-stat", null],
+                     [".cf26-slot", null],
                      ["li", null], ["ul", null], ["ol", null],
                      ["label", null]];
 

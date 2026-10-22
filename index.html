@@ -8,7 +8,7 @@
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
 <link rel="stylesheet" href="/Chanukah-Fest-26/assets/nav.css?v=20261022q" />
 <script src="/Chanukah-Fest-26/assets/to-top.js?v=20261022p" defer></script>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022s" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022t" defer></script>
 <script src="/Chanukah-Fest-26/assets/calendar.js?v=20261022p" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
@@ -599,7 +599,27 @@
   margin-top: 36px;
 }
 
+/* Acts that are not the headline act. They used to sit beside it as
+   equal cards, each with its own photo box, which read as though the
+   school choirs were billed the same as the headliners. */
+.cf26 .cf26-also {
+  margin: 26px 0 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+.cf26 .cf26-also li {
+  margin-top: 9px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--muted) !important;
+}
+.cf26 .cf26-also li::marker { color: var(--gold); }
+.cf26 .cf26-also strong { color: var(--ink) !important; font-weight: 700; }
+
+/* With only the headliner left in the row, a full-width track would
+   stretch the poster to about 800px tall. */
 .cf26 .cf26-act {
+  max-width: 520px;
   border: 1px solid var(--line);
   border-radius: 10px;
   overflow: hidden;
@@ -643,9 +663,11 @@
 /* ============================ FOOD AND BOOTHS ============================ */
 .cf26 .cf26-food { background-color: var(--page) !important; }
 
+/* Was a fixed pair. It carries three now, and should take however many
+   it is given rather than needing a new rule each time one is added. */
 .cf26 .cf26-two {
   display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 26px;
   margin-top: 36px;
 }
@@ -855,7 +877,6 @@
 /* ============================ RESPONSIVE ============================ */
 @media (max-width: 900px) {
   .cf26 .cf26-about-grid,
-  .cf26 .cf26-two,
   .cf26 .cf26-loc-grid,
   .cf26 .cf26-qs {
     grid-template-columns: minmax(0,1fr);
@@ -1309,16 +1330,13 @@ html, body { overflow-x: clip; max-width: 100%; }
           </div>
         </div>
 
-        <div class="cf26-act">
-          <div class="cf26-act-photo" data-cf="stage.c6bb3813~2">[[ PHOTO ]]</div>
-          <div class="cf26-act-body">
-            <div class="cf26-act-role" data-cf="stage.bfd58ee3">Community</div>
-            <h3 data-cf="stage.f089dfd9">School choirs and bands</h3>
-            <p><span data-cf="stage.7f08a223">Students from Houston-area schools open the afternoon. </span><span class="cf26-fill" data-cf="stage.90705357">[[ SCHOOL NAMES ]]</span></p>
-          </div>
-        </div>
-
       </div>
+
+      <ul class="cf26-also">
+        <li>
+          <strong data-cf="stage.f089dfd9">School choirs and bands</strong><span class="cf-sep"> &mdash; </span><span data-cf="stage.7f08a223">Students from Houston-area schools open the afternoon. </span><span class="cf26-fill" data-cf="stage.90705357">[[ SCHOOL NAMES ]]</span>
+        </li>
+      </ul>
 
     </div>
   </div><span data-cf="page.bc9086b6">
@@ -1351,7 +1369,11 @@ html, body { overflow-x: clip; max-width: 100%; }
             <span class="cf26-tag" data-cf="food.24d2bb75">Photo booths</span>
             <span class="cf26-tag" data-cf="food.74236d4d">Community exhibits</span>
           </div>
-          <p style="margin-top:18px;"><span data-cf="food.3356f093">Toy drive on site — </span><span class="cf26-fill" data-cf="food.700a24cd">[[ WHAT TO BRING AND WHERE IT GOES ]]</span></p>
+        </div>
+
+        <div class="cf26-panel">
+          <h3 data-cf="food.3356f093">Toy drive on site</h3>
+          <p><span class="cf26-fill" data-cf="food.700a24cd">[[ WHAT TO BRING AND WHERE IT GOES ]]</span></p>
         </div>
 
       </div>

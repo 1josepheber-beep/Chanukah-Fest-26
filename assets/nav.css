@@ -50,6 +50,9 @@
   color: #F0B429 !important;
   border-bottom-color: #F0B429;
 }
+/* same trap as the pill below: :hover outranks this, so without saying so
+   the page you are on would lose its gold the moment you pointed at it */
+.cfnav .cfnav-row .cfnav-link-current:hover { color: #F7C64B !important; }
 
 /* ---- the application links -------------------------------------------- */
 
@@ -95,6 +98,15 @@
   color: #0A1E38 !important;
   background-color: #F0B429 !important;
   border-color: #F0B429;
+}
+/* A pseudo-class counts towards specificity, so the plain :hover rule
+   above outranks the rule that fills this one in. Hovering the page you
+   are already on therefore washed the gold out from under text that
+   stayed dark, leaving navy on navy. It lifts instead of dropping. */
+.cfbar .cfbar-row .cfbar-link-current:hover {
+  color: #0A1E38 !important;
+  background-color: #F7C64B !important;
+  border-color: #F7C64B;
 }
 
 /* A field cleared in the editor leaves an element with nothing in it;

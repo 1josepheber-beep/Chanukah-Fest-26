@@ -6,7 +6,7 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022c" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022d" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -148,6 +148,19 @@
 /* kept in the page for search engines and screen readers, not on screen —
    the artwork above already says Chanukah Fest, so showing the typed
    heading as well would say it twice */
+.cf-banner {
+  display: block;
+  line-height: 0;
+  margin-bottom: 22px;
+}
+.cf-banner img {
+  display: block;
+  width: 100%;
+  max-width: 1024px;
+  height: auto;
+  margin: 0 auto;
+}
+
 .cf26 .cf26-sr {
   position: absolute !important;
   width: 1px; height: 1px;
@@ -168,17 +181,9 @@
     radial-gradient(900px 420px at 50% 112%, rgba(240,180,41,0.30) 0%, rgba(240,180,41,0) 66%),
     linear-gradient(180deg, var(--navy-2) 0%, var(--navy) 58%, #123152 100%) !important;
   color: #FFFFFF !important;
-  padding: 56px 0 60px;
+  padding: 0 0 60px;
   text-align: center;
   overflow: hidden;
-  /* the photograph sits under a heavy wash so nothing on top of it
-     loses contrast; the artwork is the subject, this is atmosphere */
-  background-image:
-    linear-gradient(180deg, rgba(6,20,42,.86) 0%, rgba(6,20,42,.92) 55%, var(--navy) 100%),
-    url('/Chanukah-Fest-26/images/hero-bg.jpg');
-  background-size: cover, cover;
-  background-position: center, center top;
-  background-repeat: no-repeat, no-repeat;
 }
 
 .cf26 .cf26-kicker {
@@ -1063,10 +1068,9 @@ html, body { overflow-x: clip; max-width: 100%; }
 
   <!-- ==================== HERO ==================== -->
   </span><div class="cf26-hero" data-cf-sec="hero">
+    <div class="cf-banner"><img src="/Chanukah-Fest-26/images/banner-wide.jpg" alt="Houston Chanukah Fest" width="1024" height="348" /></div>
     <div class="cf26-wrap">
       <div class="cf26-kicker" data-cf="hero.23f60a5e">31st Annual Grand Menorah Lighting at Houston City Hall</div>
-
-      <img class="cf26-logo" src="/Chanukah-Fest-26/images/logo.png" alt="" width="1024" height="306" />
 
       <h1 class="cf26-sr" data-cf="hero.645b2c16">Chanukah Fest 2026</h1>
 

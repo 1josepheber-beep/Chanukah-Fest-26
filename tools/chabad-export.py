@@ -28,7 +28,7 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
-BUILT = "22oct-1805-colours-written-out"
+BUILT = "22oct-1825-menu-and-faq"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
@@ -136,6 +136,90 @@ def flatten_vars(css):
     return css
 
 
+MENU_CSS = """/* ============== THE MENU, WITH NOTHING RUNNING ==============
+
+   On a phone the eight links do not fit, so they fold behind a
+   button. That button used to need a script to open it, and there is
+   no script here -- which is why the links came back as a strip that
+   runs off the edge of the screen with nothing to say so.
+
+   A checkbox needs no script. Clicking a label ticks the checkbox it
+   names, which is plain HTML 4 behaviour, and CSS can see the state.
+   The label is the button; the checkbox itself is parked off-screen.
+
+   Every rule that folds the links away is written with :checked. If
+   this system ever stops understanding that, the whole group is
+   ignored: the button stays hidden and the links stay out in the
+   open, exactly as they are today. The one outcome worth avoiding is
+   a menu that is there but will not open, and this cannot produce it.
+*/
+
+.cfnav .cfnav-chk { position: absolute; left: -9999px; }
+
+@media (max-width: 760px) {
+
+  .cfnav .cfnav-chk:checked + .cfnav-toggle,
+  .cfnav .cfnav-chk:not(:checked) + .cfnav-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 11px;
+    padding: 15px 16px;
+    font-family: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #B9CBDE;
+    cursor: pointer;
+  }
+
+  /* shut unless the box is ticked */
+  .cfnav .cfnav-chk:not(:checked) + .cfnav-toggle + .cfnav-inner { display: none; }
+
+  .cfnav .cfnav-chk:checked + .cfnav-toggle + .cfnav-inner {
+    padding: 0;
+    overflow-x: visible;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  /* three bars, drawn rather than typed */
+  .cfnav .cfnav-bars {
+    display: block;
+    width: 19px; height: 2px;
+    background: #F0B429;
+    box-shadow: 0 6px 0 #F0B429, 0 -6px 0 #F0B429;
+  }
+  .cfnav .cfnav-chk:checked + .cfnav-toggle .cfnav-bars {
+    box-shadow: none;
+    transform: rotate(45deg);
+    position: relative;
+  }
+  .cfnav .cfnav-chk:checked + .cfnav-toggle .cfnav-bars::after {
+    content: ""; position: absolute; left: 0; top: 0;
+    width: 19px; height: 2px; background: #F0B429;
+    transform: rotate(-90deg);
+  }
+
+  .cfnav .cfnav-chk:checked + .cfnav-toggle + .cfnav-inner .cfnav-row {
+    flex-direction: column;
+    width: auto;
+    gap: 0;
+  }
+  .cfnav .cfnav-chk:checked + .cfnav-toggle + .cfnav-inner .cfnav-link {
+    padding: 14px 16px;
+    font-size: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid transparent;
+  }
+  .cfnav .cfnav-chk:checked + .cfnav-toggle + .cfnav-inner .cfnav-link-current {
+    border-bottom-color: rgba(255, 255, 255, 0.07);
+    border-left-color: #F0B429;
+  }
+}
+"""
+
+
 def one_stylesheet(html, body, nav_css):
     """Three of the pages keep their stylesheet in the head and two in the
        body, and nav.css is a file of its own. A pasted block has no head,
@@ -154,6 +238,7 @@ def one_stylesheet(html, body, nav_css):
     for css in STYLE.findall(head):
         parts.append(plain_comments(RULE_HTML_BODY.sub("", css).strip()))
     parts.append("/* ============== SITE HEADER ============== */\n" + plain_comments(nav_css.strip()))
+    parts.append(plain_comments(MENU_CSS.strip()))
     for css in STYLE.findall(body):
         parts.append(plain_comments(RULE_HTML_BODY.sub("", css).strip()))
     body = STYLE.sub("", body).lstrip()
@@ -165,9 +250,16 @@ def drop_script_only_bits(body):
     # two of the pages carry their form handler inline; it cannot come
     body = re.sub(r"\s*<script\b[^>]*>.*?</script>", "", body, flags=re.S)
 
-    # the menu button does nothing without a script to open it
-    body = re.sub(r'\s*<button type="button" class="cfnav-toggle".*?</button>',
-                  "", body, flags=re.S)
+    # The menu button needed a script to open, so it used to be dropped
+    # and the links left as a strip. A label and its own checkbox do the
+    # same job with nothing running; the bars and the wording come across
+    # unchanged. MENU_CSS above folds the links away.
+    body = re.sub(
+        r'\s*<button type="button" class="cfnav-toggle"[^>]*>(.*?)</button>',
+        lambda m: ('\n    <input type="checkbox" id="cfnavopen" class="cfnav-chk" />'
+                   '\n    <label for="cfnavopen" class="cfnav-toggle">%s</label>'
+                   % m.group(1).strip()),
+        body, flags=re.S)
 
     # the date chip: keep the words, lose the menu it used to open
     body = re.sub(
@@ -217,8 +309,15 @@ def old_html_only(body):
     """Their editor accepts XHTML 1.0 / HTML 4.01 and may strip anything
        newer. Rather than hope each modern piece survives, none is sent.
 
-       details/summary  the FAQ becomes headings with their answers under
-                        them, always open. Nothing is lost but the folding.
+       details/summary  kept. These are HTML5 and the guidance warns that
+                        newer tags may be stripped, so the FAQ went out
+                        unfolded at first -- an answer always showing is a
+                        poor result, but a dropdown that cannot open is a
+                        worse one. A probe page pasted into a scratch
+                        article settled it: the element survives there,
+                        triangle and all, so the folding comes back. If it
+                        is ever stripped the children remain and the
+                        answers simply show, which is where this started.
        srcset           one picture instead of three to choose from.
        data- and aria-  not in that DTD. data- in particular is load
                         bearing here -- the rules that hide a cleared
@@ -228,11 +327,6 @@ def old_html_only(body):
                         copy, so there is nothing for them to come back for.
     """
     body = cut_marked(body)
-
-    # the FAQ, unfolded
-    body = re.sub(r"<details[^>]*>\s*<summary[^>]*>(.*?)</summary>(.*?)</details>",
-                  lambda m: m.group(1) + m.group(2), body, flags=re.S)
-    body = body.replace('<div class="cf26-q-body">', "<div>")
 
     # one picture, not a set
     body = re.sub(r'\s(?:srcset|sizes)="[^"]*"', "", body)
@@ -390,8 +484,10 @@ def main():
         except ET.ParseError as err:
             raise AssertionError("%s does not parse as XML: %s" % (name, err))
 
-        for banned, what in [(r"<details", "details"), (r"<summary", "summary"),
-                             (r"\ssrcset=", "srcset"), (r"\sdata-[\w-]+=", "a data- attribute"),
+        # details and summary are deliberate now -- the probe page showed
+        # their system keeps them -- so they are not on this list.
+        for banned, what in [(r"\ssrcset=", "srcset"),
+                             (r"\sdata-[\w-]+=", "a data- attribute"),
                              (r"\saria-[\w-]+=", "an aria- attribute")]:
             hits = re.findall(banned, out)
             assert not hits, "%s still has %s (%d)" % (name, what, len(hits))

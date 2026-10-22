@@ -65,19 +65,26 @@
   var MONTHS = ["January","February","March","April","May","June","July",
                 "August","September","October","November","December"];
 
+  function clock(d) {
+    var h = d.getHours() % 12 || 12;
+    var m = d.getMinutes();
+    return h + ":" + (m < 10 ? "0" + m : m) + (d.getHours() < 12 ? " AM" : " PM");
+  }
+
   function readable(v) {
     var raw = String(v == null ? "" : v);
     if (!DATE_DUMP.test(raw.trim())) return v;
     var d = new Date(raw);
     if (isNaN(d.getTime())) return v;
+
+    /* Type a bare time into a field and the sheet stores a time, which it
+       counts from its own zero day -- 30 December 1899. Handing that whole
+       date back is nonsense; the time is the entire content of the cell. */
+    if (d.getFullYear() < 1900) return clock(d);
+
     var out = DAYS[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " +
               d.getDate() + ", " + d.getFullYear();
-    if (d.getHours() || d.getMinutes()) {
-      var h = d.getHours() % 12 || 12;
-      var m = d.getMinutes();
-      out += " at " + h + ":" + (m < 10 ? "0" + m : m) +
-             (d.getHours() < 12 ? " AM" : " PM");
-    }
+    if (d.getHours() || d.getMinutes()) out += " at " + clock(d);
     return out;
   }
 

@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,viewport-fit=cover">
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
-<meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
+<meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission, with reserved seating available.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
 <link rel="stylesheet" href="/Chanukah-Fest-26/assets/nav.css?v=20261022q" />
 <script src="/Chanukah-Fest-26/assets/to-top.js?v=20261022p" defer></script>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022t" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022u" defer></script>
 <script src="/Chanukah-Fest-26/assets/calendar.js?v=20261022p" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
-<meta property="og:description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission." />
+<meta property="og:description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission, with reserved seating available." />
 <meta property="og:image" content="https://1josepheber-beep.github.io/Chanukah-Fest-26/images/hero.jpg" />
 <meta property="og:url" content="https://1josepheber-beep.github.io/Chanukah-Fest-26/" />
 <meta property="og:type" content="website" />
@@ -924,6 +924,62 @@
 
 
 /* ---- raffle band ---- */
+/* ---- reserved seating ----
+   The raffle band directly above this is navy with a gold glow. Repeating
+   that would make the two read as one long advert, so this one sits on the
+   page background and earns its weight from a gold-edged card instead. */
+.cf26 .cf26-seats { background-color: var(--page) !important; }
+
+.cf26 .cf26-seats-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 34px 32px;
+  text-align: center;
+  background-color: #FFFFFF !important;
+  border: 2px solid var(--gold);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(6,20,42,0.07);
+}
+
+.cf26 .cf26-seats-badge {
+  display: inline-block;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.cf26 .cf26-seats-card h2 { margin-bottom: 12px; }
+
+.cf26 .cf26-seats-card p {
+  max-width: 54ch;
+  margin: 0 auto 24px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted) !important;
+}
+
+.cf26 .cf26-seats-btn {
+  display: inline-block;
+  background-color: var(--gold) !important;
+  color: var(--ink) !important;
+  font-size: 17px;
+  font-weight: 800;
+  padding: 16px 36px;
+  border-radius: 9px;
+}
+.cf26 .cf26-seats-btn:hover { background-color: #F7C64B !important; }
+
+@media (max-width: 640px) {
+  .cf26 .cf26-seats-card { padding: 26px 20px; }
+  .cf26 .cf26-seats-btn { display: block; padding: 16px 20px; }
+}
+
 .cf26 .cf26-raffle {
   background-color: var(--navy) !important;
   background-image: radial-gradient(680px 300px at 50% 120%, rgba(240,180,41,0.24) 0%, rgba(240,180,41,0) 70%) !important;
@@ -1195,7 +1251,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <div class="cf26-prose" style="margin-top:22px;">
             <p data-cf="about.d120ed54">What began as a public lighting has grown into one of the largest Jewish community gatherings in Greater Houston, drawing families, business leaders and elected officials from across the region. It is open to everyone — Jewish or not, affiliated or not.</p>
             <p data-cf="about.c17a14eb">Chanukah Fest 2026 falls on Sunday, December 6, the third night of Chanukah. The afternoon runs as a festival: live music, more than twenty activity and craft booths, kosher food, strolling performers, a digital raffle and a toy drive. At six o'clock everything stops for the ceremony, and the evening closes with fireworks behind the Grand Menorah.</p>
-            <p data-cf="about.88b0307e">Admission is free. Food, merchandise and VIP seating are available for purchase.</p>
+            <p data-cf="about.88b0307e">Admission is free and open to everyone. Reserved front-row seating can be purchased in advance — only 500 seats are available — along with food and merchandise.</p>
           </div>
         </div>
 
@@ -1224,7 +1280,7 @@ html, body { overflow-x: clip; max-width: 100%; }
             </li>
             <li>
               <span class="cf26-dt" data-cf="about.64a37eb1">Admission</span>
-              <span class="cf26-dd" data-cf="about.3e56df44">Free and open to the public</span>
+              <span class="cf26-dd" data-cf="about.3e56df44">Free and open to the public. Reserved seating available.</span>
             </li>
             <li>
               <span class="cf26-dt" data-cf="about.cbc13012">Expected attendance</span>
@@ -1391,6 +1447,18 @@ html, body { overflow-x: clip; max-width: 100%; }
     </div>
   </div><span data-cf="page.e64a91c0">
 
+  <!-- ==================== RESERVED SEATING ==================== -->
+  </span><div class="cf26-seats cf26-band" id="seating" data-cf-sec="seating">
+    <div class="cf26-wrap">
+      <div class="cf26-seats-card">
+        <span class="cf26-seats-badge" data-cf="seating.b1a0c5d1">Only 500 seats</span>
+        <h2 data-cf="seating.7c4e2f88">Reserved seating</h2>
+        <p data-cf="seating.2f9ad640">Enjoy guaranteed, front-row seating right in front of the main stage and Menorah lighting. While Houston Chanukah Fest is free and open to all, primary reserved seats are extremely limited. Secure your dedicated seat today!</p>
+        <a class="cf26-seats-btn" href="https://www.ticketsignup.io/TicketEvent/HoustonChanukahFest" target="_blank" rel="noopener" data-cf-href="seating.0d3b7a19" data-cf="seating.5e81c4b2">Reserve your seats</a>
+      </div>
+    </div>
+  </div><span data-cf="page.3a7c91e2">
+
   <!-- ==================== GET INVOLVED ==================== -->
   </span><div class="cf26-involved cf26-band cf26-anchor" id="involved" data-cf-sec="involved">
     <div class="cf26-wrap">
@@ -1468,7 +1536,7 @@ html, body { overflow-x: clip; max-width: 100%; }
 
         <div class="cf26-q">
           <h3 data-cf="faq.de0cab55">Do I need a ticket?</h3>
-          <p data-cf="faq.ef899d28">No. Admission is free and open to everyone. VIP seating, food and merchandise are the only things you pay for.</p>
+          <p data-cf="faq.ef899d28">No. Admission is free and open to everyone. If you would like a guaranteed seat at the front, reserved seating can be bought in advance and only 500 seats are available. Food and merchandise are the only other things you pay for.</p>
         </div>
 
         <div class="cf26-q">

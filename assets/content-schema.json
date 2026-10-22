@@ -39,6 +39,10 @@
           "label": "Raffle"
         },
         {
+          "id": "seating",
+          "label": "Reserved seating"
+        },
+        {
           "id": "involved",
           "label": "Involved"
         },
@@ -1433,6 +1437,46 @@
           "tag": "span",
           "label": "Add to calendar › Address",
           "value": "Houston City Hall, 901 Bagby St, Houston, TX 77002"
+        },
+        {
+          "key": "seating.b1a0c5d1",
+          "sec": "seating",
+          "type": "text",
+          "tag": "span",
+          "label": "Reserved seating › Badge",
+          "value": "Only 500 seats"
+        },
+        {
+          "key": "seating.7c4e2f88",
+          "sec": "seating",
+          "type": "text",
+          "tag": "h2",
+          "label": "Reserved seating › Heading",
+          "value": "Reserved seating"
+        },
+        {
+          "key": "seating.2f9ad640",
+          "sec": "seating",
+          "type": "text",
+          "tag": "p",
+          "label": "Reserved seating › Description",
+          "value": "Enjoy guaranteed, front-row seating right in front of the main stage and Menorah lighting. While Houston Chanukah Fest is free and open to all, primary reserved seats are extremely limited. Secure your dedicated seat today!"
+        },
+        {
+          "key": "seating.5e81c4b2",
+          "sec": "seating",
+          "type": "text",
+          "tag": "a",
+          "label": "Reserved seating › Button text",
+          "value": "Reserve your seats"
+        },
+        {
+          "key": "seating.0d3b7a19",
+          "sec": "seating",
+          "type": "text",
+          "tag": "a",
+          "label": "Reserved seating › Button link",
+          "value": "https://www.ticketsignup.io/TicketEvent/HoustonChanukahFest"
         }
       ]
     },

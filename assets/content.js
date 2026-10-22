@@ -132,18 +132,36 @@
      emptied stays on the page as a picture with no caption. If every
      editable piece of text in the body has gone, the card goes too --
      and comes straight back the moment anything is typed into it. */
-  var EMPTY_HIDES = [[".cf26-act", ".cf26-act-body"], [".sp26-stat", null]];
+  /* The text a reader would actually see: anything already marked blank,
+     or hidden for some other reason, does not count. Checking the editable
+     fields alone was not enough -- a block can hold typed-in words beside
+     them, and those should keep it alive. */
+  function livingText(el) {
+    var out = "";
+    (function walk(n) {
+      for (var c = n.firstChild; c; c = c.nextSibling) {
+        if (c.nodeType === 3) { out += c.nodeValue; continue; }
+        if (c.nodeType !== 1) continue;
+        if (c.hasAttribute("data-cf-blank") || c.hasAttribute("data-cf-gone")) continue;
+        walk(c);
+      }
+    })(el);
+    return out;
+  }
+
+  /* Blocks that are nothing but decoration once their words are gone: a
+     card is a photo with no caption, a stat box is a gold rule over
+     nothing, a list item is a bullet on its own. Innermost first, so a
+     list is judged after the items inside it have gone. */
+  var EMPTY_HIDES = [[".cf26-act", ".cf26-act-body"], [".sp26-stat", null],
+                     ["li", null], ["ul", null], ["ol", null]];
 
   function tidyCards() {
     EMPTY_HIDES.forEach(function (pair) { each(pair[0], function (card) {
       var body = pair[1] ? card.querySelector(pair[1]) : card;
       if (!body) return;
-      var bound = body.querySelectorAll("[data-cf]");
-      if (!bound.length) return;            /* nothing editable: not ours to hide */
-      var anyWords = false;
-      for (var i = 0; i < bound.length; i++) {
-        if (!bound[i].hasAttribute("data-cf-blank")) { anyWords = true; break; }
-      }
+      if (!body.querySelector("[data-cf]")) return;   /* nothing editable: not ours */
+      var anyWords = HAS_WORDS.test(livingText(body));
       if (anyWords) card.removeAttribute("data-cf-gone");
       else card.setAttribute("data-cf-gone", "");
     }); });

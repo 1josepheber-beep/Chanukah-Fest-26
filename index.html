@@ -6,7 +6,7 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022h" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022i" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -205,7 +205,11 @@
 /* The poster carries the logo across its top half and the performers
    below, so a card showing the middle would be mostly sky. Anchored to
    the bottom, the card holds all three of them. */
-.cf26 .cf26-act-photo-poster img { object-position: center bottom; }
+/* The poster is 1024x791 and the card slot is much wider than it is
+   tall, so most of the picture is cropped away. Anchored at the bottom
+   the crop took the performers' heads off once the card widened; 72%
+   keeps all three faces in and the lettering out. */
+.cf26 .cf26-act-photo-poster img { object-position: center 72%; }
 
 .cf26 .cf26-hero {
   background-color: var(--navy) !important;
@@ -918,8 +922,12 @@
   .cf26 .cf26-band { padding: 46px 0; }
 
   /* hero trimmed so the nav bar lands at the fold */
-  .cf26 .cf26-hero { padding: 26px 0 30px; }
-  .cf26 .cf26-kicker { font-size: 12.5px; margin-bottom: 16px; max-width: 26ch; }
+  /* The artwork carries the hero now, so the dark padding around it
+     was just empty screen on a phone -- a band above the banner and a
+     bigger one under the gold line, before anything to read. */
+  .cf26 .cf26-hero { padding: 6px 0 14px; }
+  .cf26 .cf-banner-hero { margin-bottom: 14px; }
+  .cf26 .cf26-kicker { font-size: 12.5px; margin-bottom: 8px; max-width: 26ch; }
   .cf26 .cf26-menorah {
     transform: scale(.68);
     transform-origin: center top;

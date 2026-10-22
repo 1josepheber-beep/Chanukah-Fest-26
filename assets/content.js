@@ -97,6 +97,26 @@
     });
   }
 
+  /* A card whose words have all been cleared is still a card: a photo
+     with nothing under it. Merge two acts into one and the card you
+     emptied stays on the page as a picture with no caption. If every
+     editable piece of text in the body has gone, the card goes too --
+     and comes straight back the moment anything is typed into it. */
+  function tidyCards() {
+    each(".cf26-act", function (card) {
+      var body = card.querySelector(".cf26-act-body");
+      if (!body) return;
+      var bound = body.querySelectorAll("[data-cf]");
+      if (!bound.length) return;            /* nothing editable: not ours to hide */
+      var anyWords = false;
+      for (var i = 0; i < bound.length; i++) {
+        if (!bound[i].hasAttribute("data-cf-blank")) { anyWords = true; break; }
+      }
+      if (anyWords) card.removeAttribute("data-cf-gone");
+      else card.setAttribute("data-cf-gone", "");
+    });
+  }
+
   function applyFields(data) {
     if (!data) return;
     var by = data.fields || {};
@@ -270,6 +290,7 @@
     try { applyFields(data); } catch (e) {}
     try { tidyBreaks(); } catch (e) {}
     try { tidyHighlights(); } catch (e) {}
+    try { tidyCards(); } catch (e) {}
     try { applyColours(data); } catch (e) {}
     try { applySections(data); } catch (e) {}
     // after layout has settled
@@ -355,7 +376,7 @@
   /* ---------------------------------------------------------------- go */
 
   function tidyOnce() {
-    try { hideRule(); tidyHighlights(); } catch (e) {}
+    try { hideRule(); tidyHighlights(); tidyCards(); } catch (e) {}
     try { each("[data-cf-map]", function (el) { drawMap(el, el.textContent); }); } catch (e) {}
   }
 

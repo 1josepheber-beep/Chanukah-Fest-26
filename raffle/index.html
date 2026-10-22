@@ -494,16 +494,20 @@ html, body { overflow-x: clip; max-width: 100%; }
   background-color: #06142A;
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
+/* Shown whole, never cropped. Capping the height and letting it cover
+   meant a wide screen scaled the 1024px artwork up to the full window
+   and then cut a band out of the middle, taking the top and bottom off
+   the lettering. Capped at its own width instead, so it is never
+   enlarged past the size it was drawn at and nothing is lost. */
 .cf-banner img {
   display: block;
   width: 100%;
-  max-height: 190px;
-  object-fit: cover;
-  object-position: center 45%;
+  max-width: 1024px;
+  height: auto;
+  margin: 0 auto;
 }
-@media (max-width: 640px) { .cf-banner img { max-height: 132px; } }
 </style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022b" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022c" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Chanukah Fest Raffle" />

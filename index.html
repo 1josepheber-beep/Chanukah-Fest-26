@@ -6,7 +6,15 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261018d" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022a" defer></script>
+<link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
+<meta property="og:title" content="Houston Chanukah Fest 2026" />
+<meta property="og:description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission." />
+<meta property="og:image" content="https://1josepheber-beep.github.io/Chanukah-Fest-26/images/hero.jpg" />
+<meta property="og:url" content="https://1josepheber-beep.github.io/Chanukah-Fest-26/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
 <style type="text/css">
@@ -130,6 +138,30 @@
 }
 
 /* ============================ HERO ============================ */
+.cf26 .cf26-logo {
+  display: block;
+  width: min(100%, 620px);
+  height: auto;
+  margin: 0 auto 18px;
+}
+
+/* kept in the page for search engines and screen readers, not on screen —
+   the artwork above already says Chanukah Fest, so showing the typed
+   heading as well would say it twice */
+.cf26 .cf26-sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%);
+  overflow: hidden; white-space: nowrap;
+}
+
+.cf26 .cf26-act-photo-on { padding: 0; overflow: hidden; }
+.cf26 .cf26-act-photo-on img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: center 22%;
+}
+
 .cf26 .cf26-hero {
   background-color: var(--navy) !important;
   background-image:
@@ -139,6 +171,14 @@
   padding: 56px 0 60px;
   text-align: center;
   overflow: hidden;
+  /* the photograph sits under a heavy wash so nothing on top of it
+     loses contrast; the artwork is the subject, this is atmosphere */
+  background-image:
+    linear-gradient(180deg, rgba(6,20,42,.86) 0%, rgba(6,20,42,.92) 55%, var(--navy) 100%),
+    url('/Chanukah-Fest-26/images/hero-bg.jpg');
+  background-size: cover, cover;
+  background-position: center, center top;
+  background-repeat: no-repeat, no-repeat;
 }
 
 .cf26 .cf26-kicker {
@@ -1026,9 +1066,9 @@ html, body { overflow-x: clip; max-width: 100%; }
     <div class="cf26-wrap">
       <div class="cf26-kicker" data-cf="hero.23f60a5e">31st Annual Grand Menorah Lighting at Houston City Hall</div>
 
-      <div class="cf26-menorah" aria-hidden="true" data-cf="hero.43170050">&#160;</div>
+      <img class="cf26-logo" src="/Chanukah-Fest-26/images/logo.png" alt="" width="1024" height="306" />
 
-      <h1 data-cf="hero.645b2c16">Chanukah Fest 2026</h1>
+      <h1 class="cf26-sr" data-cf="hero.645b2c16">Chanukah Fest 2026</h1>
 
       <p class="cf26-hero-sub" data-cf="hero.9074814d">Four hours of music, food and family activities in downtown Houston, ending with the menorah lit and fireworks over City Hall.</p>
 
@@ -1211,7 +1251,7 @@ html, body { overflow-x: clip; max-width: 100%; }
       <div class="cf26-acts">
 
         <div class="cf26-act">
-          <div class="cf26-act-photo" data-cf="stage.c6bb3813">[[ PHOTO ]]</div>
+          <div class="cf26-act-photo cf26-act-photo-on"><img src="/Chanukah-Fest-26/images/performer-1.jpg" alt="Itzik Dadya on stage" loading="lazy" width="1600" height="1600" /></div>
           <div class="cf26-act-body">
             <div class="cf26-act-role" data-cf="stage.8fd582a9">Headliner</div>
             <h3 data-cf="stage.19aa5f8c">Itzik Dadya</h3>

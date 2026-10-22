@@ -91,9 +91,13 @@
   }
 
   /* Decided per break, not per line. Deciding it per line meant the
-     second line put back the break the first line had just taken away. */
+     second line put back the break the first line had just taken away.
+
+     The same goes for a literal separator sitting between two fields --
+     the dash in "name - price". Clear one side and the dash is left
+     pointing at nothing. */
   function tidyBreaks() {
-    each("br", function (br) {
+    each("br, .cf-sep", function (br) {
       var before = nextTag(br, true), after = nextTag(br, false);
       var dead = function (n) { return n && n.hasAttribute && n.hasAttribute("data-cf-blank"); };
       if (dead(before) || dead(after)) br.setAttribute("data-cf-gone", "");
@@ -154,13 +158,23 @@
      nothing, a list item is a bullet on its own. Innermost first, so a
      list is judged after the items inside it have gone. */
   var EMPTY_HIDES = [[".cf26-act", ".cf26-act-body"], [".sp26-stat", null],
-                     ["li", null], ["ul", null], ["ol", null]];
+                     ["li", null], ["ul", null], ["ol", null],
+                     ["label", null]];
+
+  /* A label with no control in it is just words; losing them leaves
+     nothing behind to look wrong. One wrapped round a checkbox still
+     draws the box, so that is the one worth hiding. */
+  function drawsAControl(el) {
+    return el.tagName !== "LABEL" ||
+           !!el.querySelector("input,select,textarea");
+  }
 
   function tidyCards() {
     EMPTY_HIDES.forEach(function (pair) { each(pair[0], function (card) {
       var body = pair[1] ? card.querySelector(pair[1]) : card;
       if (!body) return;
       if (!body.querySelector("[data-cf]")) return;   /* nothing editable: not ours */
+      if (!drawsAControl(card)) return;
       var anyWords = HAS_WORDS.test(livingText(body));
       if (anyWords) card.removeAttribute("data-cf-gone");
       else card.setAttribute("data-cf-gone", "");

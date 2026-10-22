@@ -7,7 +7,7 @@
 <meta name="description" content="Partnership levels for Chanukah Fest 2026 at Houston City Hall.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
 <script src="/Chanukah-Fest-26/assets/forms.js?v=20261022h" defer></script>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022m" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022n" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Sponsor Houston Chanukah Fest 2026" />
@@ -307,13 +307,11 @@
 
 .sp26 .sp26-summary-value::after { content: "Nothing selected yet"; font-size: 15.5px; font-weight: 600; color: #7C93AB; }
 
-.sp26 #sp-presenting:checked ~ .sp26-summary .sp26-summary-value::after { content: "Presenting Sponsor — $50,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
-.sp26 #sp-vip:checked ~ .sp26-summary .sp26-summary-value::after { content: "VIP Reception Sponsor — $36,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
-.sp26 #sp-platinum:checked ~ .sp26-summary .sp26-summary-value::after { content: "Platinum Sponsor — $25,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
-.sp26 #sp-gold:checked ~ .sp26-summary .sp26-summary-value::after { content: "Gold Sponsor — $18,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
-.sp26 #sp-silver:checked ~ .sp26-summary .sp26-summary-value::after { content: "Silver Sponsor — $10,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
-.sp26 #sp-bronze:checked ~ .sp26-summary .sp26-summary-value::after { content: "Bronze Sponsor — $5,000"; font-size: 21px; font-weight: 800; color: var(--gold); }
-.sp26 #sp-other:checked ~ .sp26-summary .sp26-summary-value::after { content: "Custom amount"; font-size: 21px; font-weight: 800; color: var(--gold); }
+/* The rule for each selected tier is written at run time from what the
+   tier card actually says -- see syncSponsorSummary in content.js. Keeping
+   a hardcoded copy here meant editing a price changed the card and left
+   the summary quoting the old amount. */
+
 
 /* ============================ FORM ============================ */
 .sp26 .sp26-form { background-color: #FFFFFF !important; border-top: 1px solid var(--line-2); }
@@ -837,7 +835,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <label class="sp26-level sp26-level-feature" for="sp-presenting">
             <span class="sp26-level-top">
               <span class="sp26-level-name" data-cf="form.cc116298">Presenting Sponsor</span>
-              <span class="sp26-level-price" data-cf="form.888af71d">$50,000</span>
+              <span class="sp26-level-price" data-cf-money data-cf="form.888af71d">$50,000</span>
             </span>
             <span class="sp26-level-avail"><span class="sp26-fill" data-cf="form.91379f53">[[ HOW MANY AVAILABLE? ]]</span></span>
             <ul class="sp26-level-benefits">
@@ -849,7 +847,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <label class="sp26-level sp26-level-feature" for="sp-vip">
             <span class="sp26-level-top">
               <span class="sp26-level-name" data-cf="form.e95b1bf8">VIP Reception Sponsor</span>
-              <span class="sp26-level-price" data-cf="form.b1afb58f">$36,000</span>
+              <span class="sp26-level-price" data-cf-money data-cf="form.b1afb58f">$36,000</span>
             </span>
             <span class="sp26-level-avail"><span class="sp26-fill" data-cf="form.91379f53~1">[[ HOW MANY AVAILABLE? ]]</span></span>
             <ul class="sp26-level-benefits">
@@ -861,7 +859,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <label class="sp26-level" for="sp-platinum">
             <span class="sp26-level-top">
               <span class="sp26-level-name" data-cf="form.c37f0ada">Platinum Sponsor</span>
-              <span class="sp26-level-price" data-cf="form.a2f176db">$25,000</span>
+              <span class="sp26-level-price" data-cf-money data-cf="form.a2f176db">$25,000</span>
             </span>
             <ul class="sp26-level-benefits">
               <li><span class="sp26-fill" data-cf="form.0c203d02">[[ LIST 3–5 BENEFITS ]]</span></li>
@@ -872,7 +870,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <label class="sp26-level" for="sp-gold">
             <span class="sp26-level-top">
               <span class="sp26-level-name" data-cf="form.a7edd5c2">Gold Sponsor</span>
-              <span class="sp26-level-price" data-cf="form.c56ea69c">$18,000</span>
+              <span class="sp26-level-price" data-cf-money data-cf="form.c56ea69c">$18,000</span>
             </span>
             <ul class="sp26-level-benefits">
               <li><span class="sp26-fill" data-cf="form.0c203d02~1">[[ LIST 3–5 BENEFITS ]]</span></li>
@@ -883,7 +881,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <label class="sp26-level" for="sp-silver">
             <span class="sp26-level-top">
               <span class="sp26-level-name" data-cf="form.8a500b72">Silver Sponsor</span>
-              <span class="sp26-level-price" data-cf="form.8c52c915">$10,000</span>
+              <span class="sp26-level-price" data-cf-money data-cf="form.8c52c915">$10,000</span>
             </span>
             <ul class="sp26-level-benefits">
               <li><span class="sp26-fill" data-cf="form.0c203d02~2">[[ LIST 3–5 BENEFITS ]]</span></li>
@@ -894,7 +892,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <label class="sp26-level" for="sp-bronze">
             <span class="sp26-level-top">
               <span class="sp26-level-name" data-cf="form.90787335">Bronze Sponsor</span>
-              <span class="sp26-level-price" data-cf="form.c07530a8">$5,000</span>
+              <span class="sp26-level-price" data-cf-money data-cf="form.c07530a8">$5,000</span>
             </span>
             <ul class="sp26-level-benefits">
               <li><span class="sp26-fill" data-cf="form.0c203d02~3">[[ LIST 3–5 BENEFITS ]]</span></li>
@@ -905,7 +903,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <label class="sp26-level sp26-level-other" for="sp-other">
             <span class="sp26-level-top">
               <span class="sp26-level-name" data-cf="form.274c0e0a">Another amount, or build me a custom package</span>
-              <span class="sp26-level-price" data-cf="form.8c854f40">You choose</span>
+              <span class="sp26-level-price" data-cf-money data-cf="form.8c854f40">You choose</span>
             </span>
             <ul class="sp26-level-benefits">
               <li data-cf="form.4e0efa46">Tell us what you have in mind and we'll put a package together.</li>

@@ -117,6 +117,63 @@
     });
   }
 
+  /* An amount typed as 72000 should read as $72,000. Nobody editing a
+     price should have to remember where the comma goes, and a tier that
+     says "You choose" or "3,600+" has to survive untouched -- so only a
+     bare number is reformatted, and anything else is left exactly as
+     typed. */
+  function money(text) {
+    var raw = String(text == null ? "" : text).trim();
+    var m = raw.match(/^\$?\s*(\d{1,3}(?:,\d{3})*|\d+)(\.\d{1,2})?\s*(\+?)$/);
+    if (!m) return raw;
+    var whole = m[1].replace(/,/g, "");
+    if (!whole.length || whole.length > 15) return raw;
+    return "$" + whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (m[2] || "") + m[3];
+  }
+
+  function tidyMoney() {
+    each("[data-cf-money]", function (el) {
+      var now = el.textContent;
+      var want = money(now);
+      if (want !== now.trim()) text(el, want);
+    });
+  }
+
+  /* Each tier's price was written down three times: on the card, in a
+     stylesheet that drew the summary, and in the radio's submitted value.
+     Editing a tier only ever reached the first, so picking a tier quoted
+     the old amount back and the form recorded it too. Both copies are
+     rebuilt here from what the card actually says, so they cannot drift. */
+  function syncSponsorSummary() {
+    var rows = document.querySelectorAll(".sp26-level");
+    if (!rows.length) return;
+    var tag = document.getElementById("cf-summary-sync");
+    if (!tag) {
+      tag = document.createElement("style");
+      tag.id = "cf-summary-sync";
+      (document.head || document.documentElement).appendChild(tag);
+    }
+    var out = [];
+    each(".sp26-level", function (row) {
+      var input = row.querySelector("input[type=radio]") ||
+                  document.getElementById(row.getAttribute("for") || "");
+      var id = input && input.id;
+      if (!id) return;
+      var name = row.querySelector(".sp26-level-name");
+      var price = row.querySelector(".sp26-level-price");
+      var label = name ? name.textContent.trim() : "";
+      var amount = price ? price.textContent.trim() : "";
+      if (!label && !amount) return;
+      var shown = label && amount ? label + " \u2014 " + amount : (label || amount);
+      out.push('.sp26 #' + id + ':checked ~ .sp26-summary .sp26-summary-value::after{' +
+               'content:"' + shown.replace(/["\\]/g, "\\$&") + '";' +
+               'font-size:21px;font-weight:800;color:var(--gold)}');
+      /* what the sheet records has to be what the sponsor was shown */
+      input.value = label && amount ? label + " - " + amount : (label || amount);
+    });
+    tag.textContent = out.join("\n");
+  }
+
   function applyFields(data) {
     if (!data) return;
     var by = data.fields || {};
@@ -291,6 +348,8 @@
     try { tidyBreaks(); } catch (e) {}
     try { tidyHighlights(); } catch (e) {}
     try { tidyCards(); } catch (e) {}
+    try { tidyMoney(); } catch (e) {}
+    try { syncSponsorSummary(); } catch (e) {}
     try { applyColours(data); } catch (e) {}
     try { applySections(data); } catch (e) {}
     // after layout has settled
@@ -377,6 +436,7 @@
 
   function tidyOnce() {
     try { hideRule(); tidyHighlights(); tidyCards(); } catch (e) {}
+    try { tidyMoney(); syncSponsorSummary(); } catch (e) {}
     try { each("[data-cf-map]", function (el) { drawMap(el, el.textContent); }); } catch (e) {}
   }
 

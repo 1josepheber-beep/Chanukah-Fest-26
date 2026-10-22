@@ -6,7 +6,8 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022m" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022n" defer></script>
+<script src="/Chanukah-Fest-26/assets/calendar.js?v=20261022n" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -217,12 +218,15 @@
     radial-gradient(900px 420px at 50% 112%, rgba(240,180,41,0.30) 0%, rgba(240,180,41,0) 66%),
     linear-gradient(180deg, var(--navy-2) 0%, var(--navy) 58%, #123152 100%) !important;
   color: #FFFFFF !important;
-  /* the chips and buttons used to sit here and needed the room;
-     they are on the artwork now, so this is just breathing space */
-  padding: 0 0 30px;
+  /* The artwork sits flush under the nav, so there is nothing above it.
+     22px below matches the gap between the artwork and the gold line, so
+     the block is not lopsided. */
+  padding: 0 0 22px;
   text-align: center;
   overflow: hidden;
 }
+
+.cf26 .cf26-wrap:has(> .cf26-hero-sub[data-cf-blank]) .cf26-kicker { margin-bottom: 0; }
 
 .cf26 .cf26-kicker {
   display: inline-block;
@@ -320,7 +324,8 @@
   line-height: 1.55;
   color: var(--soft) !important;
   max-width: 44ch;
-  margin: 0 auto 32px;
+  /* nothing follows it, so a bottom margin here only pads the section */
+  margin: 0 auto;
 }
 
 .cf26 .cf26-facts {
@@ -340,6 +345,59 @@
   font-weight: 600;
   color: #EAF2FA !important;
 }
+
+/* ---- add to calendar ---------------------------------------------------
+   The date chip opens a two-item menu. It is a <button> so it works from
+   the keyboard; the chip styling is shared with the plain chips, so only
+   the button's own defaults need undoing. */
+.cf26 .cf26-cal { position: relative; display: inline-block; }
+
+.cf26 .cf26-fact-cal {
+  font: inherit;
+  cursor: pointer;
+  border-style: solid;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.cf26 .cf26-fact-cal::after {
+  content: "";
+  display: inline-block;
+  width: 5px; height: 5px;
+  margin-left: 7px;
+  vertical-align: 2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+.cf26 .cf26-fact-cal:hover { border-color: var(--gold); }
+
+.cf26 .cf26-cal-menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  min-width: 172px;
+  padding: 5px;
+  background-color: #FFFFFF !important;
+  border: 1px solid #D8E1EC;
+  border-radius: 9px;
+  box-shadow: 0 10px 28px rgba(6,20,42,0.30);
+}
+.cf26 .cf26-cal-menu[hidden] { display: none; }
+
+.cf26 .cf26-cal-item {
+  padding: 9px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: left;
+  border-radius: 6px;
+  color: var(--navy) !important;
+}
+.cf26 .cf26-cal-item:hover { background-color: #F1F5FA !important; }
 
 .cf26 .cf26-fact.cf26-fact-free {
   background-color: rgba(240,180,41,0.16) !important;
@@ -1149,6 +1207,7 @@ html, body { overflow-x: clip; max-width: 100%; }
   </span><div class="cf26-nav" data-cf-sec="nav">
     <div class="cf26-nav-inner">
       <div class="cf26-nav-row">
+      <a class="cf26-navlink" href="/Chanukah-Fest-26/" data-cf="nav.4a7d2e10">Home</a>
       <a class="cf26-navlink" href="#about" data-cf="nav.6b21fb79">About</a>
       <a class="cf26-navlink" href="#schedule" data-cf="nav.0a8adac9">Schedule</a>
       <a class="cf26-navlink" href="#stage" data-cf="nav.1b8ec34a">On stage</a>
@@ -1183,7 +1242,14 @@ html, body { overflow-x: clip; max-width: 100%; }
     <div class="cf-banner cf-banner-hero"><img src="/Chanukah-Fest-26/images/banner-wide.jpg" alt="Houston Chanukah Fest" width="1024" height="348" />
         <div class="cf-banner-over">
           <div class="cf26-facts">
-        <span class="cf26-fact" data-cf="hero.4f30495a">Sunday, December 6</span>
+        <span class="cf26-cal">
+          <button type="button" class="cf26-fact cf26-fact-cal" data-cf="hero.4f30495a"
+                  aria-haspopup="true" aria-expanded="false">Sunday, December 6</button>
+          <span class="cf26-cal-menu" hidden>
+            <a class="cf26-cal-item" data-cal="google" href="#" target="_blank" rel="noopener">Google Calendar</a>
+            <a class="cf26-cal-item" data-cal="ics" href="#" download="chanukah-fest-2026.ics">Apple / Outlook</a>
+          </span>
+        </span>
         <span class="cf26-fact" data-cf="hero.a075c3d3">3:00 – 7:00 PM</span>
         <span class="cf26-fact" data-cf="hero.9e847abd">Houston City Hall</span>
         <span class="cf26-fact cf26-fact-free" data-cf="hero.daee9ff0">Free admission</span>
@@ -1199,6 +1265,16 @@ html, body { overflow-x: clip; max-width: 100%; }
       <div class="cf26-kicker" data-cf="hero.23f60a5e">31st Annual Grand Menorah Lighting at Houston City Hall</div>
 
       <h1 class="cf26-sr" data-cf="hero.645b2c16">Chanukah Fest 2026</h1>
+
+      <!-- What the "add to calendar" button writes into the calendar.
+           Kept out of sight but editable, so the chip above can say
+           whatever reads well while the calendar entry stays exact. -->
+      <span class="cf26-sr" aria-hidden="true">
+        <span data-cf="hero.cal-title">Houston Chanukah Fest 2026</span>
+        <span data-cf="hero.cal-start">2026-12-06 15:00</span>
+        <span data-cf="hero.cal-end">2026-12-06 19:00</span>
+        <span data-cf="hero.cal-place">Houston City Hall, 901 Bagby St, Houston, TX 77002</span>
+      </span>
 
       <p class="cf26-hero-sub" data-cf="hero.9074814d">Four hours of music, food and family activities in downtown Houston, ending with the menorah lit and fireworks over City Hall.</p>
 

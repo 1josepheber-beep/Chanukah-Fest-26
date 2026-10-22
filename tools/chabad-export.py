@@ -28,6 +28,7 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
+BUILT = "22oct-1700"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
@@ -260,7 +261,7 @@ def main():
         body = xml_safe(body)
 
         out = tidy_comments(header(slug, label) + body) + "\n"
-        name = "%s-aid-%s.html" % (label, AID[slug])
+        name = "%s-aid-%s-BUILT-%s.html" % (label, AID[slug], BUILT)
         io.open(os.path.join(OUT, name), "w", encoding="utf-8").write(out)
 
         left = len(re.findall(r"(?<!github\.io)/Chanukah-Fest-26/", out))

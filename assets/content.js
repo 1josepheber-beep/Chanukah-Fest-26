@@ -167,6 +167,8 @@
   var EMPTY_HIDES = [[".cf26-act", ".cf26-act-body"], [".sp26-stat", null],
                      [".cf26-slot", null], [".cf26-q", null], [".cfbar", null],
                      ["li", null], ["ul", null], ["ol", null],
+                     [".vf26-tier-incl-item", null], [".sp26-level-benefits-item", null],
+                     [".vf26-tier-incl", null], [".sp26-level-benefits", null],
                      ["label", null]];
 
   /* A label with no control in it is just words; losing them leaves

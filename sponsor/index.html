@@ -9,7 +9,7 @@
 <script>document.documentElement.classList.add("cfjs")</script>
 <link rel="stylesheet" href="/Chanukah-Fest-26/assets/nav.css?v=20261022x">
 <script src="/Chanukah-Fest-26/assets/to-top.js?v=20261022x" defer=""></script>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022z" defer=""></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022z2" defer=""></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png">
 <meta property="og:title" content="Sponsor Houston Chanukah Fest 2026">
@@ -239,16 +239,18 @@
   margin-top: 10px;
 }
 
-.sp26 .sp26-level-benefits { list-style: none; margin-top: 10px; }
+.sp26 .sp26-level-benefits { display: block; list-style: none; margin-top: 10px; }
 
-.sp26 .sp26-level-benefits li {
+.sp26 .sp26-level-benefits-item {
+  display: list-item;
+  list-style: none;
   font-size: 14.5px;
   color: var(--body-txt) !important;
   padding: 4px 0 4px 17px;
   position: relative;
 }
 
-.sp26 .sp26-level-benefits li::before {
+.sp26 .sp26-level-benefits-item::before {
   content: "";
   position: absolute;
   left: 2px;
@@ -799,9 +801,9 @@ html, body { overflow-x: clip; max-width: 100%; }
               <span class="sp26-level-price" data-cf-money="" data-cf="form.888af71d">$72,000</span>
             </span>
             <span class="sp26-level-avail"><span class="sp26-fill" data-cf="form.91379f53" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;">1 AVAILABLE</span></span>
-            <ul class="sp26-level-benefits" data-cf-gone="">
-              <li data-cf-gone=""><span class="sp26-fill" data-cf="form.f301ed76" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></li>
-            </ul>
+            <span class="sp26-level-benefits" data-cf-gone="">
+              <span class="sp26-level-benefits-item" data-cf-gone=""><span class="sp26-fill" data-cf="form.f301ed76" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></span>
+            </span>
           </label>
 
           <input class="sp26-radio" type="radio" id="sp-vip" name="sponsorship_level" value="VIP RECEPTION SPONSOR - $54,000">
@@ -811,9 +813,9 @@ html, body { overflow-x: clip; max-width: 100%; }
               <span class="sp26-level-price" data-cf-money="" data-cf="form.b1afb58f">$54,000</span>
             </span>
             <span class="sp26-level-avail"><span class="sp26-fill" data-cf="form.91379f53~1" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;">1 AVAILABLE</span></span>
-            <ul class="sp26-level-benefits" data-cf-gone="">
-              <li data-cf-gone=""><span class="sp26-fill" data-cf="form.f301ed76~1" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></li>
-            </ul>
+            <span class="sp26-level-benefits" data-cf-gone="">
+              <span class="sp26-level-benefits-item" data-cf-gone=""><span class="sp26-fill" data-cf="form.f301ed76~1" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></span>
+            </span>
           </label>
 
           <input class="sp26-radio" type="radio" id="sp-platinum" name="sponsorship_level" value="PLATINUM SPONSOR - $36,000">
@@ -822,9 +824,9 @@ html, body { overflow-x: clip; max-width: 100%; }
               <span class="sp26-level-name" data-cf="form.c37f0ada">PLATINUM SPONSOR</span>
               <span class="sp26-level-price" data-cf-money="" data-cf="form.a2f176db">$36,000</span>
             </span>
-            <ul class="sp26-level-benefits" data-cf-gone="">
-              <li data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></li>
-            </ul>
+            <span class="sp26-level-benefits" data-cf-gone="">
+              <span class="sp26-level-benefits-item" data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></span>
+            </span>
           </label>
 
           <input class="sp26-radio" type="radio" id="sp-gold" name="sponsorship_level" value="Gold Sponsor - $25,000">
@@ -833,9 +835,9 @@ html, body { overflow-x: clip; max-width: 100%; }
               <span class="sp26-level-name" data-cf="form.a7edd5c2">Gold Sponsor</span>
               <span class="sp26-level-price" data-cf-money="" data-cf="form.c56ea69c">$25,000</span>
             </span>
-            <ul class="sp26-level-benefits" data-cf-gone="">
-              <li data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02~1" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></li>
-            </ul>
+            <span class="sp26-level-benefits" data-cf-gone="">
+              <span class="sp26-level-benefits-item" data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02~1" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></span>
+            </span>
           </label>
 
           <input class="sp26-radio" type="radio" id="sp-silver" name="sponsorship_level" value="Silver Sponsor - $18,000">
@@ -844,9 +846,9 @@ html, body { overflow-x: clip; max-width: 100%; }
               <span class="sp26-level-name" data-cf="form.8a500b72">Silver Sponsor</span>
               <span class="sp26-level-price" data-cf-money="" data-cf="form.8c52c915">$18,000</span>
             </span>
-            <ul class="sp26-level-benefits" data-cf-gone="">
-              <li data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02~2" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></li>
-            </ul>
+            <span class="sp26-level-benefits" data-cf-gone="">
+              <span class="sp26-level-benefits-item" data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02~2" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></span>
+            </span>
           </label>
 
           <input class="sp26-radio" type="radio" id="sp-bronze" name="sponsorship_level" value="Bronze Sponsor - $10,000">
@@ -855,9 +857,9 @@ html, body { overflow-x: clip; max-width: 100%; }
               <span class="sp26-level-name" data-cf="form.90787335">Bronze Sponsor</span>
               <span class="sp26-level-price" data-cf-money="" data-cf="form.c07530a8">$10,000</span>
             </span>
-            <ul class="sp26-level-benefits" data-cf-gone="">
-              <li data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02~3" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></li>
-            </ul>
+            <span class="sp26-level-benefits" data-cf-gone="">
+              <span class="sp26-level-benefits-item" data-cf-gone=""><span class="sp26-fill" data-cf="form.0c203d02~3" data-cf-blank="" data-cf-done="" style="background: none !important; color: inherit !important; border-bottom: 0px !important; padding: 0px !important; font-weight: inherit !important;"></span></span>
+            </span>
           </label>
 
           <input class="sp26-radio" type="radio" id="sp-other" name="sponsorship_level" value="COMMUNITY PARTNER - $3,600+">
@@ -866,9 +868,9 @@ html, body { overflow-x: clip; max-width: 100%; }
               <span class="sp26-level-name" data-cf="form.274c0e0a">COMMUNITY PARTNER</span>
               <span class="sp26-level-price" data-cf-money="" data-cf="form.8c854f40">$3,600+</span>
             </span>
-            <ul class="sp26-level-benefits" data-cf-gone="">
-              <li data-cf="form.4e0efa46" data-cf-blank=""></li>
-            </ul>
+            <span class="sp26-level-benefits" data-cf-gone="">
+              <span class="sp26-level-benefits-item" data-cf="form.4e0efa46" data-cf-blank=""></span>
+            </span>
           </label>
 
           <div class="sp26-summary">

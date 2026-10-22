@@ -6,7 +6,7 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022i" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022j" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -202,14 +202,14 @@
   display: block; width: 100%; height: 100%;
   object-fit: cover; object-position: center 22%;
 }
-/* The poster carries the logo across its top half and the performers
-   below, so a card showing the middle would be mostly sky. Anchored to
-   the bottom, the card holds all three of them. */
-/* The poster is 1024x791 and the card slot is much wider than it is
-   tall, so most of the picture is cropped away. Anchored at the bottom
-   the crop took the performers' heads off once the card widened; 72%
-   keeps all three faces in and the lettering out. */
-.cf26 .cf26-act-photo-poster img { object-position: center 72%; }
+/* Show the poster whole.
+
+   The photo slot is a fixed-height letterbox and the poster is nearly
+   square, so any crop of it loses most of the picture -- first the
+   lettering, then, once the card widened, the performers' heads. No
+   anchor point fixes that; the slot is the wrong shape. Given the
+   poster's own shape, the slot holds all of it and nothing is cut. */
+.cf26 .cf26-act-photo-poster img { object-fit: contain; object-position: center; }
 
 .cf26 .cf26-hero {
   background-color: var(--navy) !important;
@@ -499,10 +499,13 @@
 
 .cf26 .cf26-apps-link {
   /* the cards are the same height, so a one-line label has to be
-     centred or it floats at the top beside two-line neighbours */
+     centred or it floats at the top beside two-line neighbours.
+     text-align centres the words across the card as well; it used to
+     be set only on a phone, so on a desktop they sat hard left. */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: center;
   background-color: #FFFFFF !important;
   border: 1px solid #EBD9A8;
   border-radius: 7px;
@@ -662,7 +665,10 @@
 }
 
 .cf26 .cf26-act-photo {
-  height: 190px;
+  /* Every photo in the row shares the poster's shape, so the cards line
+     up whatever width the row is. A fixed height would leave the poster
+     card tall and its neighbours short. */
+  aspect-ratio: 1024 / 791;
   background-color: #E8EEF5 !important;
   background-size: cover;
   background-position: center;
@@ -944,7 +950,7 @@
   .cf26 .cf26-apps-inner { padding: 16px 18px; }
   .cf26 .cf26-apps-label { font-size: 14px; }
   .cf26 .cf26-apps-links { gap: 7px; }
-  .cf26 .cf26-apps-link { padding: 9px 8px; text-align: center; }
+  .cf26 .cf26-apps-link { padding: 9px 8px; }
   .cf26 .cf26-apps-name { font-size: 13.5px; }
   .cf26 .cf26-apps-due { font-size: 11.5px; }
   .cf26 .cf26-slot {

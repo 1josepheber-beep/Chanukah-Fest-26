@@ -60,10 +60,10 @@
    700 they ran off the edge with nothing to say so. Rather than hint that
    the strip scrolls, below 760 it stops being a strip.
 
-   It is a real <details>, so it opens from the keyboard, is announced as
-   expandable, and still works if a script fails to load. Above 760 the
-   summary is hidden and the links are forced visible whatever state the
-   details is in. */
+   It is a real button with aria-expanded, not a div that toggles, so it
+   works from the keyboard and is announced properly. The compact layout
+   only applies once a script has run; without one the links stay as the
+   strip they have always been. */
 .cfnav .cfnav-toggle { display: none; }
 
 @media (max-width: 760px) {

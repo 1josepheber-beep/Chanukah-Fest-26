@@ -6,7 +6,7 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022f" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022g" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -202,6 +202,10 @@
   display: block; width: 100%; height: 100%;
   object-fit: cover; object-position: center 22%;
 }
+/* 22% suits one standing figure, where the head is a fifth of the way
+   down. Two people filling the frame have their heads at the very top,
+   and that framing cut both of them off. */
+.cf26 .cf26-act-photo-top img { object-position: center top; }
 
 .cf26 .cf26-hero {
   background-color: var(--navy) !important;
@@ -1332,7 +1336,7 @@ html, body { overflow-x: clip; max-width: 100%; }
         </div>
 
         <div class="cf26-act">
-          <div class="cf26-act-photo" data-cf="stage.c6bb3813~1">[[ PHOTO ]]</div>
+          <div class="cf26-act-photo cf26-act-photo-on cf26-act-photo-top"><img src="/Chanukah-Fest-26/images/performer-2.jpg" alt="8th Day on stage" loading="lazy" width="470" height="476" /></div>
           <div class="cf26-act-body">
             <div class="cf26-act-role" data-cf="stage.8fd582a9~1">Headliner</div>
             <h3 data-cf="stage.c804aa01">8th Day</h3>

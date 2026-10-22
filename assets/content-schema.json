@@ -796,14 +796,6 @@
      "value": "[[ ONE OR TWO LINES OF BIO ]]"
     },
     {
-     "key": "stage.c6bb3813~1",
-     "sec": "stage",
-     "type": "text",
-     "tag": "div",
-     "label": "[[ PHOTO ]]",
-     "value": "[[ PHOTO ]]"
-    },
-    {
      "key": "stage.8fd582a9~1",
      "sec": "stage",
      "type": "text",

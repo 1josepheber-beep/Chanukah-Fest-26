@@ -47,9 +47,16 @@
     return n && n.nodeType === 1 ? n : null;
   }
 
+  /* A field cleared down to a stray full stop or bullet is empty as far
+     as anyone reading the page is concerned, but it still drew a dot
+     where the words used to be. Anything with no letters or digits in
+     it counts as cleared. Nothing on this site is legitimately
+     punctuation on its own — checked against all 600 fields. */
+  var HAS_WORDS = /[0-9A-Za-z\u00c0-\u024f\u0590-\u05ff]/;
+
   function setText(el, v) {
     text(el, v);
-    if (String(v).trim() === "") el.setAttribute("data-cf-blank", "");
+    if (!HAS_WORDS.test(String(v))) el.setAttribute("data-cf-blank", "");
     else el.removeAttribute("data-cf-blank");
   }
 

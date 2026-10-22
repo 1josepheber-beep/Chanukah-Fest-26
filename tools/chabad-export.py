@@ -28,7 +28,7 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
-BUILT = "22oct-1700"
+BUILT = "22oct-1740-minisite"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
@@ -125,6 +125,64 @@ def drop_script_only_bits(body):
     body = re.sub(r'\s*<!-- What the "add to calendar".*?'
                   r'data-cf="hero\.cal-place">[^<]*</span>\s*</span>', "",
                   body, flags=re.S)
+    return body
+
+
+MARKED = re.compile(r"<([a-zA-Z][-\w]*)\b[^>]*?\bdata-cf-(?:gone|blank)\b[^>]*?(/?)>")
+
+
+def cut_marked(body):
+    """Remove each element the runtime marked unseen, and everything inside
+       it. A non-greedy match cannot do this: a span holding spans closes on
+       the first </span> it meets, which is the inner one, and the rest of
+       the document comes apart. So the nesting is counted."""
+    while True:
+        m = MARKED.search(body)
+        if not m:
+            return body
+        tag, selfclose = m.group(1), m.group(2)
+        if selfclose or tag.lower() in VOID:
+            body = body[:m.start()] + body[m.end():]
+            continue
+        depth, i = 1, m.end()
+        opener = re.compile(r"<(/?)%s\b" % re.escape(tag), re.I)
+        while depth and i < len(body):
+            nxt = opener.search(body, i)
+            if not nxt:
+                break
+            depth += -1 if nxt.group(1) else 1
+            i = nxt.end()
+        end = body.index(">", i - 1) + 1 if depth == 0 else m.end()
+        body = body[:m.start()] + body[end:]
+
+
+def old_html_only(body):
+    """Their editor accepts XHTML 1.0 / HTML 4.01 and may strip anything
+       newer. Rather than hope each modern piece survives, none is sent.
+
+       details/summary  the FAQ becomes headings with their answers under
+                        them, always open. Nothing is lost but the folding.
+       srcset           one picture instead of three to choose from.
+       data- and aria-  not in that DTD. data- in particular is load
+                        bearing here -- the rules that hide a cleared
+                        field key off it -- so rather than risk it being
+                        dropped and every blank reappearing, the hidden
+                        elements are removed outright. Nothing edits this
+                        copy, so there is nothing for them to come back for.
+    """
+    body = cut_marked(body)
+
+    # the FAQ, unfolded
+    body = re.sub(r"<details[^>]*>\s*<summary[^>]*>(.*?)</summary>(.*?)</details>",
+                  lambda m: m.group(1) + m.group(2), body, flags=re.S)
+    body = body.replace('<div class="cf26-q-body">', "<div>")
+
+    # one picture, not a set
+    body = re.sub(r'\s(?:srcset|sizes)="[^"]*"', "", body)
+
+    # attributes that DTD never heard of
+    body = re.sub(r'\s(?:data-[\w-]+|aria-[\w-]+|role)="[^"]*"', "", body)
+    body = re.sub(r"\s(?:data-[\w-]+|aria-[\w-]+)(?=[\s/>])", "", body)
     return body
 
 
@@ -256,6 +314,7 @@ def main():
         html = read(path)
         body = one_stylesheet(html, body_of(html), nav_css)
         body = drop_script_only_bits(body)
+        body = old_html_only(body)
         body = static_map(body)
         body = retarget(body, slug)
         body = xml_safe(body)
@@ -273,6 +332,12 @@ def main():
             ET.fromstring("<root>" + out + "</root>")
         except ET.ParseError as err:
             raise AssertionError("%s does not parse as XML: %s" % (name, err))
+
+        for banned, what in [(r"<details", "details"), (r"<summary", "summary"),
+                             (r"\ssrcset=", "srcset"), (r"\sdata-[\w-]+=", "a data- attribute"),
+                             (r"\saria-[\w-]+=", "an aria- attribute")]:
+            hits = re.findall(banned, out)
+            assert not hits, "%s still has %s (%d)" % (name, what, len(hits))
 
         # A bare < inside the stylesheet is markup to an XML parser, so a
         # CSS comment that mentions a tag would break the page.

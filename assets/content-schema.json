@@ -756,14 +756,6 @@
      "value": "Live music all afternoon, plus strolling performers moving through the crowd."
     },
     {
-     "key": "stage.c6bb3813",
-     "sec": "stage",
-     "type": "text",
-     "tag": "div",
-     "label": "[[ PHOTO ]]",
-     "value": "[[ PHOTO ]]"
-    },
-    {
      "key": "stage.8fd582a9",
      "sec": "stage",
      "type": "text",

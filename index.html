@@ -6,7 +6,7 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022e" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022f" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -158,16 +158,18 @@
 .cf-banner-hero { position: relative; max-width: 1024px; margin: 0 auto; }
 .cf-banner-over { padding: 16px 0 0; }
 
-@media (min-width: 900px) {
+/* 1100, matching the width at which the picture becomes tall enough to
+   carry anything. At 900 the two were out of step: the chips went on top
+   of a picture with no room for them. */
+@media (min-width: 1100px) {
+
   .cf-banner-over {
     position: absolute;
     left: 0; right: 0; bottom: 0;
     /* the lettering in the artwork ends around 70% of the way down, so
        everything here has to live in the bottom third and not a pixel
        higher */
-    padding: 34px 24px 14px;
-    background: linear-gradient(180deg,
-      rgba(6,20,42,0) 0%, rgba(6,20,42,.55) 30%, rgba(6,20,42,.92) 100%);
+    padding: 10px 24px 16px;
   }
   .cf-banner-over .cf26-facts { margin-bottom: 10px; gap: 7px; }
   .cf-banner-over .cf26-fact { padding: 5px 13px; font-size: 13.5px; }
@@ -1090,6 +1092,40 @@ label.cf-bad {
    and the sticky sub-navigation would then stick to that container
    instead of the screen. clip has no such side effect. */
 html, body { overflow-x: clip; max-width: 100%; }
+
+/* ---- the hero banner, edge to edge -----------------------------------
+   The artwork's lettering runs from 34% to 69% of the way down and is
+   close to centred, so a centred crop keeps all of it. What changes with
+   the window is how much stage is left underneath it for the chips and
+   buttons: the lettering scales with the picture, the chips do not.
+
+   Below 1100px the picture is too short for anything to sit on, so it
+   is shown whole and the chips flow underneath instead.
+
+   These live at the end of the stylesheet because .cf-banner img caps
+   the width at 1024 and, at equal strength, whichever comes last wins. */
+@media (min-width: 1100px) {
+  .cf26 .cf-banner-hero { max-width: none; }
+  .cf26 .cf-banner-hero img {
+    max-width: none;
+    width: 100%;
+    height: clamp(340px, 34vw, 640px);
+    object-fit: cover;
+    object-position: center center;
+  }
+  /* the fade is its own layer, so it can reach well above the chips
+     without the padding that would create that gap pushing them up
+     into the lettering */
+  .cf26 .cf-banner-over::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0; top: -130px;
+    background: linear-gradient(180deg,
+      rgba(6,20,42,0) 0%, rgba(6,20,42,.52) 46%, rgba(6,20,42,.90) 100%);
+    pointer-events: none;
+  }
+  .cf26 .cf-banner-over > * { position: relative; }
+}
 </style>
 
 <div class="cf26"><span data-cf="page.a10ad0a5">

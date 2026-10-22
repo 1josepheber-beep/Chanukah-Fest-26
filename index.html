@@ -6,8 +6,10 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022n" defer></script>
-<script src="/Chanukah-Fest-26/assets/calendar.js?v=20261022n" defer></script>
+<link rel="stylesheet" href="/Chanukah-Fest-26/assets/nav.css?v=20261022p" />
+<script src="/Chanukah-Fest-26/assets/to-top.js?v=20261022p" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022p" defer></script>
+<script src="/Chanukah-Fest-26/assets/calendar.js?v=20261022p" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -77,10 +79,6 @@
 }
 
 .cf26 a:focus-visible,
-.cf26 .cf26-navlink:focus-visible {
-  outline: 3px solid var(--gold);
-  outline-offset: 3px;
-}
 
 .cf26 .cf26-wrap {
   max-width: 1080px;
@@ -447,69 +445,15 @@
 }
 
 /* ============================ STICKY NAV ============================ */
-.cf26 .cf26-nav {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background-color: var(--navy-2) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-}
 
-.cf26 .cf26-nav-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 12px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
 
-.cf26 .cf26-nav-row {
-  display: flex;
-  gap: 4px;
-  width: max-content;
-  margin: 0 auto;     /* centred while it fits, flush left once it scrolls */
-}
 
-.cf26 .cf26-nav-inner::-webkit-scrollbar { display: none; }
 
-.cf26 .cf26-navlink {
-  flex: 0 0 auto;
-  padding: 16px 15px;
-  font-size: 14.5px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: #B9CBDE !important;
-  border-bottom: 3px solid transparent;
-}
 
-.cf26 .cf26-navlink:hover {
-  color: #FFFFFF !important;
-  border-bottom-color: var(--gold);
-}
 
 /* the one action item in the bar */
-.cf26 .cf26-navlink-go {
-  padding: 11px 12px;
-  border-bottom-color: transparent !important;
-}
 
-.cf26 .cf26-navlink-go span {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background-color: rgba(240,180,41,0.14) !important;
-  border: 1px solid rgba(240,180,41,0.45);
-  color: var(--gold) !important;
-  font-weight: 700;
-}
 
-.cf26 .cf26-navlink-go:hover span {
-  background-color: var(--gold) !important;
-  border-color: var(--gold);
-  color: var(--ink) !important;
-}
 
 .cf26 .cf26-anchor {
   scroll-margin-top: 66px;
@@ -519,61 +463,13 @@
    A slim bar sitting under the nav, above the artwork, rather than a cream
    band below it. Same section and same editable fields -- only the shape
    changed. */
-.cf26 .cf26-apps {
-  background-color: #10294A !important;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-}
 
-.cf26 .cf26-apps-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 7px 22px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
 
-.cf26 .cf26-apps-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--gold) !important;
-  letter-spacing: 0.02em;
-}
 
-.cf26 .cf26-apps-links {
-  display: flex;
-  gap: 10px;
-}
 
-.cf26 .cf26-apps-link {
-  flex: 0 0 auto;
-  padding: 5px 15px;
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--gold) !important;
-  border: 1px solid rgba(240,180,41,0.5);
-  border-radius: 999px;
-}
 
-.cf26 .cf26-apps-link:hover { border-color: var(--gold); background-color: rgba(240,180,41,0.12) !important; }
 
-.cf26 .cf26-apps-name {
-  /* the pill owns the colour now; this span used to be navy on white */
-  font-size: 13px;
-  font-weight: 700;
-  color: inherit !important;
-}
 
-.cf26 .cf26-apps-due {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--gold-deep) !important;
-  margin-top: 2px;
-}
 
 /* ============================ MOBILE ACTION BAR ============================ */
 .cf26 .cf26-dock { display: none; }
@@ -995,13 +891,6 @@
   .cf26 .cf26-btn { flex: 1 1 0; padding: 14px 8px; font-size: 14px; }
 
   .cf26 h2 { font-size: 27px; }
-  .cf26 .cf26-apps-inner { padding: 7px 10px; gap: 7px; }
-  .cf26 .cf26-apps-label { font-size: 12px; width: 100%; text-align: center; }
-  .cf26 .cf26-apps-links { gap: 7px; }
-  .cf26 .cf26-apps-links { gap: 7px; }
-  .cf26 .cf26-apps-link { padding: 7px 10px; font-size: 12px; }
-  .cf26 .cf26-apps-name { font-size: 12px; }
-  .cf26 .cf26-apps-due { font-size: 11.5px; }
   .cf26 .cf26-slot {
     grid-template-columns: minmax(0,1fr);
     gap: 4px;
@@ -1204,36 +1093,28 @@ html, body { overflow-x: clip; max-width: 100%; }
 <div class="cf26"><span data-cf="page.a10ad0a5">
 
   <!-- ==================== STICKY NAV ==================== -->
-  </span><div class="cf26-nav" data-cf-sec="nav">
-    <div class="cf26-nav-inner">
-      <div class="cf26-nav-row">
-      <a class="cf26-navlink" href="/Chanukah-Fest-26/" data-cf="nav.4a7d2e10">Home</a>
-      <a class="cf26-navlink" href="#about" data-cf="nav.6b21fb79">About</a>
-      <a class="cf26-navlink" href="#schedule" data-cf="nav.0a8adac9">Schedule</a>
-      <a class="cf26-navlink" href="#stage" data-cf="nav.1b8ec34a">On stage</a>
-      <a class="cf26-navlink" href="#food" data-cf="nav.ea0dd4b7">Food &amp; booths</a>
-      <a class="cf26-navlink" href="#raffle" data-cf="nav.ac37b40b">Raffle</a>
-      <a class="cf26-navlink" href="#location" data-cf="nav.d219c681">Location</a>
-      <a class="cf26-navlink" href="#questions" data-cf="nav.9a1fc173">Questions</a>
+  </span><div class="cfnav" data-cf-sec="nav">
+    <div class="cfnav-inner">
+      <div class="cfnav-row">
+        <a class="cfnav-link" href="/Chanukah-Fest-26/" data-cf="nav.4a7d2e10">Home</a>
+        <a class="cfnav-link" href="#about" data-cf="nav.6b21fb79">About</a>
+        <a class="cfnav-link" href="#schedule" data-cf="nav.0a8adac9">Schedule</a>
+        <a class="cfnav-link" href="#stage" data-cf="nav.1b8ec34a">On stage</a>
+        <a class="cfnav-link" href="#food" data-cf="nav.ea0dd4b7">Food &amp; booths</a>
+        <a class="cfnav-link" href="#raffle" data-cf="nav.ac37b40b">Raffle</a>
+        <a class="cfnav-link" href="#location" data-cf="nav.d219c681">Location</a>
+        <a class="cfnav-link" href="#questions" data-cf="nav.9a1fc173">Questions</a>
       </div>
     </div>
   </div><span data-cf="page.1b2f9daf">
 
   <!-- ==================== APPLICATIONS STRIP ==================== -->
-  </span><div class="cf26-apps" data-cf-sec="apps">
-    <div class="cf26-apps-inner">
-      <div class="cf26-apps-label" data-cf="apps.4ddf8f74">Applications are open</div>
-      <div class="cf26-apps-links">
-        <a class="cf26-apps-link" href="/Chanukah-Fest-26/sponsor/" data-cf-href="apps.987469ad">
-          <span class="cf26-apps-name" data-cf="apps.fd0b743b">Sponsor</span>
-        </a>
-        <a class="cf26-apps-link" href="/Chanukah-Fest-26/vendor/" data-cf-href="apps.13b72917">
-          <span class="cf26-apps-name" data-cf="apps.52d656a6">Vendor booth</span>
-        </a>
-        <a class="cf26-apps-link" href="/Chanukah-Fest-26/volunteer/" data-cf-href="apps.7aae9d63">
-          <span class="cf26-apps-name" data-cf="apps.cbf217d4">Volunteer</span>
-        </a>
-      </div>
+  </span><div class="cfbar" data-cf-sec="apps">
+    <div class="cfbar-row">
+        <span class="cfbar-label" data-cf="apps.4ddf8f74">Applications are open</span>
+        <a class="cfbar-link" href="/Chanukah-Fest-26/sponsor/" data-cf-href="apps.987469ad" data-cf="apps.fd0b743b">Sponsor</a>
+        <a class="cfbar-link" href="/Chanukah-Fest-26/vendor/" data-cf-href="apps.13b72917" data-cf="apps.52d656a6">Vendor booth</a>
+        <a class="cfbar-link" href="/Chanukah-Fest-26/volunteer/" data-cf-href="apps.7aae9d63" data-cf="apps.cbf217d4">Volunteer</a>
     </div>
   </div><span data-cf="page.41e9083a">
 

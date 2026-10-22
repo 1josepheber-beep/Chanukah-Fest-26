@@ -7,7 +7,9 @@
 <meta name="description" content="Reserve a booth at Chanukah Fest 2026, Houston City Hall.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
 <script src="/Chanukah-Fest-26/assets/forms.js?v=20261022h" defer></script>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022n" defer></script>
+<link rel="stylesheet" href="/Chanukah-Fest-26/assets/nav.css?v=20261022p" />
+<script src="/Chanukah-Fest-26/assets/to-top.js?v=20261022p" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022p" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Chanukah Fest 2026 Vendor Booths" />
@@ -544,71 +546,15 @@
 }
 
 /* ============================ CROSS-PAGE NAV ============================ */
-.vf26 .vf26-subnav {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background-color: var(--navy-2) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-}
 
-.vf26 .vf26-subnav-inner {
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 0 12px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
 
-.vf26 .vf26-subnav-row {
-  display: flex;
-  gap: 2px;
-  width: max-content;
-  margin: 0 auto;     /* centred while it fits, flush left once it scrolls */
-}
 
-.vf26 .vf26-subnav-inner::-webkit-scrollbar { display: none; }
 
-.vf26 .vf26-subnav-home {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 15px 14px;
-  margin-right: 6px;
-  font-size: 14.5px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: #FFFFFF !important;
-  border-right: 1px solid rgba(255,255,255,0.14);
-}
 
-.vf26 .vf26-subnav-home::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-left: 2px solid var(--gold);
-  border-bottom: 2px solid var(--gold);
-  transform: rotate(45deg);
-}
 
-.vf26 .vf26-subnav-home:hover { color: var(--gold) !important; }
 
-.vf26 .vf26-subnav-link {
-  flex: 0 0 auto;
-  padding: 15px 13px;
-  font-size: 14.5px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: #B9CBDE !important;
-  border-bottom: 3px solid transparent;
-}
 
-.vf26 .vf26-subnav-link:hover { color: #FFFFFF !important; border-bottom-color: rgba(240,180,41,0.55); }
 
-.vf26 .vf26-subnav-current { color: var(--gold) !important; border-bottom-color: var(--gold); }
 
 /* ============================ OTHER WAYS ============================ */
 .vf26 .vf26-other { background-color: var(--page) !important; border-top: 1px solid var(--line-2); }
@@ -812,15 +758,27 @@ html, body { overflow-x: clip; max-width: 100%; }
 
 <div class="vf26">
 
-  <div class="vf26-subnav" data-cf-sec="subnav">
-    <div class="vf26-subnav-inner">
-      <div class="vf26-subnav-row">
-      <a class="vf26-subnav-home" href="/Chanukah-Fest-26/" data-cf-href="subnav.2124692f" data-cf="subnav.645b2c16">Chanukah Fest 2026</a>
-      <a class="vf26-subnav-link" href="/Chanukah-Fest-26/sponsor/" data-cf-href="subnav.987469ad" data-cf="subnav.fd0b743b">Sponsor</a>
-      <a class="vf26-subnav-link vf26-subnav-current" href="/Chanukah-Fest-26/vendor/" data-cf-href="subnav.13b72917" data-cf="subnav.d96159ff">Vendor</a>
-      <a class="vf26-subnav-link" href="/Chanukah-Fest-26/raffle/" data-cf-href="subnav.8a44954d" data-cf="subnav.ac37b40b">Raffle</a>
-      <a class="vf26-subnav-link" href="/Chanukah-Fest-26/volunteer/" data-cf-href="subnav.7aae9d63" data-cf="subnav.cbf217d4">Volunteer</a>
-      <a class="vf26-subnav-link" href="/Chanukah-Fest-26/#location" data-cf-href="subnav.331d4aa4" data-cf="subnav.d219c681">Location</a>
+  <div data-cf-sec="subnav">
+  <div class="cfnav">
+      <div class="cfnav-inner">
+        <div class="cfnav-row">
+          <a class="cfnav-link" href="/Chanukah-Fest-26/" data-cf="nav.4a7d2e10">Home</a>
+          <a class="cfnav-link" href="/Chanukah-Fest-26/#about" data-cf="nav.6b21fb79">About</a>
+          <a class="cfnav-link" href="/Chanukah-Fest-26/#schedule" data-cf="nav.0a8adac9">Schedule</a>
+          <a class="cfnav-link" href="/Chanukah-Fest-26/#stage" data-cf="nav.1b8ec34a">On stage</a>
+          <a class="cfnav-link" href="/Chanukah-Fest-26/#food" data-cf="nav.ea0dd4b7">Food &amp; booths</a>
+          <a class="cfnav-link" href="/Chanukah-Fest-26/#raffle" data-cf="nav.ac37b40b">Raffle</a>
+          <a class="cfnav-link" href="/Chanukah-Fest-26/#location" data-cf="nav.d219c681">Location</a>
+          <a class="cfnav-link" href="/Chanukah-Fest-26/#questions" data-cf="nav.9a1fc173">Questions</a>
+        </div>
+      </div>
+    </div>
+  <div class="cfbar">
+      <div class="cfbar-row">
+          <span class="cfbar-label" data-cf="apps.4ddf8f74">Applications are open</span>
+          <a class="cfbar-link" href="/Chanukah-Fest-26/sponsor/" data-cf-href="apps.987469ad" data-cf="apps.fd0b743b">Sponsor</a>
+          <a class="cfbar-link cfbar-link-current" href="/Chanukah-Fest-26/vendor/" data-cf-href="apps.13b72917" data-cf="apps.52d656a6">Vendor booth</a>
+          <a class="cfbar-link" href="/Chanukah-Fest-26/volunteer/" data-cf-href="apps.7aae9d63" data-cf="apps.cbf217d4">Volunteer</a>
       </div>
     </div>
   </div><span data-cf="page.6477dff6">
@@ -875,7 +833,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <span class="vf26-tier-main">
             <span class="vf26-tier-top">
               <span class="vf26-tier-name" data-cf="band.fd05f518">Food vendor</span>
-              <span class="vf26-tier-price" data-cf="band.16a97c52">$1,500</span>
+              <span class="vf26-tier-price" data-cf-money data-cf="band.16a97c52">$1,500</span>
             </span>
             <span class="vf26-tier-desc" data-cf="band.de8ddfa2">Kosher certified concessions. Requires health and fire permits.</span>
             <ul class="vf26-tier-incl">
@@ -890,7 +848,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <span class="vf26-tier-main">
             <span class="vf26-tier-top">
               <span class="vf26-tier-name" data-cf="band.3662c83d">Artisan, merchandise or Judaica</span>
-              <span class="vf26-tier-price" data-cf="band.17108a61">$1,000</span>
+              <span class="vf26-tier-price" data-cf-money data-cf="band.17108a61">$1,000</span>
             </span>
             <span class="vf26-tier-desc" data-cf="band.418e70e9">Retail sales of goods, gifts or Judaica.</span>
             <ul class="vf26-tier-incl">
@@ -905,7 +863,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <span class="vf26-tier-main">
             <span class="vf26-tier-top">
               <span class="vf26-tier-name" data-cf="band.18d2b03c">Non-profit, school or synagogue</span>
-              <span class="vf26-tier-price" data-cf="band.96735d13">$750</span>
+              <span class="vf26-tier-price" data-cf-money data-cf="band.96735d13">$750</span>
             </span>
             <span class="vf26-tier-desc" data-cf="band.05e64c0e">Outreach and information booth. No retail sales.</span>
             <ul class="vf26-tier-incl">
@@ -920,7 +878,7 @@ html, body { overflow-x: clip; max-width: 100%; }
           <span class="vf26-tier-main">
             <span class="vf26-tier-top">
               <span class="vf26-tier-name" data-cf="band.7594b89a">Family activity or craft station</span>
-              <span class="vf26-tier-price" data-cf="band.728a0672">$550</span>
+              <span class="vf26-tier-price" data-cf-money data-cf="band.728a0672">$550</span>
             </span>
             <span class="vf26-tier-desc" data-cf="band.c2b08ffa">Hands-on activity for children in the Activity Village.</span>
             <ul class="vf26-tier-incl">

@@ -52,9 +52,39 @@
      where the words used to be. Anything with no letters or digits in
      it counts as cleared. Nothing on this site is legitimately
      punctuation on its own — checked against all 600 fields. */
+  /* Type "December 6, 2026" into a field and Google Sheets quietly stores
+     it as a date rather than the words that were typed. Apps Script hands
+     that back as a Date, which arrives here stringified -- so a tidy line
+     under a heading turns into
+     "Sun Dec 06 2026 00:00:00 GMT-0600 (Central Standard Time)".
+     Nobody typed that, so it is turned back into something readable. The
+     real fix is in the sheet; this is the net underneath it. */
+  var DATE_DUMP =
+    /^[A-Z][a-z]{2} [A-Z][a-z]{2} \d{2} \d{4} \d{2}:\d{2}:\d{2} GMT[+-]\d{4}/;
+  var DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var MONTHS = ["January","February","March","April","May","June","July",
+                "August","September","October","November","December"];
+
+  function readable(v) {
+    var raw = String(v == null ? "" : v);
+    if (!DATE_DUMP.test(raw.trim())) return v;
+    var d = new Date(raw);
+    if (isNaN(d.getTime())) return v;
+    var out = DAYS[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " +
+              d.getDate() + ", " + d.getFullYear();
+    if (d.getHours() || d.getMinutes()) {
+      var h = d.getHours() % 12 || 12;
+      var m = d.getMinutes();
+      out += " at " + h + ":" + (m < 10 ? "0" + m : m) +
+             (d.getHours() < 12 ? " AM" : " PM");
+    }
+    return out;
+  }
+
   var HAS_WORDS = /[0-9A-Za-z\u00c0-\u024f\u0590-\u05ff]/;
 
   function setText(el, v) {
+    v = readable(v);
     text(el, v);
     if (!HAS_WORDS.test(String(v))) el.setAttribute("data-cf-blank", "");
     else el.removeAttribute("data-cf-blank");
@@ -102,9 +132,11 @@
      emptied stays on the page as a picture with no caption. If every
      editable piece of text in the body has gone, the card goes too --
      and comes straight back the moment anything is typed into it. */
+  var EMPTY_HIDES = [[".cf26-act", ".cf26-act-body"], [".sp26-stat", null]];
+
   function tidyCards() {
-    each(".cf26-act", function (card) {
-      var body = card.querySelector(".cf26-act-body");
+    EMPTY_HIDES.forEach(function (pair) { each(pair[0], function (card) {
+      var body = pair[1] ? card.querySelector(pair[1]) : card;
       if (!body) return;
       var bound = body.querySelectorAll("[data-cf]");
       if (!bound.length) return;            /* nothing editable: not ours to hide */
@@ -114,7 +146,7 @@
       }
       if (anyWords) card.removeAttribute("data-cf-gone");
       else card.setAttribute("data-cf-gone", "");
-    });
+    }); });
   }
 
   /* An amount typed as 72000 should read as $72,000. Nobody editing a
@@ -144,9 +176,14 @@
      Editing a tier only ever reached the first, so picking a tier quoted
      the old amount back and the form recorded it too. Both copies are
      rebuilt here from what the card actually says, so they cannot drift. */
-  function syncSponsorSummary() {
-    var rows = document.querySelectorAll(".sp26-level");
-    if (!rows.length) return;
+  function syncTiers() {
+    var KINDS = [[".sp26-level", ".sp26-level-name", ".sp26-level-price"],
+                 [".vf26-tier",  ".vf26-tier-name",  ".vf26-tier-price"]];
+    var kind = null;
+    for (var k = 0; k < KINDS.length; k++) {
+      if (document.querySelector(KINDS[k][0])) { kind = KINDS[k]; break; }
+    }
+    if (!kind) return;
     var tag = document.getElementById("cf-summary-sync");
     if (!tag) {
       tag = document.createElement("style");
@@ -154,13 +191,13 @@
       (document.head || document.documentElement).appendChild(tag);
     }
     var out = [];
-    each(".sp26-level", function (row) {
-      var input = row.querySelector("input[type=radio]") ||
+    each(kind[0], function (row) {
+      var input = row.querySelector("input[type=radio],input[type=checkbox]") ||
                   document.getElementById(row.getAttribute("for") || "");
       var id = input && input.id;
       if (!id) return;
-      var name = row.querySelector(".sp26-level-name");
-      var price = row.querySelector(".sp26-level-price");
+      var name = row.querySelector(kind[1]);
+      var price = row.querySelector(kind[2]);
       var label = name ? name.textContent.trim() : "";
       var amount = price ? price.textContent.trim() : "";
       if (!label && !amount) return;
@@ -349,7 +386,7 @@
     try { tidyHighlights(); } catch (e) {}
     try { tidyCards(); } catch (e) {}
     try { tidyMoney(); } catch (e) {}
-    try { syncSponsorSummary(); } catch (e) {}
+    try { syncTiers(); } catch (e) {}
     try { applyColours(data); } catch (e) {}
     try { applySections(data); } catch (e) {}
     // after layout has settled
@@ -436,7 +473,7 @@
 
   function tidyOnce() {
     try { hideRule(); tidyHighlights(); tidyCards(); } catch (e) {}
-    try { tidyMoney(); syncSponsorSummary(); } catch (e) {}
+    try { tidyMoney(); syncTiers(); } catch (e) {}
     try { each("[data-cf-map]", function (el) { drawMap(el, el.textContent); }); } catch (e) {}
   }
 

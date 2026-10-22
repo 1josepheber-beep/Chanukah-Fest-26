@@ -1,0 +1,156 @@
+/* The site header: one bar of section links, one bar of application
+   links, identical on every page.
+
+   It used to be two different headers -- the main page had section links,
+   the application pages had a back arrow and a list of themselves -- so
+   moving between them changed the furniture. This is the only copy; each
+   page links it rather than keeping its own.
+
+   Colours are stated with !important because every page sets a blanket
+   `a { color: ... !important }` of its own, which would otherwise win. */
+
+.cfnav {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: #06142A !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.cfnav .cfnav-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 22px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.cfnav .cfnav-inner::-webkit-scrollbar { display: none; }
+
+.cfnav .cfnav-row {
+  display: flex;
+  gap: 4px;
+  width: max-content;
+  margin: 0 auto;          /* centred while it fits, flush left once it scrolls */
+}
+
+.cfnav .cfnav-row .cfnav-link {
+  flex: 0 0 auto;
+  padding: 16px 15px;
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none !important;
+  color: #B9CBDE !important;
+  border-bottom: 3px solid transparent;
+}
+.cfnav .cfnav-row .cfnav-link:hover { color: #FFFFFF !important; }
+.cfnav .cfnav-row .cfnav-link-current {
+  color: #F0B429 !important;
+  border-bottom-color: #F0B429;
+}
+
+/* ---- the application links -------------------------------------------- */
+
+.cfbar {
+  background-color: #10294A !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.cfbar .cfbar-row {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 7px 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cfbar .cfbar-row .cfbar-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #F0B429 !important;
+}
+
+.cfbar .cfbar-row .cfbar-link {
+  flex: 0 0 auto;
+  padding: 5px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none !important;
+  color: #F0B429 !important;
+  border: 1px solid rgba(240, 180, 41, 0.5);
+  border-radius: 999px;
+}
+.cfbar .cfbar-row .cfbar-link:hover {
+  border-color: #F0B429;
+  background-color: rgba(240, 180, 41, 0.12) !important;
+}
+.cfbar .cfbar-row .cfbar-link-current {
+  color: #0A1E38 !important;
+  background-color: #F0B429 !important;
+  border-color: #F0B429;
+}
+
+/* A field cleared in the editor leaves an element with nothing in it;
+   content.js marks those, and here they take no room. */
+.cfnav [data-cf-blank],
+.cfbar [data-cf-blank] { display: none !important; }
+
+@media (max-width: 640px) {
+  .cfnav .cfnav-inner { padding: 0 12px; }
+  .cfnav .cfnav-row .cfnav-link { padding: 15px 12px; font-size: 14px; }
+  .cfbar .cfbar-row { padding: 7px 10px; gap: 7px; }
+  .cfbar .cfbar-row .cfbar-label { width: 100%; text-align: center; font-size: 12px; }
+  .cfbar .cfbar-row .cfbar-link { padding: 7px 10px; font-size: 12px; }
+}
+
+/* ---- back to top ------------------------------------------------------- */
+
+.cftop {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid rgba(240, 180, 41, 0.55);
+  border-radius: 999px;
+  background-color: #0A1E38 !important;
+  box-shadow: 0 6px 20px rgba(6, 20, 42, 0.38);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+}
+.cftop.cftop-on {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.cftop:hover { background-color: #10294A !important; border-color: #F0B429; }
+
+/* the arrowhead, drawn rather than typed, so no font has to carry it */
+.cftop::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  margin-top: 4px;
+  border-left: 2px solid #F0B429;
+  border-top: 2px solid #F0B429;
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cftop { transition: none; }
+}

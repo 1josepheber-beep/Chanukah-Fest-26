@@ -831,6 +831,29 @@
   margin-top: 32px;
 }
 
+/* Three points and a link do not sit well in half a column beside a
+   one-line answer, so this one takes the full width of the row. */
+.cf26 .cf26-q-wide { grid-column: 1 / -1; }
+
+.cf26 .cf26-q-list {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  list-style: disc;
+  font-family: "Newsreader", Georgia, serif !important;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--muted) !important;
+}
+.cf26 .cf26-q-list li { margin-top: 7px; }
+.cf26 .cf26-q-list li::marker { color: var(--gold); }
+.cf26 .cf26-q-list strong { color: var(--ink) !important; font-weight: 700; }
+.cf26 .cf26-q-link {
+  font-family: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .cf26 .cf26-q h3 {
   font-size: 17.5px;
   margin-bottom: 7px;
@@ -1543,6 +1566,15 @@ html, body { overflow-x: clip; max-width: 100%; }
         <div class="cf26-q">
           <h3 data-cf="faq.de0cab55">Do I need a ticket?</h3>
           <p data-cf="faq.ef899d28">No. Admission is free and open to everyone. If you would like a guaranteed seat at the front, reserved seating can be bought in advance and only 500 seats are available. Food and merchandise are the only other things you pay for.</p>
+        </div>
+
+        <div class="cf26-q cf26-q-wide">
+          <h3 data-cf="faq.5b0e1c47">Parking &amp; transportation</h3>
+          <ul class="cf26-q-list">
+            <li><strong data-cf="faq.0a7d31b9">Free street parking</strong><span class="cf-sep"> &mdash; </span><span data-cf="faq.6c2e84f0">Metered street parking in Downtown Houston is free on Sundays.</span></li>
+            <li><strong data-cf="faq.b3f19d22">Guaranteed garage parking</strong><span class="cf-sep"> &mdash; </span><span data-cf="faq.e7a5206c">Reserve a parking space in advance at the Theater District Garage (Tranquility 2), 499 Rusk St., Houston, TX 77002.</span> <a class="cf26-q-link" href="https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00" target="_blank" rel="noopener" data-cf-href="faq.9f4c0e83" data-cf="faq.2c81b7de">Reserve your garage space</a></li>
+            <li><strong data-cf="faq.47ad5f10">Rideshare &amp; carpooling</strong><span class="cf-sep"> &mdash; </span><span data-cf="faq.d80b6a35">To avoid traffic and limited street spots, rideshare (Uber/Lyft) or carpooling is encouraged.</span></li>
+          </ul>
         </div>
 
         <div class="cf26-q">

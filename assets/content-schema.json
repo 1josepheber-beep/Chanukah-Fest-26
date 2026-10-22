@@ -1477,6 +1477,78 @@
           "tag": "a",
           "label": "Reserved seating › Button link",
           "value": "https://www.ticketsignup.io/TicketEvent/HoustonChanukahFest"
+        },
+        {
+          "key": "faq.5b0e1c47",
+          "sec": "faq",
+          "type": "text",
+          "tag": "h3",
+          "label": "Parking › Heading",
+          "value": "Parking & transportation"
+        },
+        {
+          "key": "faq.0a7d31b9",
+          "sec": "faq",
+          "type": "text",
+          "tag": "strong",
+          "label": "Parking › 1 Label",
+          "value": "Free street parking"
+        },
+        {
+          "key": "faq.6c2e84f0",
+          "sec": "faq",
+          "type": "text",
+          "tag": "span",
+          "label": "Parking › 1 Text",
+          "value": "Metered street parking in Downtown Houston is free on Sundays."
+        },
+        {
+          "key": "faq.b3f19d22",
+          "sec": "faq",
+          "type": "text",
+          "tag": "strong",
+          "label": "Parking › 2 Label",
+          "value": "Guaranteed garage parking"
+        },
+        {
+          "key": "faq.e7a5206c",
+          "sec": "faq",
+          "type": "text",
+          "tag": "span",
+          "label": "Parking › 2 Text",
+          "value": "Reserve a parking space in advance at the Theater District Garage (Tranquility 2), 499 Rusk St., Houston, TX 77002."
+        },
+        {
+          "key": "faq.2c81b7de",
+          "sec": "faq",
+          "type": "text",
+          "tag": "a",
+          "label": "Parking › 2 Link text",
+          "value": "Reserve your garage space"
+        },
+        {
+          "key": "faq.9f4c0e83",
+          "sec": "faq",
+          "type": "text",
+          "tag": "a",
+          "label": "Parking › 2 Link address",
+          "value": "https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00"
+        },
+        {
+          "key": "faq.47ad5f10",
+          "sec": "faq",
+          "type": "text",
+          "tag": "strong",
+          "label": "Parking › 3 Label",
+          "value": "Rideshare & carpooling"
+        },
+        {
+          "key": "faq.d80b6a35",
+          "sec": "faq",
+          "type": "text",
+          "tag": "span",
+          "label": "Parking › 3 Text",
+          "value": "To avoid traffic and limited street spots, rideshare (Uber/Lyft) or carpooling is encouraged."
         }
       ]
     },

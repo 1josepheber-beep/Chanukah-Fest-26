@@ -597,13 +597,19 @@
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 22px;
   margin-top: 36px;
+  /* With one act left, its track is the full width and the card sat at
+     the left of it. Centring the item rather than the track puts the
+     headliner in the middle however many acts there are. */
+  justify-items: center;
 }
 
 /* Acts that are not the headline act. They used to sit beside it as
    equal cards, each with its own photo box, which read as though the
    school choirs were billed the same as the headliners. */
 .cf26 .cf26-also {
-  margin: 26px 0 0;
+  /* sits under the headliner rather than beside it, and centred with it */
+  max-width: 620px;
+  margin: 26px auto 0;
   padding-left: 20px;
   list-style: disc;
 }

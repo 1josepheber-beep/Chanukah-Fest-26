@@ -6,7 +6,7 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
-<script src="/Chanukah-Fest-26/assets/content.js?v=20261022k" defer></script>
+<script src="/Chanukah-Fest-26/assets/content.js?v=20261022m" defer></script>
 <link rel="icon" href="/Chanukah-Fest-26/images/icon-32.png" sizes="32x32" />
 <link rel="apple-touch-icon" href="/Chanukah-Fest-26/images/icon-180.png" />
 <meta property="og:title" content="Houston Chanukah Fest 2026" />
@@ -457,68 +457,56 @@
   scroll-margin-top: 66px;
 }
 
-/* ============================ APPLICATIONS STRIP ============================ */
+/* ============================ APPLICATIONS STRIP ============================
+   A slim bar sitting under the nav, above the artwork, rather than a cream
+   band below it. Same section and same editable fields -- only the shape
+   changed. */
 .cf26 .cf26-apps {
-  background-color: #FFF8E9 !important;
-  border-bottom: 1px solid #F0DFB4;
+  background-color: #10294A !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
 }
 
-/* One centred column, label above the cards.
-
-   This used to be two columns, label beside cards. Hiding the label
-   shunted the cards into the column the label had been in -- a column
-   sized to fit them, over at the left -- while the wide column sat
-   empty beside. display:none takes an element out of the grid
-   altogether, so everything after it moves up a column, and centring
-   an item cannot fix being in the wrong one.
-
-   Stacked, it looks the same with the label or without, and matches
-   how it has always behaved on a phone. */
 .cf26 .cf26-apps-inner {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 18px 22px;
-  display: grid;
-  grid-template-columns: minmax(0,1fr);
-  gap: 12px;
+  padding: 7px 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .cf26 .cf26-apps-label {
-  font-size: 14.5px;
+  font-size: 13px;
   font-weight: 700;
-  color: #7A5200 !important;
-  line-height: 1.35;
-  text-align: center;
+  color: var(--gold) !important;
+  letter-spacing: 0.02em;
 }
 
 .cf26 .cf26-apps-links {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
+  display: flex;
   gap: 10px;
 }
 
 .cf26 .cf26-apps-link {
-  /* the cards are the same height, so a one-line label has to be
-     centred or it floats at the top beside two-line neighbours.
-     text-align centres the words across the card as well; it used to
-     be set only on a phone, so on a desktop they sat hard left. */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  background-color: #FFFFFF !important;
-  border: 1px solid #EBD9A8;
-  border-radius: 7px;
-  padding: 11px 14px;
+  flex: 0 0 auto;
+  padding: 5px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--gold) !important;
+  border: 1px solid rgba(240,180,41,0.5);
+  border-radius: 999px;
 }
 
-.cf26 .cf26-apps-link:hover { border-color: #D9A400; }
+.cf26 .cf26-apps-link:hover { border-color: var(--gold); background-color: rgba(240,180,41,0.12) !important; }
 
 .cf26 .cf26-apps-name {
-  display: block;
-  font-size: 15px;
+  /* the pill owns the colour now; this span used to be navy on white */
+  font-size: 13px;
   font-weight: 700;
-  color: var(--navy) !important;
+  color: inherit !important;
 }
 
 .cf26 .cf26-apps-due {
@@ -949,11 +937,12 @@
   .cf26 .cf26-btn { flex: 1 1 0; padding: 14px 8px; font-size: 14px; }
 
   .cf26 h2 { font-size: 27px; }
-  .cf26 .cf26-apps-inner { padding: 16px 18px; }
-  .cf26 .cf26-apps-label { font-size: 14px; }
+  .cf26 .cf26-apps-inner { padding: 7px 10px; gap: 7px; }
+  .cf26 .cf26-apps-label { font-size: 12px; width: 100%; text-align: center; }
   .cf26 .cf26-apps-links { gap: 7px; }
-  .cf26 .cf26-apps-link { padding: 9px 8px; }
-  .cf26 .cf26-apps-name { font-size: 13.5px; }
+  .cf26 .cf26-apps-links { gap: 7px; }
+  .cf26 .cf26-apps-link { padding: 7px 10px; font-size: 12px; }
+  .cf26 .cf26-apps-name { font-size: 12px; }
   .cf26 .cf26-apps-due { font-size: 11.5px; }
   .cf26 .cf26-slot {
     grid-template-columns: minmax(0,1fr);
@@ -1156,6 +1145,39 @@ html, body { overflow-x: clip; max-width: 100%; }
 
 <div class="cf26"><span data-cf="page.a10ad0a5">
 
+  <!-- ==================== STICKY NAV ==================== -->
+  </span><div class="cf26-nav" data-cf-sec="nav">
+    <div class="cf26-nav-inner">
+      <div class="cf26-nav-row">
+      <a class="cf26-navlink" href="#about" data-cf="nav.6b21fb79">About</a>
+      <a class="cf26-navlink" href="#schedule" data-cf="nav.0a8adac9">Schedule</a>
+      <a class="cf26-navlink" href="#stage" data-cf="nav.1b8ec34a">On stage</a>
+      <a class="cf26-navlink" href="#food" data-cf="nav.ea0dd4b7">Food &amp; booths</a>
+      <a class="cf26-navlink" href="#raffle" data-cf="nav.ac37b40b">Raffle</a>
+      <a class="cf26-navlink" href="#location" data-cf="nav.d219c681">Location</a>
+      <a class="cf26-navlink" href="#questions" data-cf="nav.9a1fc173">Questions</a>
+      </div>
+    </div>
+  </div><span data-cf="page.1b2f9daf">
+
+  <!-- ==================== APPLICATIONS STRIP ==================== -->
+  </span><div class="cf26-apps" data-cf-sec="apps">
+    <div class="cf26-apps-inner">
+      <div class="cf26-apps-label" data-cf="apps.4ddf8f74">Applications are open</div>
+      <div class="cf26-apps-links">
+        <a class="cf26-apps-link" href="/Chanukah-Fest-26/sponsor/" data-cf-href="apps.987469ad">
+          <span class="cf26-apps-name" data-cf="apps.fd0b743b">Sponsor</span>
+        </a>
+        <a class="cf26-apps-link" href="/Chanukah-Fest-26/vendor/" data-cf-href="apps.13b72917">
+          <span class="cf26-apps-name" data-cf="apps.52d656a6">Vendor booth</span>
+        </a>
+        <a class="cf26-apps-link" href="/Chanukah-Fest-26/volunteer/" data-cf-href="apps.7aae9d63">
+          <span class="cf26-apps-name" data-cf="apps.cbf217d4">Volunteer</span>
+        </a>
+      </div>
+    </div>
+  </div><span data-cf="page.41e9083a">
+
   <!-- ==================== HERO ==================== -->
   </span><div class="cf26-hero" data-cf-sec="hero">
     <div class="cf-banner cf-banner-hero"><img src="/Chanukah-Fest-26/images/banner-wide.jpg" alt="Houston Chanukah Fest" width="1024" height="348" />
@@ -1183,42 +1205,6 @@ html, body { overflow-x: clip; max-width: 100%; }
       
     </div>
   </div><span data-cf="page.a6188c66">
-
-  <!-- ==================== STICKY NAV ==================== -->
-  </span><div class="cf26-nav" data-cf-sec="nav">
-    <div class="cf26-nav-inner">
-      <div class="cf26-nav-row">
-      <a class="cf26-navlink" href="#about" data-cf="nav.6b21fb79">About</a>
-      <a class="cf26-navlink" href="#schedule" data-cf="nav.0a8adac9">Schedule</a>
-      <a class="cf26-navlink" href="#stage" data-cf="nav.1b8ec34a">On stage</a>
-      <a class="cf26-navlink" href="#food" data-cf="nav.ea0dd4b7">Food &amp; booths</a>
-      <a class="cf26-navlink" href="#raffle" data-cf="nav.ac37b40b">Raffle</a>
-      <a class="cf26-navlink" href="#location" data-cf="nav.d219c681">Location</a>
-      <a class="cf26-navlink" href="#questions" data-cf="nav.9a1fc173">Questions</a>
-      </div>
-    </div>
-  </div><span data-cf="page.1b2f9daf">
-
-  <!-- ==================== APPLICATIONS STRIP ==================== -->
-  </span><div class="cf26-apps" data-cf-sec="apps">
-    <div class="cf26-apps-inner">
-      <div class="cf26-apps-label" data-cf="apps.4ddf8f74">Applications are open</div>
-      <div class="cf26-apps-links">
-        <a class="cf26-apps-link" href="/Chanukah-Fest-26/sponsor/" data-cf-href="apps.987469ad">
-          <span class="cf26-apps-name" data-cf="apps.fd0b743b">Sponsor</span>
-          <span class="cf26-apps-due"><span data-cf="apps.145caf29">Due </span><span class="cf26-fill" data-cf="apps.2590ae5f">[[ DATE ]]</span></span>
-        </a>
-        <a class="cf26-apps-link" href="/Chanukah-Fest-26/vendor/" data-cf-href="apps.13b72917">
-          <span class="cf26-apps-name" data-cf="apps.52d656a6">Vendor booth</span>
-          <span class="cf26-apps-due"><span data-cf="apps.145caf29~1">Due </span><span class="cf26-fill" data-cf="apps.2590ae5f~1">[[ DATE ]]</span></span>
-        </a>
-        <a class="cf26-apps-link" href="/Chanukah-Fest-26/volunteer/" data-cf-href="apps.7aae9d63">
-          <span class="cf26-apps-name" data-cf="apps.cbf217d4">Volunteer</span>
-          <span class="cf26-apps-due" data-cf="apps.80508ef5">Pick your shifts</span>
-        </a>
-      </div>
-    </div>
-  </div><span data-cf="page.41e9083a">
 
   <!-- ==================== ABOUT ==================== -->
   </span><div class="cf26-about cf26-band cf26-anchor" id="about" data-cf-sec="about">

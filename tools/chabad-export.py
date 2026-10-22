@@ -28,17 +28,17 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
-BUILT = "22oct-1850-links-stay-on-chabad"
+BUILT = "22oct-1855-real-aids"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
 # on the Chabad site now. Raffle never had one.
 AID = {
-    "index":     "7435582",
-    "sponsor":   "7472762",
-    "vendor":    "7472765",
-    "volunteer": "7472832",
-    "raffle":    "PUT-THE-RAFFLE-AID-HERE",
+    "index":     "7542663",
+    "sponsor":   "7561354",
+    "vendor":    "7561401",
+    "volunteer": "7561374",
+    "raffle":    "7561376",
 }
 
 PAGES = [

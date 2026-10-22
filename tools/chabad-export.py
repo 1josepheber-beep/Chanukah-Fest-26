@@ -28,7 +28,7 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
-BUILT = "22oct-1825-menu-and-faq"
+BUILT = "22oct-1850-links-stay-on-chabad"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
@@ -352,10 +352,25 @@ def static_map(body):
 
 
 def retarget(body, me):
-    # pages point at each other through the CMS, not through the hosted copy
-    for slug, aid in AID.items():
-        href = "/Chanukah-Fest-26/" + ("" if slug == "index" else slug + "/")
-        body = body.replace('href="%s"' % href, 'href="/article.asp?aid=%s"' % aid)
+    """Pages point at each other through the CMS, not through the hosted
+       copy.
+
+       This used to match the page paths exactly, which quietly missed
+       every link that carries a section with it. The header on the four
+       application pages points at the main page AND a place on it --
+       /Chanukah-Fest-26/#schedule and six more like it -- so none of
+       them matched. They fell through to the catch-all below, came out
+       as full github.io addresses, and tapping About on the sponsor
+       page left the Chabad site altogether. The section is kept and
+       carried onto the article link."""
+    def swap(m):
+        slug = (m.group(1) or "").strip("/") or "index"
+        if slug not in AID:
+            return m.group(0)          # not a page of ours; leave it alone
+        return 'href="/article.asp?aid=%s%s"' % (AID[slug], m.group(2) or "")
+
+    body = re.sub(r'href="/Chanukah-Fest-26/([a-z]*/?)(#[\w-]*)?"', swap, body)
+
     # Anything else still hosted -- images above all -- is reached in full.
     # Not every one is preceded by a quote: a srcset lists several, so the
     # path is matched wherever it appears and skipped where it is already
@@ -486,7 +501,11 @@ def main():
 
         # details and summary are deliberate now -- the probe page showed
         # their system keeps them -- so they are not on this list.
-        for banned, what in [(r"\ssrcset=", "srcset"),
+        # A link to the hosted copy walks the reader off the Chabad site
+        # mid-visit. Pictures are served from there on purpose; an href
+        # never should be, and this shipped once before it was noticed.
+        for banned, what in [(r'href="[^"]*github\.io', "a link back to the hosted copy"),
+                             (r"\ssrcset=", "srcset"),
                              (r"\sdata-[\w-]+=", "a data- attribute"),
                              (r"\saria-[\w-]+=", "an aria- attribute")]:
             hits = re.findall(banned, out)

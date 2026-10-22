@@ -1549,6 +1549,14 @@
           "tag": "span",
           "label": "Parking › 3 Text",
           "value": "To avoid traffic and limited street spots, rideshare (Uber/Lyft) or carpooling is encouraged."
+        },
+        {
+          "key": "nav.9c3e55a1",
+          "sec": "nav",
+          "type": "text",
+          "tag": "span",
+          "label": "Menu button (small screens)",
+          "value": "Menu"
         }
       ]
     },

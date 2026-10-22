@@ -54,6 +54,85 @@
    the page you are on would lose its gold the moment you pointed at it */
 .cfnav .cfnav-row .cfnav-link-current:hover { color: #F7C64B !important; }
 
+/* ---- the menu button, small screens only -------------------------------
+
+   The eight links need 753px and fit down to a 768px screen; below about
+   700 they ran off the edge with nothing to say so. Rather than hint that
+   the strip scrolls, below 760 it stops being a strip.
+
+   It is a real <details>, so it opens from the keyboard, is announced as
+   expandable, and still works if a script fails to load. Above 760 the
+   summary is hidden and the links are forced visible whatever state the
+   details is in. */
+.cfnav .cfnav-toggle { display: none; }
+
+@media (max-width: 760px) {
+  /* Only once a script has run: without one the links stay as they are,
+     a strip that scrolls, rather than disappearing behind a button that
+     cannot open. */
+  .cfjs .cfnav .cfnav-toggle {
+    display: flex;
+    width: 100%;
+    background: none;
+    border: 0;
+    text-align: left;
+    align-items: center;
+    gap: 11px;
+    padding: 15px 16px;
+    font-family: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #B9CBDE !important;
+    cursor: pointer;
+    list-style: none;
+  }
+  .cfjs .cfnav .cfnav-toggle:focus-visible { outline: 2px solid #F0B429; outline-offset: -3px; }
+
+  /* three bars, drawn rather than typed */
+  .cfjs .cfnav .cfnav-bars {
+    display: block;
+    width: 19px; height: 2px;
+    background: #F0B429;
+    box-shadow: 0 6px 0 #F0B429, 0 -6px 0 #F0B429;
+  }
+  .cfjs .cfnav.cfnav-open .cfnav-bars {
+    box-shadow: none;
+    transform: rotate(45deg);
+    position: relative;
+  }
+  .cfjs .cfnav.cfnav-open .cfnav-bars::after {
+    content: ""; position: absolute; left: 0; top: 0;
+    width: 19px; height: 2px; background: #F0B429;
+    transform: rotate(-90deg);
+  }
+
+  .cfjs .cfnav:not(.cfnav-open) > .cfnav-inner { display: none; }
+  .cfjs .cfnav > .cfnav-inner {
+    padding: 0;
+    overflow-x: visible;
+    /* never taller than the screen, however many links there are */
+    max-height: calc(100vh - 58px);
+    overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+  }
+  .cfjs .cfnav .cfnav-row {
+    flex-direction: column;
+    width: auto;
+    gap: 0;
+  }
+  .cfjs .cfnav .cfnav-row .cfnav-link {
+    padding: 14px 16px;
+    font-size: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid transparent;
+  }
+  .cfjs .cfnav .cfnav-row .cfnav-link:last-child { border-bottom: 0; }
+  .cfjs .cfnav .cfnav-row .cfnav-link-current {
+    border-bottom-color: rgba(255, 255, 255, 0.07);
+    border-left-color: #F0B429;
+  }
+}
+
 /* ---- the application links -------------------------------------------- */
 
 .cfbar {
@@ -116,7 +195,7 @@
 
 @media (max-width: 640px) {
   .cfnav .cfnav-inner { padding: 0 12px; }
-  .cfnav .cfnav-row .cfnav-link { padding: 15px 12px; font-size: 14px; }
+  .cfjs .cfnav .cfnav-inner { padding: 0; }
   .cfbar .cfbar-row { padding: 7px 10px; gap: 7px; }
   .cfbar .cfbar-row .cfbar-label { width: 100%; text-align: center; font-size: 12px; }
   .cfbar .cfbar-row .cfbar-link { padding: 7px 10px; font-size: 12px; }

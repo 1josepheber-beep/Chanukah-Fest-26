@@ -28,7 +28,7 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
-BUILT = "22oct-1910-booth-page"
+BUILT = "22oct-1940-forms-work"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
@@ -136,6 +136,12 @@ def flatten_vars(css):
     return css
 
 
+FORM_CSS = """/* the rest of the household, behind a fold */
+.fam-more { margin-top: 10px; }
+.fam-more > summary { cursor: pointer; font-weight: 700; padding: 10px 2px; }
+"""
+
+
 MENU_CSS = """/* ============== THE MENU, WITH NOTHING RUNNING ==============
 
    On a phone the eight links do not fit, so they fold behind a
@@ -183,22 +189,25 @@ MENU_CSS = """/* ============== THE MENU, WITH NOTHING RUNNING ==============
     border-top: 1px solid rgba(255, 255, 255, 0.10);
   }
 
-  /* three bars, drawn rather than typed */
-  .cfnav .cfnav-bars {
-    display: block;
-    width: 19px; height: 2px;
-    background: #F0B429;
-    box-shadow: 0 6px 0 #F0B429, 0 -6px 0 #F0B429;
-  }
-  .cfnav .cfnav-chk:checked + .cfnav-toggle .cfnav-bars {
-    box-shadow: none;
-    transform: rotate(45deg);
-    position: relative;
-  }
-  .cfnav .cfnav-chk:checked + .cfnav-toggle .cfnav-bars::after {
-    content: ""; position: absolute; left: 0; top: 0;
-    width: 19px; height: 2px; background: #F0B429;
-    transform: rotate(-90deg);
+  /* Three bars, drawn on the label itself.
+
+     They used to be an empty span: one bar its background, the other
+     two its shadow. An empty span is exactly what an editor's tidier
+     deletes, and this one does -- the button arrived reading Menu with
+     no icon beside it. Nothing here is an element, so there is nothing
+     to delete. The outer two bars are the borders, the middle one a
+     flat gradient that cannot be mistaken for empty space. */
+  .cfnav .cfnav-toggle::before {
+    content: "";
+    display: inline-block;
+    width: 19px;
+    height: 15px;
+    border-top: 2px solid #F0B429;
+    border-bottom: 2px solid #F0B429;
+    background-image: linear-gradient(#F0B429, #F0B429);
+    background-size: 19px 2px;
+    background-position: center center;
+    background-repeat: no-repeat;
   }
 
   .cfnav .cfnav-chk:checked + .cfnav-toggle + .cfnav-inner .cfnav-row {
@@ -239,11 +248,122 @@ def one_stylesheet(html, body, nav_css):
         parts.append(plain_comments(RULE_HTML_BODY.sub("", css).strip()))
     parts.append("/* ============== SITE HEADER ============== */\n" + plain_comments(nav_css.strip()))
     parts.append(plain_comments(MENU_CSS.strip()))
+    parts.append(plain_comments(FORM_CSS.strip()))
     for css in STYLE.findall(body):
         parts.append(plain_comments(RULE_HTML_BODY.sub("", css).strip()))
     body = STYLE.sub("", body).lstrip()
     sheet = flatten_vars("\n\n".join(p for p in parts if p))
     return '<style type="text/css">\n%s\n</style>\n\n%s' % (sheet, body)
+
+
+FAM_ROW = """      <div class="fam-row">
+        <div class="fam-head"><span class="fam-n">Person %(n)d</span></div>
+        <div class="namerow">
+          <div class="field">
+            <label><span>First name</span></label>
+            <input type="text" name="fam%(n)d_first" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label><span>Last name</span></label>
+            <input type="text" name="fam%(n)d_last" autocomplete="off" />
+          </div>
+        </div>
+        <div class="field agefield">
+          <label><span>Age </span><span class="opt">— optional</span></label>
+          <input type="number" name="fam%(n)d_age" min="0" max="120" inputmode="numeric" />
+        </div>
+      </div>
+"""
+
+
+def native_required(body):
+    """Two of the forms marked their required fields for their own script
+       to read -- data-check on the wrapper -- and that
+       attribute leaves with the rest of the data- ones. Said natively on
+       the control instead, the browser enforces it with nothing running:
+       volunteer and the raffle would otherwise have gone out with no
+       checking at all, which is worse than before.
+
+       phone and email count too: both validators there reject an empty
+       value, so the page already treated them as required, and the
+       script turns away an entry without them. famname does not -- it
+       only asks once somebody has started filling that row in, and a
+       blank row is skipped -- so it stays optional."""
+    at = [m.end() for m in
+          re.finditer(r'data-check="(?:required|phone|email)"', body)]
+    spots = []
+    for start in at:
+        here = start
+        while True:
+            c = re.compile(r"<(?:input|select|textarea)\b[^>]*>").search(body, here)
+            if not c:
+                break
+            tag = c.group(0)
+            if 'type="hidden"' in tag:      # not the field being asked for
+                here = c.end()
+                continue
+            if re.search(r"\srequired\b", tag):
+                break                        # already says so
+            spots.append(c.start() + len(c.group(0).split()[0]))
+            break
+    for i in sorted(set(spots), reverse=True):
+        body = body[:i] + ' required="required"' + body[i:]
+    return body
+
+
+def forms_without_script(body):
+    """Give the four submit buttons back their job.
+
+       On the hosted site a script takes over the submit: it sends the
+       form in the background, keeps the reader where they are, and
+       writes the answer in underneath. Two things in the markup exist
+       only to let it do that -- novalidate, because the script does the
+       checking itself, and a target pointing at a hidden frame, so the
+       reply lands somewhere invisible.
+
+       With no script those two are what break the button. The form
+       posts into a frame nobody can see and the page sits there, so it
+       reads as a button that does nothing, and people send it again.
+
+       Taking both off hands the work back to the browser, which has
+       done it since long before any of this. It refuses to submit while
+       a required field is empty and says which one -- the fields are
+       already marked, 24 of them on sponsor, 30 on the booth page -- and
+       it follows the post and shows what comes back. Every answer the
+       script sends is a finished page already: a thank you, a what went
+       missing, a you are already entered. There is something to land on.
+
+       The raffle needs one more thing. Its family rows were stamped out
+       of a template by script, so without one there are none at all and
+       a household can only enter one person. The rows are written out
+       here instead, named the way collectFamily_ reads them, fam1_first
+       through fam10_age; it skips the blank ones, so nothing else
+       changes. Ten rows is a wall to scroll past, so three are out and
+       the rest sit behind a fold, which works here -- that is what the
+       probe page established."""
+    # the browser checks the fields itself
+    body = re.sub(r'\s*novalidate(?:="[^"]*")?', "", body)
+
+    # the answer is shown rather than posted somewhere invisible
+    body = re.sub(r'\s*target="[a-z-]*sink"', "", body)
+    body = re.sub(r'\s*<iframe[^>]*?(?:class="(?:cf-)?sink"|name="[a-z-]*sink")'
+                  r'[^>]*>\s*</iframe>', "", body, flags=re.S)
+
+    if '<div id="famRows"></div>' in body:
+        shown = "".join(FAM_ROW % {"n": i} for i in range(1, 4))
+        folded = "".join(FAM_ROW % {"n": i} for i in range(4, 11))
+        body = body.replace(
+            '<div id="famRows"></div>',
+            shown.strip("\n") +
+            '\n      <details class="fam-more">'
+            '\n        <summary>Add more people</summary>\n' +
+            folded + '      </details>')
+
+    # stamped out by script, and the buttons that worked it
+    body = re.sub(r"\s*<template\b.*?</template>", "", body, flags=re.S)
+    body = re.sub(r'\s*<button[^>]*class="(?:add|remove)"[^>]*>.*?</button>',
+                  "", body, flags=re.S)
+    return body
 
 
 def drop_script_only_bits(body):
@@ -258,7 +378,8 @@ def drop_script_only_bits(body):
         r'\s*<button type="button" class="cfnav-toggle"[^>]*>(.*?)</button>',
         lambda m: ('\n    <input type="checkbox" id="cfnavopen" class="cfnav-chk" />'
                    '\n    <label for="cfnavopen" class="cfnav-toggle">%s</label>'
-                   % m.group(1).strip()),
+                   % re.sub(r'<span class="cfnav-bars"[^>]*>\s*</span>', '',
+                            m.group(1)).strip()),
         body, flags=re.S)
 
     # the date chip: keep the words, lose the menu it used to open
@@ -480,6 +601,8 @@ def main():
         html = read(path)
         body = one_stylesheet(html, body_of(html), nav_css)
         body = drop_script_only_bits(body)
+        body = native_required(body)
+        body = forms_without_script(body)
         body = old_html_only(body)
         body = static_map(body)
         body = retarget(body, slug)

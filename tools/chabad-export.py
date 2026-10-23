@@ -22,6 +22,20 @@ version or left out:
 Run:  python3 tools/chabad-export.py
 """
 
+"""RETIRED -- 23 October 2026.
+
+   This built pastable copies of the pages for the Chabad CMS, back when
+   the plan was to host the site inside their article pages. That plan is
+   over: chanukahinhouston.com now points at the hosted site directly, so
+   the pages run their own scripts and none of this is needed.
+
+   It also no longer works. It found hosted files by their absolute path,
+   /Chanukah-Fest-26/..., and turned each one into a full address. Those
+   paths are relative now, so it would match nothing and quietly emit
+   pages whose pictures and stylesheets resolve against whatever page
+   they were pasted into. Kept for the record, not for running.
+"""
+
 import io
 import os
 import re

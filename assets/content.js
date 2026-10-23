@@ -169,7 +169,15 @@
                      ["li", null], ["ul", null], ["ol", null],
                      [".vf26-tier-incl-item", null], [".sp26-level-benefits-item", null],
                      [".vf26-tier-incl", null], [".sp26-level-benefits", null],
-                     ["label", null]];
+                     ["label", null],
+                     /* The three cards at the foot of an application page, and
+                        then the band itself. Cards first: once they are marked
+                        gone the band has no living words left, so the same test
+                        catches it and the empty strip goes with them. Cleared
+                        of their wording they were drawing three white boxes
+                        with nothing in them above the footer. */
+                     [".vf26-other-card", null], [".sp26-other-card", null],
+                     [".vf26-other", null], [".sp26-other", null]];
 
   /* A label with no control in it is just words; losing them leaves
      nothing behind to look wrong. One wrapped round a checkbox still

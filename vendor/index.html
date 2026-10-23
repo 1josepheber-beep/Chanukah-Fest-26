@@ -705,6 +705,12 @@ label.cf-bad {
 
 .cf-done-next:hover { background-color: var(--gold-dark) !important; }
 
+/* The blanket `.vf26 a { color: var(--link) !important }` near the top
+   is two class levels deep; this button was one, so the link colour
+   won and the text came out blue on gold. Matched at the same depth,
+   it goes back to reading as a button. */
+.vf26 a.cf-done-next { color: var(--ink) !important; }
+
 .cf-done-more {
   display: flex;
   justify-content: center;

@@ -28,7 +28,7 @@ import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = "/mnt/user-data/outputs/chanukah-fest-2026/chabad"
-BUILT = "22oct-1855-real-aids"
+BUILT = "22oct-1910-booth-page"
 LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 
 # The article ids already in use, from the version of these pages that is
@@ -36,7 +36,7 @@ LIVE = "https://1josepheber-beep.github.io/Chanukah-Fest-26"
 AID = {
     "index":     "7542663",
     "sponsor":   "7561354",
-    "vendor":    "7561401",
+    "vendor":    "7561425",
     "volunteer": "7561374",
     "raffle":    "7561376",
 }

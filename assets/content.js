@@ -310,6 +310,8 @@
       el.setAttribute("data-cf-map-was", el.textContent.trim());
     }
     var q = mapQuery(text);
+    // belt and braces: never throw away a map that is already up
+    if (!q && el.querySelector("iframe")) return;
     if (!q) {                        // nothing usable: leave the empty box
       el.classList.remove("cf26-map-on");
       el.textContent = String(text || "").trim() ||
@@ -516,7 +518,15 @@
   function tidyOnce() {
     try { hideRule(); tidyHighlights(); tidyCards(); } catch (e) {}
     try { tidyMoney(); syncTiers(); } catch (e) {}
-    try { each("[data-cf-map]", function (el) { drawMap(el, el.textContent); }); } catch (e) {}
+    /* Once the map is drawn this box holds a frame and no text, so
+       reading its text hands drawMap an empty string -- which it quite
+       reasonably treats as "nothing to show" and clears the frame it
+       drew a moment earlier. That is why the map came up grey. The
+       address it was built from is on the element; use that. */
+    try { each("[data-cf-map]", function (el) {
+      drawMap(el, el.textContent.trim() ||
+                  el.getAttribute("data-cf-map-was") || "");
+    }); } catch (e) {}
   }
 
   applyAll(cached());          // before paint, from what we saw last time

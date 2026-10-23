@@ -71,7 +71,9 @@ const PAGES = [
       const top = d.querySelector(".cftop");
       if (top) top.remove();
 
-      d.querySelectorAll("[data-cf-map-was]").forEach(e => e.removeAttribute("data-cf-map-was"));
+      // data-cf-map-was is the address the map falls back to, not a trace
+      // of the script having run. Stripping it left the map with nothing
+      // to rebuild from.
 
       // what the runtime decided, so it holds without the runtime
       return "<!doctype html>\n" + d.documentElement.outerHTML + "\n";

@@ -5,11 +5,21 @@
 <title data-cf="page.645b2c16">Chanukah Fest 2026</title>
 <meta name="description" content="The 31st Annual Grand Menorah Lighting at Houston City Hall, Sunday 6 December 2026. Free admission, with reserved seating available.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
+<!-- How the site is used. Counts visits and which buttons get pressed;
+     analytics.js below gives every button a name worth reading. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7124QY56S6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7124QY56S6');
+</script>
 <script>document.documentElement.classList.add("cfjs")</script>
 <link rel="stylesheet" href="assets/nav.css?v=20261022x">
 <script src="assets/to-top.js?v=20261022x" defer=""></script>
 <script src="assets/content.js?v=20261022z2" defer=""></script>
 <script src="assets/calendar.js?v=20261022p" defer=""></script>
+<script src="assets/analytics.js?v=20261024a" defer=""></script>
 <link rel="icon" href="images/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="images/icon-180.png">
 <meta property="og:title" content="Houston Chanukah Fest 2026">
@@ -1330,7 +1340,7 @@ html, body { overflow-x: clip; max-width: 100%; }
       </div>
 
       <div class="cf26-cta-row">
-        <a class="cf26-btn cf26-btn-gold" href="#raffle" data-cf="hero.ee79c420">Register</a>
+        <a class="cf26-btn cf26-btn-gold" href="#raffle" data-cf="hero.ee79c420" data-ev="register_hero">Register</a>
         <a class="cf26-btn cf26-btn-ghost" href="raffle" data-cf-href="hero.987469ad" data-cf="hero.8bb7dd5b" data-cf-blank=""></a>
       </div>
         </div>
@@ -1548,7 +1558,7 @@ Students from Houston-area schools open the afternoon.</span><span class="cf26-f
       <span class="cf26-raffle-badge" data-cf="raffle.3d1800b9">FREE TO ENTER</span>
       <h2 data-cf="raffle.2bdb828d">Win a prize at the festival</h2>
       <p data-cf="raffle.67a811a8">Help us keep Houston Chanukah Fest safe and smooth for all families by registering in advance. Plus, every pre-registered guest is automatically entered into our Grand Chanukah Free Raffle!</p>
-      <a class="cf26-raffle-btn" href="raffle/" data-cf-href="raffle.8a44954d" data-cf="raffle.28f00c1c">Registration &amp; Raffle</a>
+      <a class="cf26-raffle-btn" href="raffle/" data-cf-href="raffle.8a44954d" data-ev="raffle_band" data-cf="raffle.28f00c1c">Registration &amp; Raffle</a>
     </div>
   </div><div class="cf26-seats cf26-band" id="seating" data-cf-sec="seating">
     <div class="cf26-wrap">
@@ -1558,7 +1568,7 @@ Students from Houston-area schools open the afternoon.</span><span class="cf26-f
         <p data-cf="seating.2f9ad640">Enjoy guaranteed seating directly in front of the main stage and Grand Menorah Lighting.
 Choose any available seat within the reserved section on a first-come, first-served basis upon arrival.
 Secure your reserved seats today!</p>
-        <a class="cf26-seats-btn" href="https://www.ticketsignup.io/TicketEvent/HoustonChanukahFest" target="_blank" rel="noopener" data-cf-href="seating.0d3b7a19" data-cf="seating.5e81c4b2">Reserve your Seats</a>
+        <a class="cf26-seats-btn" href="https://www.ticketsignup.io/TicketEvent/HoustonChanukahFest" target="_blank" rel="noopener" data-cf-href="seating.0d3b7a19" data-ev="reserve_seats" data-cf="seating.5e81c4b2">Reserve your Seats</a>
       </div>
     </div>
   </div><div class="cf26-involved cf26-band cf26-anchor" id="involved" data-cf-sec="involved">
@@ -1571,19 +1581,19 @@ Secure your reserved seats today!</p>
         <div class="cf26-action cf26-action-gold">
           <h3 data-cf="involved.76d657b1">Sponsorship Info</h3>
           <p data-cf="involved.523136d5">Houston Chanukah Fest: A landmark celebration bringing all of Houston together in light, pride, and unity.</p>
-          <a class="cf26-action-btn" href="sponsor/" data-cf-href="involved.987469ad" data-cf="involved.5d626f85">Sponsorship</a>
+          <a class="cf26-action-btn" href="sponsor/" data-cf-href="involved.987469ad" data-ev="sponsor_getinvolved" data-cf="involved.5d626f85">Sponsorship</a>
         </div>
 
         <div class="cf26-action">
           <h3 data-cf="involved.1b1129aa">Reserve a Booth</h3>
           <p data-cf="involved.d9b7d006">Bring your business or organization into the Vendor &amp; Activity Village.</p>
-          <a class="cf26-action-btn" href="vendor/" data-cf-href="involved.13b72917" data-cf="involved.1502a721">Apply as a Vendor</a>
+          <a class="cf26-action-btn" href="vendor/" data-cf-href="involved.13b72917" data-ev="vendor_getinvolved" data-cf="involved.1502a721">Apply as a Vendor</a>
         </div>
 
         <div class="cf26-action">
           <h3 data-cf="involved.cbf217d4">Volunteer</h3>
           <p data-cf="involved.ea296706">Help with setup, registration, info booths, Mivtzoyim or teardown. Shifts available before, during and after.</p>
-          <a class="cf26-action-btn" href="volunteer/" data-cf-href="involved.7aae9d63" data-cf="involved.d7c111c7">Sign up to Volunteer</a>
+          <a class="cf26-action-btn" href="volunteer/" data-cf-href="involved.7aae9d63" data-ev="volunteer_getinvolved" data-cf="involved.d7c111c7">Sign up to Volunteer</a>
         </div>
 
       </div>
@@ -1608,7 +1618,7 @@ Secure your reserved seats today!</p>
             </p>
             <p class="cf26-park-note" data-cf="loc.park-note">Spaces can be reserved in advance.</p>
             <p>
-              <a class="cf26-park-link" rel="noopener" href="https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00" data-cf-href="loc.park-link"><span data-cf="loc.park-cta">Reserve a space</span></a>
+              <a class="cf26-park-link" rel="noopener" href="https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00" data-cf-href="loc.park-link" data-ev="parking_reserve"><span data-cf="loc.park-cta">Reserve a space</span></a>
             </p>
           </div>
 
@@ -1639,7 +1649,7 @@ Secure your reserved seats today!</p>
             <summary><h3 data-cf="faq.5b0e1c47">Parking &amp; transportation</h3></summary>
             <div class="cf26-q-body">          <ul class="cf26-q-list">
             <li><strong data-cf="faq.0a7d31b9">Free street parking</strong><span class="cf-sep"> — </span><span data-cf="faq.6c2e84f0">Metered street parking in Downtown Houston is free on Sundays.</span></li>
-            <li><strong data-cf="faq.b3f19d22">Guaranteed garage parking</strong><span class="cf-sep"> — </span><span data-cf="faq.e7a5206c">Reserve a parking space in advance at the Theater District Garage (Tranquility 2), 499 Rusk St., Houston, TX 77002.</span> <a class="cf26-q-link" href="https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00" target="_blank" rel="noopener" data-cf-href="faq.9f4c0e83" data-cf="faq.2c81b7de">Reserve your garage space</a></li>
+            <li><strong data-cf="faq.b3f19d22">Guaranteed garage parking</strong><span class="cf-sep"> — </span><span data-cf="faq.e7a5206c">Reserve a parking space in advance at the Theater District Garage (Tranquility 2), 499 Rusk St., Houston, TX 77002.</span> <a class="cf26-q-link" href="https://app.parkmobile.io/reservation/13986?startDate=2026-12-06T15%3A00%3A00" target="_blank" rel="noopener" data-cf-href="faq.9f4c0e83" data-ev="parking_reserve_faq" data-cf="faq.2c81b7de">Reserve your garage space</a></li>
             <li><strong data-cf="faq.47ad5f10">Rideshare &amp; carpooling</strong><span class="cf-sep"> — </span><span data-cf="faq.d80b6a35">To avoid traffic and limited street spots, rideshare (Uber/Lyft) or carpooling is encouraged.</span></li>
           </ul></div>
           </details>
@@ -1695,8 +1705,8 @@ Thank you for helping us keep this celebration safe and joyful for all families!
       <p class="cf26-close-sub" data-cf="close.226e9a06">Sunday, December 6, 2026 — from 3pm until the fireworks.</p>
 
       <div class="cf26-cta-row">
-        <a class="cf26-btn cf26-btn-gold" href="sponsor/" data-cf-href="close.987469ad" data-cf="close.8bb7dd5b">Become a Sponsor</a>
-        <a class="cf26-btn cf26-btn-ghost" href="volunteer/" data-cf-href="close.7aae9d63" data-cf="close.cbf217d4">Volunteer</a>
+        <a class="cf26-btn cf26-btn-gold" href="sponsor/" data-cf-href="close.987469ad" data-ev="sponsor_footer" data-cf="close.8bb7dd5b">Become a Sponsor</a>
+        <a class="cf26-btn cf26-btn-ghost" href="volunteer/" data-cf-href="close.7aae9d63" data-ev="volunteer_footer" data-cf="close.cbf217d4">Volunteer</a>
       </div>
 
       <div class="cf26-contact">

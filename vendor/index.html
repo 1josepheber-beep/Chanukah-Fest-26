@@ -6,10 +6,20 @@
 <meta name="description" content="Reserve a booth at Chanukah Fest 2026, Houston City Hall.">
 <style>html,body{margin:0;padding:0;background:#F4F6F9;}</style>
 <script src="../assets/forms.js?v=20261022h" defer=""></script>
+<!-- How the site is used. Counts visits and which buttons get pressed;
+     analytics.js below gives every button a name worth reading. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7124QY56S6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7124QY56S6');
+</script>
 <script>document.documentElement.classList.add("cfjs")</script>
 <link rel="stylesheet" href="../assets/nav.css?v=20261022x">
 <script src="../assets/to-top.js?v=20261022x" defer=""></script>
 <script src="../assets/content.js?v=20261022z2" defer=""></script>
+<script src="../assets/analytics.js?v=20261024a" defer=""></script>
 <link rel="icon" href="../images/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../images/icon-180.png">
 <meta property="og:title" content="Chanukah Fest 2026 Vendor Booths">
@@ -1110,7 +1120,7 @@ Requires health permit.</span>
           </div>
         </fieldset>
 
-        <button class="vf26-submit" type="submit" data-cf-sending="Sending…" data-cf="form.d1ac8faa">Submit vendor application</button>
+        <button class="vf26-submit" type="submit" data-ev="submit_booth" data-cf-sending="Sending…" data-cf="form.d1ac8faa">Submit vendor application</button>
         <div class="cf-summary" id="vendor-summary"></div>
         <p class="vf26-submit-note" data-cf="form.bc185e16">You'll get a confirmation email right away. Nothing is charged at this stage.</p>
 

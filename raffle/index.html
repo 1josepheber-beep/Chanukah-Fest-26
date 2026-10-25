@@ -461,10 +461,20 @@ html, body { overflow-x: clip; max-width: 100%; }
   margin: 0 auto;
 }
 </style>
+<!-- How the site is used. Counts visits and which buttons get pressed;
+     analytics.js below gives every button a name worth reading. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7124QY56S6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7124QY56S6');
+</script>
 <script>document.documentElement.classList.add("cfjs")</script>
 <link rel="stylesheet" href="../assets/nav.css?v=20261022x">
 <script src="../assets/to-top.js?v=20261022x" defer=""></script>
 <script src="../assets/content.js?v=20261022z2" defer=""></script>
+<script src="../assets/analytics.js?v=20261024a" defer=""></script>
 <link rel="icon" href="../images/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../images/icon-180.png">
 <meta property="og:title" content="Chanukah Fest Raffle">
@@ -604,7 +614,7 @@ html, body { overflow-x: clip; max-width: 100%; }
         <button type="button" class="add" id="addBtn" data-cf="form-band.fa5aff3a">+ Add a family member</button>
       </div>
 
-      <button type="submit" class="submit" id="submitBtn" data-cf="form-band.28f00c1c~1">Enter the raffle</button>
+      <button type="submit" class="submit" id="submitBtn" data-ev="submit_raffle" data-cf="form-band.28f00c1c~1">Enter the raffle</button>
       <div class="summary" id="summary"></div>
       <p class="after" data-cf="form-band.7e68a088" data-cf-blank=""></p>
 

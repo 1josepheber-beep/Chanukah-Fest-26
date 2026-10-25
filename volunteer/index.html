@@ -415,10 +415,20 @@ html, body { overflow-x: clip; max-width: 100%; }
   margin: 0 auto;
 }
 </style>
+<!-- How the site is used. Counts visits and which buttons get pressed;
+     analytics.js below gives every button a name worth reading. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7124QY56S6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7124QY56S6');
+</script>
 <script>document.documentElement.classList.add("cfjs")</script>
 <link rel="stylesheet" href="../assets/nav.css?v=20261022x">
 <script src="../assets/to-top.js?v=20261022x" defer=""></script>
 <script src="../assets/content.js?v=20261022z2" defer=""></script>
+<script src="../assets/analytics.js?v=20261024a" defer=""></script>
 <link rel="icon" href="../images/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../images/icon-180.png">
 <meta property="og:title" content="Volunteer at Chanukah Fest 2026">
@@ -682,7 +692,7 @@ html, body { overflow-x: clip; max-width: 100%; }
         </div>
       </div>
 
-      <button type="submit" class="submit" id="submitBtn" data-cf="form-band.d7c111c7">Sign up to volunteer</button>
+      <button type="submit" class="submit" id="submitBtn" data-ev="submit_volunteer" data-cf="form-band.d7c111c7">Sign up to volunteer</button>
       <div class="summary" id="summary"></div>
       <p class="after" data-cf="form-band.f525542a">Your confirmation appears right here.</p>
 

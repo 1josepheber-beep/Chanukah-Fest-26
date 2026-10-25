@@ -483,6 +483,12 @@ html, body { overflow-x: clip; max-width: 100%; }
   height: 1650px;
   border: 0;
 }
+/* shown once their form has been sent */
+.cf-after { display: none; margin-top: 18px; text-align: center; }
+.cf-after.show { display: block; }
+.cf-after p { font-size: 15px; color: var(--muted); line-height: 1.6; margin: 0 0 14px; }
+.cf-after .cf26-btn { display: inline-block; }
+
 .framefall { margin-top: 14px; font-size: 13.5px; color: var(--muted); text-align: center; }
 .framefall a { font-weight: 700; }
 @media (max-width: 640px) {
@@ -521,6 +527,53 @@ html, body { overflow-x: clip; max-width: 100%; }
 (function () {
   var FROM = "https://forms.chabadms.com";
   if (!window.addEventListener) return;
+
+  /* Their form is on their server, so nothing here can read it. But a
+     frame still tells its own page when it loads something new, even
+     when the contents stay private -- so the first load is the form,
+     and any load after that is what came back from sending it.
+
+     That is enough to stop the worst of it: their thank-you is a
+     short page sitting in a frame built tall enough for a long form,
+     which leaves a screen and a half of nothing to scroll past. So
+     the frame shrinks to fit, the page scrolls to it, and a way back
+     to the homepage appears.
+
+     If their form ever stops navigating on submit, no load fires, and
+     the page simply behaves as it does today. */
+  var loads = 0;
+
+  /* This script sits in the head, where the frame does not exist
+     yet, so the listener waits for the document to be built. */
+  function watchFrame() {
+    var pageFrame = document.querySelector(".formframe iframe");
+    if (!pageFrame) return;
+
+    pageFrame.addEventListener("load", function () {
+      loads++;
+      if (loads < 2) return;
+
+      pageFrame.style.height = "820px";
+
+      var after = document.getElementById("cfAfter");
+      if (after) after.className = "cf-after show";
+
+      try {
+        var band = document.querySelector(".formframe");
+        if (band && band.scrollIntoView) {
+          band.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      } catch (e) {
+        window.scrollTo(0, 0);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", watchFrame);
+  } else {
+    watchFrame();
+  }
 
   window.addEventListener("message", function (ev) {
     if (ev.origin !== FROM) return;
@@ -628,6 +681,12 @@ html, body { overflow-x: clip; max-width: 100%; }
         title="Chanukah Fest registration"
         loading="lazy"
         scrolling="auto"></iframe>
+    </div>
+
+    <div class="cf-after" id="cfAfter">
+      <p>Your pass will arrive by email shortly &mdash; keep it on your phone
+         for the gate on Smith Street.</p>
+      <a class="cf26-btn" href="../" data-ev="after_register_home">Back to the homepage</a>
     </div>
 
     <p class="framefall">

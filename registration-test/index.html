@@ -503,6 +503,47 @@ html, body { overflow-x: clip; max-width: 100%; }
 <script src="../assets/to-top.js?v=20261022x" defer=""></script>
 <script src="../assets/content.js?v=20261022z2" defer=""></script>
 <script src="../assets/analytics.js?v=20261024a" defer=""></script>
+<script>
+/* Fit the frame to their form, if their form offers to say how tall it is.
+
+   A page inside a frame from another site cannot be measured from out
+   here -- the browser seals that off, and rightly. The one way across is
+   for the page inside to volunteer the number, which many booking tools
+   do without being asked.
+
+   So this listens. If a message arrives from their server carrying a
+   height, the frame takes it, and fields added to the form from now on
+   simply make it taller on its own. If no message ever comes, nothing
+   happens and the set height stands.
+
+   Only their origin is listened to, and only a sane number is accepted:
+   a frame is a door, and this is the hinge. */
+(function () {
+  var FROM = "https://forms.chabadms.com";
+  if (!window.addEventListener) return;
+
+  window.addEventListener("message", function (ev) {
+    if (ev.origin !== FROM) return;
+
+    /* Looked up now rather than when this script ran: this sits in the
+       head, where the frame does not exist yet. */
+    var frame = document.querySelector(".formframe iframe");
+    if (!frame) return;
+
+    var d = ev.data, h = 0;
+    if (typeof d === "number") h = d;
+    else if (d && typeof d === "object") h = d.height || d.scrollHeight || d.frameHeight || 0;
+    else if (typeof d === "string") {
+      var m = d.match(/(\d{3,5})/);          // "height:1820", "1820px", bare digits
+      if (m) h = parseInt(m[1], 10);
+    }
+
+    h = Math.round(h);
+    if (h > 300 && h < 20000) frame.style.height = h + "px";
+  }, false);
+})();
+</script>
+
 <link rel="icon" href="../images/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../images/icon-180.png">
 <meta property="og:title" content="Chanukah Fest Raffle">

@@ -1002,7 +1002,13 @@
   .cf26 .cf26-hero-sub { display: none; }   /* chips below carry the facts */
   .cf26 .cf26-facts { gap: 7px; margin-bottom: 20px; }
   .cf26 .cf26-fact { font-size: 13px; padding: 7px 12px; }
-  .cf26 .cf26-cta-row { gap: 9px; }
+  /* Written for two buttons sharing the row, each taking half of it.
+     The second one is blank on this page, so the one that is left had
+     the whole width to grow into and sat flush against both edges of
+     the screen. Capping the row keeps the behaviour when there are two
+     and gives a lone button the shape of a button. */
+  .cf26 .cf26-cta-row { gap: 9px; width: calc(100% - 40px); max-width: 320px;
+                        margin-left: auto; margin-right: auto; }
   .cf26 .cf26-btn { flex: 1 1 0; padding: 14px 8px; font-size: 14px; }
 
   .cf26 h2 { font-size: 27px; }

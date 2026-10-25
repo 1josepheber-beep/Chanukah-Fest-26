@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A1E38">
+<title>Chanukah Fest — Gate</title>
+<link rel="icon" href="../images/icon-32.png">
+<link rel="apple-touch-icon" href="../images/icon-180.png">
+
+<!--
+  The gate.
+
+  A volunteer opens this on their own phone, types the code from the
+  "Check-in staff" tab once, and points the camera at a pass.
+
+  Two things shaped everything here.
+
+  The first is the queue. A person standing at a barrier with forty
+  families behind them cannot wait on a round trip to Google. So the
+  whole guest list comes down once and lives on the phone, every scan
+  is answered from memory in the same instant it is read, and the
+  record of it is sent afterwards without anybody waiting for it.
+
+  The second is the signal. City Hall at six on a December evening,
+  with several thousand phones in one square, is the worst network
+  you will meet all year. So nothing here needs the network after the
+  list has loaded. Check-ins queue up on the phone and go when they
+  can. If the phone never gets signal again all evening, the gate
+  keeps working and the queue is still there in the morning.
+
+  What that costs, stated plainly: two gates scanning the same pass
+  within a few seconds of each other, both offline, will both let it
+  through. The server settles it afterwards and the second one is
+  marked as a repeat in the sheet. Online -- which is the normal case
+  -- the second gate is told within a second or so.
+-->
+
+<style>
+:root {
+  --navy:   #0A1E38;
+  --gold:   #F0B429;
+  --ink:    #16202E;
+  --muted:  #6B7C90;
+  --line:   #DDE5EE;
+  --green:  #1E8449;
+  --amber:  #B9770E;
+  --red:    #A93226;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0; padding: 0; height: 100%;
+  background: var(--navy);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  overscroll-behavior: none;
+}
+
+body { display: flex; flex-direction: column; }
+
+/* ---------- the bar across the top ---------- */
+
+.bar {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px 10px;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.bar b { font-size: 15px; font-weight: 700; }
+.bar .who { font-size: 12.5px; color: #9FB4CC; margin-left: auto; text-align: right; line-height: 1.35; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); flex: 0 0 auto; }
+.dot.off { background: var(--amber); }
+
+/* ---------- camera ---------- */
+
+.stage { flex: 1 1 auto; position: relative; overflow: hidden; background: #000; min-height: 0; }
+.stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.reticle {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(66vw, 300px); aspect-ratio: 1;
+  border: 3px solid rgba(255,255,255,.85); border-radius: 20px;
+  box-shadow: 0 0 0 100vmax rgba(0,0,0,.45);
+  pointer-events: none;
+}
+
+.hint {
+  position: absolute; left: 0; right: 0; bottom: 14px;
+  text-align: center; font-size: 14px; color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,.9); padding: 0 20px;
+}
+
+/* ---------- the answer ---------- */
+
+.result {
+  position: absolute; inset: 0;
+  display: none; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; padding: 22px; z-index: 5;
+}
+.result.show { display: flex; }
+.result.in    { background: var(--green); }
+.result.again { background: var(--amber); }
+.result.no    { background: var(--red); }
+
+.result .mark { font-size: 62px; line-height: 1; }
+.result .name { font-size: 30px; font-weight: 800; margin-top: 12px; line-height: 1.15; word-break: break-word; }
+.result .count {
+  font-size: 19px; font-weight: 700; margin-top: 16px;
+  background: rgba(0,0,0,.26); padding: 10px 20px; border-radius: 999px;
+}
+.result .sub { font-size: 15.5px; margin-top: 14px; opacity: .95; line-height: 1.5; max-width: 30ch; }
+.result .code { font-size: 13px; margin-top: 14px; opacity: .75; font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: 1px; }
+.result .tap { font-size: 13.5px; margin-top: 22px; opacity: .8; }
+
+/* ---------- foot ---------- */
+
+.foot {
+  flex: 0 0 auto;
+  display: flex; gap: 9px; align-items: center;
+  padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px);
+  background: var(--navy); border-top: 1px solid rgba(255,255,255,.12);
+}
+.foot .tally { font-size: 13px; color: #9FB4CC; line-height: 1.35; }
+.foot .tally b { color: #fff; font-size: 15px; }
+
+button {
+  font: inherit; cursor: pointer; border: 0; border-radius: 9px;
+  padding: 11px 15px; font-weight: 700; font-size: 14.5px;
+}
+.ghost { background: rgba(255,255,255,.13); color: #fff; }
+.ghost:active { background: rgba(255,255,255,.22); }
+.gold { background: var(--gold); color: var(--ink); }
+.push { margin-left: auto; }
+
+/* ---------- panels over everything ---------- */
+
+.panel {
+  position: fixed; inset: 0; z-index: 20;
+  background: var(--navy);
+  display: none; flex-direction: column; justify-content: center;
+  padding: 26px 22px calc(env(safe-area-inset-bottom, 0px) + 26px);
+  overflow-y: auto;
+}
+.panel.show { display: flex; }
+.panel h1 { font-size: 23px; margin: 0 0 8px; }
+.panel p { font-size: 15px; color: #B9CBDE; line-height: 1.6; margin: 0 0 18px; }
+.panel label { display: block; font-size: 13px; color: #9FB4CC; margin-bottom: 7px; font-weight: 600; }
+
+input[type=text] {
+  width: 100%; font: inherit; font-size: 21px; font-weight: 700;
+  letter-spacing: 3px; text-align: center; text-transform: uppercase;
+  padding: 15px 12px; border-radius: 10px; border: 2px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.07); color: #fff;
+}
+input[type=text]:focus { outline: 0; border-color: var(--gold); }
+input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px; }
+
+.panel .go { width: 100%; margin-top: 15px; padding: 15px; font-size: 16px; }
+.panel .err { color: #FFB3A7; font-size: 14px; margin-top: 13px; min-height: 19px; line-height: 1.45; }
+.panel .small { font-size: 13px; color: #8FA6BF; margin-top: 20px; line-height: 1.6; }
+.panel .small b { color: #B9CBDE; }
+.panel .back { margin-top: 18px; }
+
+.banner {
+  position: fixed; left: 12px; right: 12px; z-index: 30;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  background: var(--ink); color: #fff; border-radius: 10px;
+  padding: 12px 15px; font-size: 13.5px; line-height: 1.5;
+  box-shadow: 0 8px 26px rgba(0,0,0,.5);
+  display: none;
+}
+.banner.show { display: block; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .result.show { animation: pop .14s ease-out; }
+  @keyframes pop { from { opacity: .4; transform: scale(.97); } to { opacity: 1; transform: none; } }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============ the code panel ============ -->
+<div class="panel show" id="signin">
+  <h1>Chanukah Fest — Gate</h1>
+  <p>Type the code you were given. You only have to do this once on this phone.</p>
+  <label for="code">Volunteer code</label>
+  <input type="text" id="code" inputmode="latin" autocapitalize="characters"
+         autocomplete="off" spellcheck="false" maxlength="8" placeholder="······">
+  <button class="gold go" id="signinGo">Start scanning</button>
+  <div class="err" id="signinErr"></div>
+  <div class="small">
+    Codes are on the <b>Check-in staff</b> tab of the registration sheet.
+    If you have not got one, ask Joseph to add you.
+  </div>
+</div>
+
+<!-- ============ typing a code in by hand ============ -->
+<div class="panel" id="manual">
+  <h1>Type the pass</h1>
+  <p>When a camera will not focus — a cracked screen, a dim phone — read the code under the QR instead.</p>
+  <label for="ticket">Pass number</label>
+  <input type="text" id="ticket" inputmode="latin" autocapitalize="characters"
+         autocomplete="off" spellcheck="false" maxlength="14" placeholder="CF26:········">
+  <button class="gold go" id="manualGo">Check this pass</button>
+  <div class="err" id="manualErr"></div>
+  <button class="ghost back" id="manualBack">Back to the camera</button>
+</div>
+
+<!-- ============ the gate itself ============ -->
+<div class="bar">
+  <span class="dot" id="dot"></span>
+  <b>Gate</b>
+  <span class="who" id="who"></span>
+</div>
+
+<div class="stage" id="stage">
+  <video id="video" playsinline muted autoplay></video>
+  <div class="reticle" id="reticle"></div>
+  <div class="hint" id="hint">Point at the QR code on their phone</div>
+
+  <div class="result" id="result">
+    <div class="mark" id="rMark"></div>
+    <div class="name" id="rName"></div>
+    <div class="count" id="rCount"></div>
+    <div class="sub" id="rSub"></div>
+    <div class="code" id="rCode"></div>
+    <div class="tap">Tap anywhere for the next one</div>
+  </div>
+</div>
+
+<div class="foot">
+  <div class="tally"><b id="tIn">0</b> in &nbsp;·&nbsp; <span id="tList">no list yet</span></div>
+  <button class="ghost push" id="btnManual">Type it</button>
+  <button class="ghost" id="btnRefresh">Refresh</button>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<script src="../assets/jsqr.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
+  var TAG = "CF26:";
+
+  var KEY_CODE  = "cf26.gate.code";
+  var KEY_LIST  = "cf26.gate.list";
+  var KEY_QUEUE = "cf26.gate.queue";
+  var KEY_WHO   = "cf26.gate.who";
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* Storage can throw -- a locked-down browser, private mode, a phone
+     with no room left. None of that is allowed to stop a gate. */
+  function load(k, dflt) {
+    try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : dflt; }
+    catch (e) { return dflt; }
+  }
+  function save(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { return false; }
+  }
+
+  var state = {
+    code:  load(KEY_CODE, ""),
+    who:   load(KEY_WHO, ""),
+    list:  load(KEY_LIST, null),      /* { at, people: { TICKET: {...} } } */
+    queue: load(KEY_QUEUE, []),
+    admitted: 0,
+    busy: false,
+    stream: null,
+    reader: null
+  };
+
+  /* ---------------- talking to the sheet ----------------
+     JSONP, because a web app on script.google.com answers a <script>
+     tag reliably from anywhere and a fetch() from a phone browser
+     does not. Every call carries its own timeout: a request that
+     never comes back must not leave the gate waiting on it. */
+
+  var jsonpN = 0;
+
+  function call(params, done, fail, ms) {
+    var name = "cfg" + (++jsonpN) + "_" + Date.now();
+    var tag = document.createElement("script");
+    var over = false;
+
+    var timer = setTimeout(function () {
+      if (over) return;
+      over = true;
+      cleanup();
+      if (fail) fail("timeout");
+    }, ms || 12000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (tag.parentNode) tag.parentNode.removeChild(tag);
+    }
+
+    window[name] = function (data) {
+      if (over) return;
+      over = true;
+      cleanup();
+      done(data);
+    };
+
+    var q = [];
+    for (var k in params) {
+      if (params.hasOwnProperty(k)) {
+        q.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k]));
+      }
+    }
+    q.push("callback=" + name);
+
+    tag.src = ENDPOINT + "?" + q.join("&");
+    tag.onerror = function () {
+      if (over) return;
+      over = true;
+      cleanup();
+      if (fail) fail("offline");
+    };
+    document.head.appendChild(tag);
+  }
+
+  /* ---------------- the guest list ---------------- */
+
+  function indexList(rows) {
+    var people = {};
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (!r || !r.t) continue;
+      people[String(r.t).toUpperCase()] = r;
+    }
+    return people;
+  }
+
+  function fetchList(onOk, onErr) {
+    call({ action: "roster", key: state.code }, function (res) {
+      if (!res || !res.ok) { if (onErr) onErr(res && res.status); return; }
+      state.who = res.who || "";
+      state.list = { at: res.at || Date.now(), people: indexList(res.list || []) };
+
+      /* A fresh list from the sheet does not yet know about scans
+         still sitting in this phone's queue. Without this, a
+         volunteer who scanned a family while the signal was out and
+         then refreshed would be shown a clean pass and wave the same
+         family through twice. */
+      applyQueueTo(state.list);
+
+      save(KEY_WHO, state.who);
+      if (!save(KEY_LIST, state.list)) {
+        note("The list is loaded but this phone will not keep it. Avoid closing the page.");
+      }
+      paintWho();
+      if (onOk) onOk(res);
+    }, function (why) { if (onErr) onErr(why); });
+  }
+
+  function applyQueueTo(list) {
+    if (!list) return;
+    for (var i = 0; i < state.queue.length; i++) {
+      var p = list.people[String(state.queue[i].t).toUpperCase()];
+      if (p && !p.c) { p.c = state.queue[i].at; p.b = state.who || "this gate"; }
+    }
+  }
+
+  function listCount() {
+    if (!state.list) return 0;
+    var n = 0;
+    for (var k in state.list.people) if (state.list.people.hasOwnProperty(k)) n++;
+    return n;
+  }
+
+  /* ---------------- check-ins waiting to be sent ---------------- */
+
+  function queuePush(ticket) {
+    state.queue.push({ t: ticket, at: Date.now() });
+    save(KEY_QUEUE, state.queue);
+    paintDot();
+  }
+
+  var draining = false;
+
+  function drainQueue() {
+    if (draining || !state.queue.length || !state.code) return;
+    draining = true;
+
+    var item = state.queue[0];
+    call({ action: "checkin", key: state.code, t: item.t }, function (res) {
+      draining = false;
+      if (res && res.ok) {
+        state.queue.shift();
+        save(KEY_QUEUE, state.queue);
+        /* keep the phone's copy honest for whoever scans next */
+        if (state.list && res.ticket) {
+          var p = state.list.people[String(res.ticket).toUpperCase()];
+          if (p && !p.c) { p.c = res.at || Date.now(); p.b = res.by || ""; save(KEY_LIST, state.list); }
+        }
+        paintDot();
+        if (state.queue.length) setTimeout(drainQueue, 120);
+      } else {
+        paintDot();
+      }
+    }, function () {
+      draining = false;
+      paintDot();            /* still offline; try again on the next scan */
+    }, 9000);
+  }
+
+  /* ---------------- deciding, instantly ---------------- */
+
+  function normalise(text) {
+    var s = String(text || "").trim().toUpperCase();
+    var at = s.indexOf(TAG);
+    if (at > -1) s = s.slice(at + TAG.length);
+    s = s.replace(/[^0-9A-Z]/g, "");
+    return s;
+  }
+
+  function judge(raw) {
+    var t = normalise(raw);
+    if (!t) return { status: "no", code: raw, why: "That is not a festival pass." };
+
+    if (!state.list) return { status: "no", code: t, why: "No guest list on this phone yet. Tap Refresh." };
+
+    var p = state.list.people[t];
+    if (!p) return { status: "no", code: t, why: "This pass is not on the list." };
+
+    if (p.c) {
+      return { status: "again", code: t, name: p.n, party: p.p, guests: p.g,
+               at: p.c, by: p.b };
+    }
+
+    /* admit now, record after -- the queue is what makes this honest */
+    p.c = Date.now();
+    p.b = state.who || "this gate";
+    save(KEY_LIST, state.list);
+    state.admitted += (p.p || 1);
+    queuePush(t);
+    drainQueue();
+
+    return { status: "in", code: t, name: p.n, party: p.p, guests: p.g };
+  }
+
+  /* ---------------- showing it ---------------- */
+
+  function when(ms) {
+    try {
+      var d = new Date(ms);
+      var h = d.getHours(), m = d.getMinutes();
+      var ap = h >= 12 ? "pm" : "am";
+      h = h % 12; if (!h) h = 12;
+      return h + ":" + (m < 10 ? "0" : "") + m + ap;
+    } catch (e) { return ""; }
+  }
+
+  function buzz(pattern) {
+    try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+  }
+
+  function show(v) {
+    var box = $("result");
+    box.className = "result show " + v.status;
+
+    $("rMark").textContent  = v.status === "in" ? "✓" : v.status === "again" ? "!" : "✕";
+    $("rName").textContent  = v.name || (v.status === "no" ? "Not on the list" : "");
+    $("rCode").textContent  = v.code ? TAG + v.code : "";
+
+    if (v.status === "in") {
+      $("rCount").textContent = (v.party || 1) + (v.party === 1 ? " person" : " people");
+      $("rSub").textContent = v.guests ? "With: " + v.guests : "Let them through.";
+      buzz(40);
+    } else if (v.status === "again") {
+      $("rCount").textContent = "Already came in";
+      $("rSub").textContent = "Scanned " + (v.at ? "at " + when(v.at) : "earlier") +
+                              (v.by ? " by " + v.by : "") +
+                              ". " + ((v.party || 1) + (v.party === 1 ? " person" : " people")) +
+                              " on this pass.";
+      buzz([25, 60, 25]);
+    } else {
+      $("rCount").textContent = "";
+      $("rSub").textContent = v.why || "This pass is not on the list.";
+      buzz([70, 50, 70]);
+    }
+
+    paintTally();
+    state.busy = true;
+  }
+
+  function clearResult() {
+    $("result").className = "result";
+    state.busy = false;
+  }
+
+  function paintWho() {
+    $("who").innerHTML = state.who
+      ? state.who + "<br>" + listCount() + " registered"
+      : listCount() + " registered";
+  }
+
+  function paintTally() {
+    $("tIn").textContent = state.admitted;
+    var n = listCount();
+    $("tList").textContent = n
+      ? n + " on the list" + (state.queue.length ? " · " + state.queue.length + " to send" : "")
+      : "no list yet";
+  }
+
+  function paintDot() {
+    $("dot").className = state.queue.length ? "dot off" : "dot";
+    paintTally();
+  }
+
+  var noteTimer;
+  function note(text) {
+    var b = $("banner");
+    b.textContent = text;
+    b.className = "banner show";
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(function () { b.className = "banner"; }, 6000);
+  }
+
+  /* ---------------- the camera ---------------- */
+
+  var canvas = document.createElement("canvas");
+  var ctx = canvas.getContext("2d", { willReadFrequently: true });
+  var scanning = false;
+  var lastSeen = "", lastAt = 0;
+
+  function startCamera() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      $("hint").textContent = "This browser will not open a camera. Use Type it.";
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    }).then(function (stream) {
+      state.stream = stream;
+      var v = $("video");
+      v.srcObject = stream;
+      v.setAttribute("playsinline", "");
+      return v.play();
+    }).then(function () {
+      scanning = true;
+      makeReader();
+      requestAnimationFrame(tick);
+      $("hint").textContent = "Point at the QR code on their phone";
+    }).catch(function (err) {
+      var why = (err && err.name === "NotAllowedError")
+        ? "Camera blocked. Allow it in the browser, or use Type it."
+        : "No camera here. Use Type it.";
+      $("hint").textContent = why;
+    });
+  }
+
+  /* The phone's own reader where there is one -- it is faster and
+     kinder to the battery. jsQR everywhere else, which is every
+     iPhone. */
+  function makeReader() {
+    if (window.BarcodeDetector) {
+      try {
+        var det = new window.BarcodeDetector({ formats: ["qr_code"] });
+        state.reader = function (video) {
+          return det.detect(video).then(function (found) {
+            return found && found.length ? found[0].rawValue : null;
+          }).catch(function () { return null; });
+        };
+        return;
+      } catch (e) { /* fall through */ }
+    }
+    state.reader = function (video) {
+      var w = video.videoWidth, h = video.videoHeight;
+      if (!w || !h) return Promise.resolve(null);
+      var side = Math.min(w, h);
+      canvas.width = 420;
+      canvas.height = 420;
+      ctx.drawImage(video, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 420, 420);
+      var img;
+      try { img = ctx.getImageData(0, 0, 420, 420); }
+      catch (e) { return Promise.resolve(null); }
+      var r = window.jsQR ? window.jsQR(img.data, 420, 420, { inversionAttempts: "dontInvert" }) : null;
+      return Promise.resolve(r ? r.data : null);
+    };
+  }
+
+  var working = false;
+
+  function tick() {
+    if (!scanning) return;
+    var v = $("video");
+
+    if (!state.busy && !working && v.readyState >= 2) {
+      working = true;
+      state.reader(v).then(function (text) {
+        working = false;
+        if (!text) return;
+
+        /* the same code sitting in front of the lens must not fire
+           over and over */
+        var now = Date.now();
+        if (text === lastSeen && now - lastAt < 2500) return;
+        lastSeen = text; lastAt = now;
+
+        show(judge(text));
+      }).catch(function () { working = false; });
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------------- wiring ---------------- */
+
+  $("stage").addEventListener("click", function () {
+    if (state.busy) { clearResult(); lastSeen = ""; }
+  });
+
+  $("signinGo").addEventListener("click", function () {
+    var code = ($("code").value || "").trim().toUpperCase();
+    if (!code) { $("signinErr").textContent = "Type your code first."; return; }
+
+    $("signinErr").textContent = "Checking…";
+    state.code = code;
+
+    fetchList(function () {
+      save(KEY_CODE, code);
+      $("signinErr").textContent = "";
+      $("signin").className = "panel";
+      paintWho(); paintDot();
+      startCamera();
+      drainQueue();
+    }, function (why) {
+      state.code = "";
+      $("signinErr").textContent = why === "badcode"
+        ? "That code is not on the list. Check it with Joseph."
+        : "Could not reach the sheet. Check the signal and try again.";
+    });
+  });
+
+  $("code").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") $("signinGo").click();
+  });
+
+  $("btnManual").addEventListener("click", function () {
+    $("manualErr").textContent = "";
+    $("ticket").value = "";
+    $("manual").className = "panel show";
+    setTimeout(function () { $("ticket").focus(); }, 60);
+  });
+
+  $("manualBack").addEventListener("click", function () {
+    $("manual").className = "panel";
+  });
+
+  $("manualGo").addEventListener("click", function () {
+    var raw = $("ticket").value || "";
+    if (!normalise(raw)) { $("manualErr").textContent = "Type the number under the QR code."; return; }
+    $("manual").className = "panel";
+    show(judge(raw));
+  });
+
+  $("ticket").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") $("manualGo").click();
+  });
+
+  $("btnRefresh").addEventListener("click", function () {
+    if (!state.code) return;
+    note("Fetching the list…");
+    drainQueue();
+    fetchList(function () {
+      note(listCount() + " registered. List is current.");
+      paintDot();
+    }, function () {
+      note("Could not reach the sheet. The list on this phone still works.");
+    });
+  });
+
+  window.addEventListener("online", function () { paintDot(); drainQueue(); });
+  window.addEventListener("offline", paintDot);
+
+  /* Phones put a page to sleep when it goes to the background and the
+     camera comes back stopped. Pick it up again on return. */
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) return;
+    drainQueue();
+    var v = $("video");
+    if (state.stream && v.paused) { v.play().catch(function () {}); }
+  });
+
+  /* ---------------- opening ---------------- */
+
+  paintDot();
+
+  if (state.code) {
+    $("signin").className = "panel";
+    paintWho();
+    startCamera();
+    drainQueue();
+    /* a list from an earlier shift is better than none while the new
+       one comes down */
+    fetchList(function () { paintDot(); }, function () {
+      if (state.list) note("Working from the list already on this phone.");
+      else note("No signal and no list yet. Try Refresh when you have a bar.");
+    });
+  } else {
+    setTimeout(function () { $("code").focus(); }, 120);
+  }
+
+  /* for the test page only; harmless in the field */
+  window.__gate = { judge: judge, normalise: normalise, state: state };
+})();
+</script>
+</body>
+</html>

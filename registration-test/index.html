@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title data-cf="page.9a53bfe6">Registration test — Chanukah Fest 2026</title>
+<meta name="description" content="Enter the free raffle at Chanukah Fest 2026, Houston City Hall.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap">
+
+<style>
+/* ============================================================
+   CHANUKAH FEST 2026 — RAFFLE ENTRY
+   Hosted on GitHub Pages, so JavaScript works here. The form
+   checks every field before it submits: anything missing turns
+   red and the page scrolls to it. Nobody gets thrown out to an
+   error page.
+
+   Submission is still a plain form POST to the same Apps Script,
+   so the thank-you page is the one already running.
+   ============================================================ */
+
+:root {
+  --gold:      #F0B429;   /* Main gold */
+  --gold-dark: #DDA31C;   /* Gold, pressed */
+  --gold-deep: #8A6A1E;   /* Gold, text on pale */
+  --navy:      #0A1E38;   /* Dark sections */
+  --navy-2:    #06142A;   /* Darkest bands */
+  --ink:       #16202E;   /* Headings */
+  --page:      #F4F6F9;   /* Page background */
+  --link:      #1B6FA8;   /* Links */
+  --body-txt:  #46566A;   /* Body text */
+  --muted:     #6B7C90;   /* Quiet text */
+  --soft:      #C9DAEC;   /* Text on dark */
+  --line:      #DDE5EE;   /* Borders */
+  --line-2:    #E3E9F0;   /* Borders, alternate */
+  --mint:      #3EE8B5;   /* Confirmations */
+  --bad:       #C2410C;
+  --bad-bg:    #FEF6F3;
+  --sans:      "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif:     "Newsreader", Georgia, "Times New Roman", serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--link); text-decoration: none; }
+
+:is(a, input, button, summary):focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.wrap { max-width: 620px; margin: 0 auto; padding: 0 20px; }
+
+h2 {
+  font-size: 24px;
+  line-height: 1.14;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+h3 { font-size: 17px; font-weight: 700; color: var(--navy); }
+
+.fill {
+  background: #FFF3D6;
+  color: #8A5A00;
+  border-bottom: 2px dashed #E0A106;
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+/* ---- back to the rest of the site ---- */
+
+
+
+
+
+
+
+
+
+/* ---- where to go once you are entered ---- */
+.done-next {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 15px 30px;
+  border-radius: 9px;
+  background: var(--gold);
+  color: var(--ink) !important;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.done-next:hover { background: var(--gold-dark); }
+
+.done-more {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.done-more a {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--soft) !important;
+  border-bottom: 1px solid rgba(201,218,236,.35);
+  padding-bottom: 2px;
+}
+
+.done-more a:hover { color: var(--gold) !important; border-bottom-color: var(--gold); }
+
+/* ---------------------------- HEADER ---------------------------- */
+.head {
+  background: var(--navy);
+  background-image:
+    radial-gradient(620px 300px at 50% 120%, rgba(240,180,41,.26) 0%, rgba(240,180,41,0) 70%),
+    linear-gradient(180deg, var(--navy-2) 0%, var(--navy) 100%);
+  color: #fff;
+  padding: 34px 0 30px;
+  text-align: center;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.head h1 {
+  font-size: clamp(29px, 7vw, 36px);
+  line-height: 1.02;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.head p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17.5px;
+  line-height: 1.55;
+  color: var(--soft);
+  max-width: 34ch;
+  margin: 0 auto;
+}
+
+/* ---------------------------- PRIZES ---------------------------- */
+.prizes { background: #FFF8E9; border-bottom: 1px solid #F0DFB4; padding: 20px 0; }
+
+.prizes-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gold-deep);
+  margin-bottom: 8px;
+}
+
+.prize-list { list-style: none; }
+
+.prize-list li {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--navy);
+  padding: 5px 0 5px 18px;
+  position: relative;
+}
+
+.prize-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 13px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* ----------------------------- FORM ----------------------------- */
+.form-band { background: #fff; padding: 30px 0 34px; }
+
+.hint {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.field { margin-bottom: 18px; }
+
+.field > label {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.req { color: var(--bad); }
+.opt { font-size: 13.5px; font-weight: 600; color: var(--muted); }
+
+input[type=text], input[type=tel], input[type=email], input[type=number] {
+  width: 100%;
+  padding: 15px 14px;
+  border: 1px solid #C4D2E0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 16px;            /* 16px stops iPhones zooming on focus */
+  color: var(--ink);
+  background: #fff;
+}
+
+input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10,30,56,.10); outline: none; }
+
+/* the whole point of this page */
+.field.bad > label { color: var(--bad); }
+.field.bad input { border-color: var(--bad); background: var(--bad-bg); }
+.field.bad input:focus { box-shadow: 0 0 0 3px rgba(194,65,12,.15); }
+
+.err {
+  display: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--bad);
+  margin-top: 6px;
+}
+
+.field.bad .err { display: block; }
+
+.namerow { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; align-items: start; }
+.agefield { max-width: 130px; }
+
+.hp { position: absolute !important; left: -9999px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
+
+/* ------------------------ FAMILY MEMBERS ------------------------ */
+.fam { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line-2); }
+
+.fam-row {
+  margin-top: 12px;
+  padding: 14px;
+  background: var(--page);
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.fam-row.bad-row { border-color: #F3C4AE; background: var(--bad-bg); }
+
+.fam-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.fam-n { font-size: 12.5px; font-weight: 700; color: #8496A9; }
+
+.fam-row .field { margin-bottom: 0; }
+.fam-row .field > label { font-size: 13px; color: var(--body-txt); margin-bottom: 4px; }
+.fam-row.bad-row .field.bad > label { color: var(--bad); }
+.fam-row .agefield { margin-top: 10px; }
+
+.remove {
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.remove:hover { color: var(--bad); text-decoration: underline; }
+
+.add {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 2px dashed #C4D2E0;
+  border-radius: 8px;
+  background: #FBFCFD;
+  color: var(--link);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add:hover { border-color: var(--link); background: #F4F9FD; }
+.add[disabled] { opacity: .5; cursor: default; border-style: solid; }
+
+/* ---------------------------- SUBMIT ---------------------------- */
+.submit {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 19px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.submit:hover { background: var(--gold-dark); }
+.submit[disabled] { opacity: .6; cursor: default; }
+
+.summary {
+  display: none;
+  margin-top: 14px;
+  padding: 13px 16px;
+  border-radius: 8px;
+  background: var(--bad-bg);
+  border: 1px solid #F3C4AE;
+  color: var(--bad);
+  font-size: 14.5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.summary.show { display: block; }
+
+.after { font-size: 14px; line-height: 1.55; color: var(--muted); text-align: center; margin-top: 14px; }
+
+/* ------------------------- THANK YOU ------------------------- */
+/* Replaces the form in place. No second page, no Back button. */
+.done {
+  display: none;
+  background: var(--navy);
+  background-image: radial-gradient(520px 260px at 50% 118%, rgba(240,180,41,.22) 0%, rgba(240,180,41,0) 70%);
+  border-radius: 14px;
+  padding: 34px 26px 30px;
+  text-align: center;
+  color: #fff;
+}
+
+.done.show { display: block; }
+
+.done .badge { margin-bottom: 18px; }
+
+.done h2 { color: #fff; font-size: 30px; margin-bottom: 12px; }
+
+.done p {
+  font-family: var(--serif);
+  font-size: 17.5px;
+  line-height: 1.6;
+  color: var(--soft);
+  max-width: 44ch;
+  margin: 0 auto;
+}
+
+.done-list {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 22px;
+  text-align: left;
+}
+
+.done-list-label {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: .03em;
+  margin-bottom: 10px;
+}
+
+.done-list div {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px 0;
+}
+
+.done-list div + div { border-top: 1px solid rgba(255,255,255,.12); }
+
+/* ---------------------------- RULES ---------------------------- */
+.rules { background: var(--page); padding: 28px 0 34px; }
+.rules ul { list-style: none; margin-top: 12px; }
+
+.rules li {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--body-txt);
+  padding: 6px 0 6px 16px;
+  position: relative;
+}
+
+.rules li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 14px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #A9BACB;
+}
+
+.contact { background: var(--navy-2); color: #fff; text-align: center; padding: 28px 0; font-size: 15px; }
+.contact a { color: var(--gold); font-weight: 700; }
+
+@media (max-width: 420px) {
+  .namerow { gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+
+/* Belt and braces against sideways panning. Nothing on these pages
+   overflows — measured at 280 to 540px wide on three device profiles —
+   but if anything ever does, it must not become a page you can drag off
+   to one side and lose.
+
+   `clip`, not `hidden`: hidden makes the element a scroll container,
+   and the sticky sub-navigation would then stick to that container
+   instead of the screen. clip has no such side effect. */
+html, body { overflow-x: clip; max-width: 100%; }
+
+/* The sub-pages carried no artwork at all — a plain navy band with a
+   little gold glow. The banner is the shape of that band, and these
+   pages show the logo nowhere else, so the one inside it is welcome
+   rather than a repeat of the hero. */
+.cf-banner {
+  display: block;
+  line-height: 0;
+  background-color: #06142A;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+/* Shown whole, never cropped. Capping the height and letting it cover
+   meant a wide screen scaled the 1024px artwork up to the full window
+   and then cut a band out of the middle, taking the top and bottom off
+   the lettering. Capped at its own width instead, so it is never
+   enlarged past the size it was drawn at and nothing is lost. */
+.cf-banner img {
+  display: block;
+  width: 100%;
+  max-width: 1024px;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* ---- the embedded booking form -------------------------------------- */
+.testnote {
+  background: #FEF6F3; border: 1px solid #F3C4AE; border-radius: 9px;
+  padding: 14px 18px; margin-bottom: 26px;
+  font-size: 14px; line-height: 1.55; color: #7A3A12;
+}
+.formframe {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.formframe iframe {
+  display: block;
+  width: 100%;
+  height: 1500px;
+  border: 0;
+}
+.framefall { margin-top: 14px; font-size: 13.5px; color: var(--muted); text-align: center; }
+.framefall a { font-weight: 700; }
+@media (max-width: 640px) {
+  .formframe iframe { height: 1700px; }   /* their form stacks, so it grows */
+}
+</style>
+<!-- How the site is used. Counts visits and which buttons get pressed;
+     analytics.js below gives every button a name worth reading. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7124QY56S6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7124QY56S6');
+</script>
+<script>document.documentElement.classList.add("cfjs")</script>
+<link rel="stylesheet" href="../assets/nav.css?v=20261022x">
+<script src="../assets/to-top.js?v=20261022x" defer=""></script>
+<script src="../assets/content.js?v=20261022z2" defer=""></script>
+<script src="../assets/analytics.js?v=20261024a" defer=""></script>
+<link rel="icon" href="../images/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../images/icon-180.png">
+<meta property="og:title" content="Chanukah Fest Raffle">
+<meta property="og:description" content="Free to enter. Winners drawn through the afternoon.">
+<meta property="og:image" content="https://1josepheber-beep.github.io../images/hero.jpg">
+<meta property="og:url" content="https://1josepheber-beep.github.io../">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style id="cf-hide">[data-cf-sec][hidden]{display:none !important}[data-cf-gone]{display:none !important}[data-cf][data-cf-blank]{display:none !important}[data-cf]{overflow-wrap:anywhere}</style></head>
+
+<body>
+
+<div data-cf-sec="subnav">
+  <div class="cfnav">
+    <button type="button" class="cfnav-toggle" aria-expanded="false" aria-controls="cfnav-list">
+      <span class="cfnav-bars" aria-hidden="true"></span><span data-cf="nav.9c3e55a1">Menu</span>
+    </button>
+    <div class="cfnav-inner" id="cfnav-list">
+      <div class="cfnav-row">
+      <a class="cfnav-link" href="../" data-cf="nav.4a7d2e10">Home</a>
+      <a class="cfnav-link" href="../#about" data-cf="nav.6b21fb79">About</a>
+      <a class="cfnav-link" href="../#stage" data-cf="nav.1b8ec34a">On stage</a>
+      <a class="cfnav-link" href="../#food" data-cf="nav.ea0dd4b7">Food &amp; Booths</a>
+      <a class="cfnav-link" href="../raffle/" data-cf="nav.ac37b40b">Registration </a>
+      <a class="cfnav-link" href="../#location" data-cf="nav.d219c681">Location</a>
+      <a class="cfnav-link" href="../#questions" data-cf="nav.9a1fc173">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="cfbar" data-cf-gone="">
+    <div class="cfbar-row">
+      <span class="cfbar-label" data-cf="apps.4ddf8f74" data-cf-blank=""></span>
+      <a class="cfbar-link" href="../sponsor/" data-cf-href="apps.987469ad" data-cf="apps.fd0b743b" data-cf-blank=""></a>
+      <a class="cfbar-link" href="" data-cf-href="apps.13b72917" data-cf="apps.52d656a6" data-cf-blank=""></a>
+      <a class="cfbar-link" href="" data-cf-href="apps.7aae9d63" data-cf="apps.cbf217d4" data-cf-blank=""></a>
+    </div>
+  </div>
+</div>
+
+<div class="head" data-cf-sec="head">
+        <div class="wrap">
+    <span class="badge" data-cf="head.3d1800b9">FREE TO ENTER</span>
+    <h1>Registration</h1>
+    <p>Automatic raffle ticket per registration</p>
+  </div>
+</div>
+
+<div class="prizes" data-cf-sec="prizes">
+  <div class="wrap">
+    <div class="prizes-label" data-cf="prizes.cae89d2e">Help us keep Houston Chanukah Fest safe and smooth for all families by registering in advance. Plus, every pre-registered guest is automatically entered into our Grand Chanukah Free Raffle!</div>
+    <ul class="prize-list" data-cf-gone="">
+      <li data-cf-gone=""><span class="fill" data-cf="prizes.c0466b87" data-cf-blank=""></span></li>
+      <li data-cf-gone=""><span class="fill" data-cf="prizes.7ba6e8ae" data-cf-blank=""></span></li>
+      <li data-cf-gone=""><span class="fill" data-cf="prizes.1d39957a" data-cf-blank=""></span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="form-band" data-cf-sec="form-band">
+  <div class="wrap">
+
+    <div class="testnote">
+      <strong>Test page.</strong> Nothing here is linked from the site and nothing
+      reaches the Chanukah Fest spreadsheet. Registrations made on this page go to
+      the Chabad system behind the form below.
+    </div>
+
+    <h2>Register</h2>
+    <p class="lede">Add everyone coming, and give where you can.</p>
+
+    <!-- The Chabad booking form, on their server. Nothing here can reach
+         inside it: a frame from another site is sealed off by the browser,
+         so its width, height, fonts and wording are theirs, not ours.
+
+         Width is ours to give, so it gets all of it. Height is not -- the
+         page inside cannot tell us how tall it has become, so the frame is
+         set tall enough for the longest version of their form and scrolls
+         within itself if it ever needs more. -->
+    <div class="formframe">
+      <iframe
+        src="https://forms.chabadms.com/eventreservation.aspx?serialnumber=0111-1161-5073&amp;formid=2982"
+        title="Chanukah Fest registration"
+        loading="lazy"
+        scrolling="auto"></iframe>
+    </div>
+
+    <p class="framefall">
+      Form not loading?
+      <a href="https://forms.chabadms.com/eventreservation.aspx?serialnumber=0111-1161-5073&amp;formid=2982"
+         target="_blank" rel="noopener">Open it in its own tab</a>.
+    </p>
+
+  </div>
+</div>
+
+<div class="rules" data-cf-sec="rules">
+  <div class="wrap">
+    <h3 data-cf="rules.b7cb47e2">The fine print</h3>
+    <ul>
+      <li data-cf="rules.0df6ccb0">No purchase necessary. Entry is completely free and no donation is required to enter or to win.</li>
+      <li data-cf="rules.3a4d1ce9">One form per household, but everyone you add is entered separately and can win on their own. The same phone number or email address cannot be submitted twice.</li>
+      <li><span data-cf="rules.b9225654">Winners drawn throughout the afternoon. Must be present to win</span><span class="fill" data-cf="rules.e302be28" data-cf-blank=""></span></li>
+      <li><span data-cf="rules.29a5a08d">Entries close at 6pm</span><span class="fill" data-cf="rules.27803d3e" data-cf-blank=""></span></li>
+      <li data-cf-gone=""><span class="fill" data-cf="rules.d6ef8cc8" data-cf-blank=""></span></li>
+      <li><span data-cf="rules.e0feeaf2">Your details are used to contact you about this raffle. </span><span class="fill" data-cf="rules.d3334d23" data-cf-blank=""></span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="contact" data-cf-sec="contact">
+  <div class="wrap"><span data-cf="contact.fdd2515c">
+    Questions? Call </span><a href="tel:7137740300" data-cf-href="contact.57805bb0" data-cf="contact.5b3e2939">713-774-0300</a>
+  </div>
+</div>
+</body></html>

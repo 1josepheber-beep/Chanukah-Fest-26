@@ -148,11 +148,17 @@ body { display: flex; flex-direction: column; }
 .ppl button.was .tick { background: rgba(255,255,255,.4); border-color: transparent; color: #fff; }
 .ppl .note { font-size: 13px; opacity: .85; margin: 2px 0 10px; font-weight: 400; }
 
+/* Deliberately not pinned to the bottom. Pinned, it floated over the
+   last two or three names until the list was scrolled to its end --
+   and those names are buttons. A volunteer reaching to untick a
+   child would have hit "let them in" instead.
+
+   So it sits after the last person. Confirming a family of nine
+   costs a scroll, and that scroll is the volunteer reading the list
+   they are about to vouch for. */
 .letin {
-  width: 100%; max-width: 380px; margin-top: 6px; padding: 17px;
+  width: 100%; max-width: 380px; margin-top: 14px; padding: 17px;
   font-size: 17.5px; background: #fff; color: var(--green);
-  position: sticky; bottom: 0;          /* stays reachable on a long family */
-  box-shadow: 0 -10px 18px rgba(0,0,0,.18);
 }
 .letin[disabled] { opacity: .45; }
 .result.again .letin { color: var(--amber); }

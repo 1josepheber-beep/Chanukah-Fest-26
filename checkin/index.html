@@ -98,8 +98,22 @@ body { display: flex; flex-direction: column; }
 
 .result {
   position: absolute; inset: 0;
-  display: none; flex-direction: column; justify-content: center; align-items: center;
+  display: none; flex-direction: column; align-items: center;
   text-align: center; padding: 22px; z-index: 5;
+
+  /* A family of six ran off the bottom of the screen with the button
+     below it, and the panel would not scroll.
+
+     Centring it with auto margins looked right and was worse: in a
+     flex column that overflows, an auto top margin pushes the first
+     line up past the edge where nothing can scroll it back. The
+     volunteer opened a nine-person family and the name was already
+     gone. So the content starts at the top and scrolls honestly,
+     with the button pinned where a thumb already is. */
+  justify-content: flex-start;
+  padding-top: 26px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .result.show { display: flex; }
 .result.in    { background: var(--green); }
@@ -135,11 +149,19 @@ body { display: flex; flex-direction: column; }
 .ppl .note { font-size: 13px; opacity: .85; margin: 2px 0 10px; font-weight: 400; }
 
 .letin {
-  width: 100%; max-width: 380px; margin-top: 6px; padding: 16px;
-  font-size: 17px; background: #fff; color: var(--green);
+  width: 100%; max-width: 380px; margin-top: 6px; padding: 17px;
+  font-size: 17.5px; background: #fff; color: var(--green);
+  position: sticky; bottom: 0;          /* stays reachable on a long family */
+  box-shadow: 0 -10px 18px rgba(0,0,0,.18);
 }
 .letin[disabled] { opacity: .45; }
 .result.again .letin { color: var(--amber); }
+
+.next {
+  width: 100%; max-width: 380px; margin-top: 14px; padding: 16px;
+  font-size: 17px; background: rgba(0,0,0,.26); color: #fff;
+  border: 2px solid rgba(255,255,255,.6);
+}
 
 /* ---------- foot ---------- */
 
@@ -293,7 +315,8 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     <div class="ppl" id="rPeople"></div>
     <button class="letin" id="rGo">Let them in</button>
     <div class="code" id="rCode"></div>
-    <div class="tap" id="rTap">Tap anywhere for the next one</div>
+    <button class="next" id="rNext">Scan the next pass</button>
+    <div class="tap" id="rTap">or tap anywhere</div>
   </div>
 </div>
 
@@ -623,7 +646,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     $("rCode").textContent  = v.code ? TAG + v.code : "";
     $("rPeople").innerHTML  = "";
     $("rGo").style.display  = "none";
-    $("rTap").textContent   = "Tap anywhere for the next one";
+    $("rTap").textContent   = "or tap anywhere";
 
     if (v.status === "no") {
       $("rCount").textContent = "";
@@ -704,10 +727,11 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     if (v.status === "in") {
       $("rGo").style.display = "";
       refreshGo();
-      $("rTap").textContent = "Tap the background to cancel";
+      $("rTap").textContent = "or tap the background to cancel";
       pending = { code: v.code, chosen: chosen, byHand: v.byHand };
     }
 
+    box.scrollTop = 0;          /* start at the name, whatever the family size */
     paintTally();
     state.busy = true;
   }
@@ -930,8 +954,15 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     $("rSub").textContent = names.length + (names.length === 1 ? " person" : " people") + " let in.";
     $("rPeople").innerHTML = "";
     $("rGo").style.display = "none";
-    $("rTap").textContent = "Tap anywhere for the next one";
+    $("rTap").textContent = "or tap anywhere";
+    $("result").scrollTop = 0;
     paintTally();
+  });
+
+  $("rNext").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    clearResult();
+    lastSeen = "";
   });
 
   $("stage").addEventListener("click", function () {

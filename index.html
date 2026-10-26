@@ -1272,7 +1272,11 @@ html, body { overflow-x: clip; max-width: 100%; }
    them: straight under the banner, above the story. Four across on a
    computer, two by two on a phone -- never one tall column, which
    would push the rest of the page out of reach. */
-.cf26-quick { padding: 26px 0 4px; }
+/* A band's worth of padding either side made this read as its own
+   chapter. It is a signpost, not a section: close to the banner it
+   follows, close to the story it introduces. The extra specificity
+   is to beat .cf26 .cf26-band, which sets 64px. */
+.cf26 .cf26-quick.cf26-band { padding: 20px 0 22px; }
 .cf26-quick-grid {
   display: grid; gap: 12px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1294,6 +1298,7 @@ html, body { overflow-x: clip; max-width: 100%; }
 .cf26-quick .qt::after { content: " \203A"; color: var(--gold-dark); font-weight: 700; }
 
 @media (max-width: 780px) {
+  .cf26 .cf26-quick.cf26-band { padding: 16px 0 18px; }
   .cf26-quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .cf26-quick a { min-height: 68px; padding: 12px 14px; }
   .cf26-quick .qt { font-size: 14.5px; }

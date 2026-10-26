@@ -386,7 +386,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 (function () {
   "use strict";
 
-  var BUILD = "26 Oct · 12:00";     /* shown in the bar, so a stale page shows itself */
+  var BUILD = "26 Oct · 12:40";     /* shown in the bar, so a stale page shows itself */
   var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
   var TAG = "CF26:";
 
@@ -487,6 +487,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
       if (!res || !res.ok) { if (onErr) onErr(res && res.status); return; }
       state.who = res.who || "";
       state.list = { at: res.at || Date.now(), people: indexList(res.list || []) };
+      state.syncedAt = Date.now();      /* when THIS phone last heard from the sheet */
 
       /* A fresh list from the sheet does not yet know about scans
          still sitting in this phone's queue. Without this, a
@@ -556,11 +557,11 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
       if (res && res.ok) {
         state.queue.shift();
         save(KEY_QUEUE, state.queue);
-        /* keep the phone's copy honest for whoever scans next */
-        if (state.list && res.ticket) {
-          var p = state.list.people[String(res.ticket).toUpperCase()];
-        }
+        /* The sheet is the only thing that knows what the other
+           three phones have done. Take its word over ours. */
+        var correction = absorb(res, item);
         paintDot();
+        if (correction) note(correction);
         if (state.queue.length) setTimeout(drainQueue, 120);
       } else {
         paintDot();
@@ -569,6 +570,48 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
       draining = false;
       paintDot();            /* still offline; try again on the next scan */
     }, 9000);
+  }
+
+  /* The sheet's reply carries the truth for one pass: who is inside
+     according to every gate, not just this one. Write it over this
+     phone's copy, and say so if another gate got there first.
+     Returns a line to show the volunteer, or "". */
+  function absorb(res, item) {
+    if (!res || !res.ticket || !state.list) return "";
+    var p = state.list.people[String(res.ticket).toUpperCase()];
+    if (!p) return "";
+
+    if (res.people && res.people.length) {
+      var inside = res.people.filter(function (x) { return x.in; })
+                             .map(function (x) { return x.n; });
+      p.i = inside.join("; ");
+    }
+    if (res.at) p.c = res.at;
+    if (res.by) p.b = res.by;
+    if (res.how) p.h = res.how;
+    save(KEY_LIST, state.list);
+
+    /* Did somebody else already let these people in? res.people
+       carries was=true for anyone who was inside before this call. */
+    if (!item || !item.who) return "";
+    var asked = item.who.split(";").map(function (n) { return n.trim().toLowerCase(); })
+                        .filter(function (n) { return n; });
+    if (!asked.length || !res.people) return "";
+
+    var clash = res.people.filter(function (x) {
+      return x.was && asked.indexOf(String(x.n).toLowerCase()) > -1;
+    });
+    if (!clash.length) return "";
+
+    /* correct the running tally: we counted them, the gate did not */
+    state.admitted = Math.max(0, state.admitted - clash.length);
+    paintTally();
+
+    var names = clash.map(function (x) { return x.n; });
+    var whoBy = res.by && res.by !== state.who ? res.by : "another gate";
+    return (names.length === 1 ? names[0] + " was" : names.length + " of them were") +
+           " already let in by " + whoBy +
+           (res.at ? " at " + when(res.at) : "") + ".";
   }
 
   /* ---------------- deciding, instantly ---------------- */
@@ -812,9 +855,19 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   function paintTally() {
     $("tIn").textContent = state.admitted;
     var n = listCount();
-    $("tList").textContent = n
-      ? n + " on the list" + (state.queue.length ? " · " + state.queue.length + " to send" : "")
-      : "no list yet";
+    if (!n) { $("tList").textContent = "no list yet"; return; }
+
+    var bits = [n + " on the list"];
+    if (state.queue.length) bits.push(state.queue.length + " to send");
+
+    /* How old this phone's copy is. Silent while it is fresh; it
+       only speaks up once it is old enough to matter. */
+    var age = state.syncedAt ? Date.now() - state.syncedAt : 0;
+    if (age > 90000) {
+      var mins = Math.round(age / 60000);
+      bits.push(mins < 60 ? mins + " min old" : "out of date");
+    }
+    $("tList").textContent = bits.join(" \u00b7 ");
   }
 
   function paintDot() {
@@ -1190,9 +1243,52 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) return;
     drainQueue();
+    poll();
     var v = $("video");
     if (state.stream && v.paused) { v.play().catch(function () {}); }
   });
+
+  /* ---------------- keeping four phones in step ----------------
+
+     Each gate decides from the list on its own phone, so a family
+     admitted at gate 1 would still look fresh at gate 2 until that
+     phone hears about it. Three things keep them together:
+
+       1. every check-in reply rewrites that pass from the sheet
+          (absorb, above) - exact, and instant, for the pass in hand;
+       2. this poll re-reads the whole list every half minute, so a
+          pass another gate took is already marked before anybody
+          scans it here;
+       3. the sheet itself is locked per check-in, so even if two
+          gates scan the same family at the same instant only one
+          set of names is recorded and the other is told.
+
+     The poll never runs while a result is on screen: swapping the
+     list under a volunteer mid-decision would be worse than a list
+     half a minute old. */
+
+  /* 45s, not 30: the list is ~23KB for 200 households, so four
+     phones polling for four hours is ~7MB each and ~1,300 reads of
+     the sheet. The interval is only the belt - absorb() is the
+     braces, and it catches a family who walks between gates faster
+     than this. */
+  var POLL_EVERY = 45000;
+  var polling = false;
+
+  function poll() {
+    if (polling || !state.code || !state.list) return;
+    if (document.hidden) return;
+    /* Only an UNDECIDED scan blocks a refresh. A finished tick
+       screen can sit there for minutes between families; going stale
+       behind it is exactly the failure this poll exists to stop. */
+    if (pending) return;
+    if ($("ask").className.indexOf("show") > -1) return;
+    polling = true;
+    fetchList(function () { polling = false; paintTally(); },
+              function () { polling = false; paintTally(); });
+  }
+
+  setInterval(function () { poll(); drainQueue(); }, POLL_EVERY);
 
   /* ---------------- opening ---------------- */
 
@@ -1237,7 +1333,8 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 
   /* for the test page only; harmless in the field */
   window.__gate = { judge: judge, normalise: normalise, search: search, show: show,
-                    admit: admit, commit: commit, leaving: leaving, state: state };
+                    admit: admit, commit: commit, leaving: leaving, state: state,
+                    poll: poll, paintTally: paintTally, absorb: absorb };
 })();
 </script>
 </body>

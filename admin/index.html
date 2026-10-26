@@ -123,8 +123,10 @@ h2:first-child { margin-top: 4px; }
 <div class="signin" id="signin">
   <h1>Chanukah Fest admin</h1>
   <p>Sign in to see who is registered, send a pass again, undo a check-in, or add people to the gate.</p>
-  <label for="u">Name</label>
-  <input type="text" id="u" autocomplete="username" autocapitalize="words" spellcheck="false">
+  <label for="u">Email or name</label>
+  <input type="text" id="u" autocomplete="username" autocapitalize="none"
+         autocorrect="off" spellcheck="false" inputmode="email"
+         placeholder="you@chabadoutreach.org">
   <label for="pw">Password</label>
   <input type="password" id="pw" autocomplete="current-password">
   <button class="go" id="inBtn" style="margin-top:16px">Sign in</button>
@@ -174,7 +176,7 @@ h2:first-child { margin-top: 4px; }
       <div id="admins"></div>
       <div class="card">
         <label for="newAdmin">Add an admin</label>
-        <input type="text" id="newAdmin" placeholder="Their name">
+        <input type="text" id="newAdmin" placeholder="Their email address" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email">
         <label for="newAdminPw" style="margin-top:10px">Password for them</label>
         <input type="text" id="newAdminPw" placeholder="At least 6 characters">
         <div class="row"><button class="gold" id="addAdmin">Add them</button></div>

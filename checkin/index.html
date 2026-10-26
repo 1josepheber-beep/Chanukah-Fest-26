@@ -169,6 +169,16 @@ body { display: flex; flex-direction: column; }
   border: 2px solid rgba(255,255,255,.6);
 }
 
+/* The way out of a scan nobody is ready to confirm. It stands beside
+   the confirm rather than instead of it, so a volunteer with a
+   family saying "we're waiting for my husband" has somewhere to
+   press that does not record them. */
+.notyet {
+  width: 100%; max-width: 380px; margin-top: 10px; padding: 15px;
+  font-size: 15.5px; background: transparent; color: #fff;
+  border: 1px solid rgba(255,255,255,.55); font-weight: 600;
+}
+
 /* ---------- foot ---------- */
 
 .foot {
@@ -346,6 +356,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     <div class="sub" id="rSub"></div>
     <div class="ppl" id="rPeople"></div>
     <button class="letin" id="rGo">Let them in</button>
+    <button class="notyet" id="rNot">Not yet &mdash; cancel this scan</button>
     <div class="code" id="rCode"></div>
     <button class="next" id="rNext">Scan the next pass</button>
     <div class="tap" id="rTap">or tap anywhere</div>
@@ -375,6 +386,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 (function () {
   "use strict";
 
+  var BUILD = "26 Oct · 12:00";     /* shown in the bar, so a stale page shows itself */
   var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
   var TAG = "CF26:";
 
@@ -687,6 +699,8 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     $("rCode").textContent  = v.code ? TAG + v.code : "";
     $("rPeople").innerHTML  = "";
     $("rGo").style.display  = "none";
+    $("rNot").style.display = "none";
+    $("rNext").style.display = "";
     $("rTap").textContent   = "or tap anywhere";
 
     if (v.status === "no") {
@@ -766,9 +780,14 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     }
 
     if (v.status === "in") {
+      /* Nothing has been recorded yet, so there is no such thing as
+         "next" from here. Confirm, or cancel. Offering a way onward
+         that quietly discarded six people was the whole problem. */
       $("rGo").style.display = "";
+      $("rNot").style.display = "";
+      $("rNext").style.display = "none";
       refreshGo();
-      $("rTap").textContent = "or tap the background to cancel";
+      $("rTap").textContent = "";
       pending = { code: v.code, chosen: chosen, byHand: v.byHand };
     }
 
@@ -786,9 +805,8 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   }
 
   function paintWho() {
-    $("who").innerHTML = state.who
-      ? state.who + "<br>" + listCount() + " registered"
-      : listCount() + " registered";
+    var line = state.who ? state.who + "<br>" : "";
+    $("who").innerHTML = line + listCount() + " registered &middot; " + BUILD;
   }
 
   function paintTally() {
@@ -1001,6 +1019,8 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     $("rSub").textContent = names.length + (names.length === 1 ? " person" : " people") + " let in.";
     $("rPeople").innerHTML = "";
     $("rGo").style.display = "none";
+    $("rNot").style.display = "none";
+    $("rNext").style.display = "";
     $("rTap").textContent = "or tap anywhere";
     $("result").scrollTop = 0;
     paintTally();
@@ -1062,6 +1082,13 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   $("rNext").addEventListener("click", function (ev) {
     ev.stopPropagation();
     leaving(backToCamera);
+  });
+
+  $("rNot").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    pending = null;                 /* deliberate: record nothing */
+    backToCamera();
+    note("Nothing recorded. Scan them again when they are ready.");
   });
 
   $("stage").addEventListener("click", function () {
@@ -1168,6 +1195,28 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   });
 
   /* ---------------- opening ---------------- */
+
+  /* GitHub tells phones to keep this page for ten minutes, so a
+     volunteer can be holding a build from before a fix without any
+     sign of it. Ask the server once, on load, and take the newer one.
+     Only here: reloading mid-shift would throw away the scan in hand.
+     Silent if there is no signal, because the gate must open offline. */
+  (function freshen() {
+    var flag = "cf26-freshened";
+    try { if (sessionStorage.getItem(flag)) return; } catch (e) {}
+    if (typeof fetch !== "function") return;
+    try {
+      fetch(location.pathname + "?probe=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.text() : ""; })
+        .then(function (html) {
+          var m = html.match(/var BUILD = "([^"]+)"/);
+          if (!m || m[1] === BUILD) return;
+          try { sessionStorage.setItem(flag, "1"); } catch (e) {}
+          location.replace(location.pathname + "?b=" + m[1].replace(/\W+/g, ""));
+        })
+        .catch(function () {});
+    } catch (e) {}
+  })();
 
   paintDot();
 

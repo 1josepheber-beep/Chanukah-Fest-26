@@ -65,8 +65,21 @@ main { padding: 16px 14px 40px; max-width: 760px; margin: 0 auto; }
 .panel { display: none; }
 .panel.on { display: block; }
 
-.sums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-.sum { background: #fff; border: 1px solid var(--line); border-radius: 11px; padding: 12px 10px; text-align: center; }
+.sums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.sum { background: #fff; border: 1px solid var(--line); border-radius: 11px; padding: 12px 10px;
+       text-align: center; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.sum.on { border-color: var(--gold); box-shadow: inset 0 0 0 2px var(--gold); }
+
+/* The filter. Tapping a tile picks the matching one, because that is
+   what a thumb reaches for when the tile says "6 inside now". */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 12px; }
+.chips button {
+  font: inherit; font-size: 13px; font-weight: 600; padding: 8px 13px;
+  border-radius: 999px; border: 1px solid var(--line);
+  background: #fff; color: var(--muted); cursor: pointer;
+}
+.chips button.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.chips button b { font-weight: 800; }
 .sum b { display: block; font-size: 22px; line-height: 1.1; }
 .sum span { font-size: 11.5px; color: var(--muted); }
 
@@ -171,9 +184,16 @@ h2:first-child { margin-top: 4px; }
   <main>
     <section class="panel on" id="tab-people">
       <div class="sums">
-        <div class="sum"><b id="sHouse">—</b><span>registrations</span></div>
-        <div class="sum"><b id="sExpect">—</b><span>people expected</span></div>
-        <div class="sum"><b id="sIn">—</b><span>inside now</span></div>
+        <button class="sum" id="tHouse" data-want="all"><b id="sHouse">&mdash;</b><span>registrations</span></button>
+        <button class="sum" id="tExpect" data-want="out"><b id="sExpect">&mdash;</b><span>people expected</span></button>
+        <button class="sum" id="tIn" data-want="in"><b id="sIn">&mdash;</b><span>inside now</span></button>
+      </div>
+      <div class="chips" id="chips">
+        <button data-want="all" class="on">Everyone</button>
+        <button data-want="in">Inside</button>
+        <button data-want="out">Not here yet</button>
+        <button data-want="part">Part of the party in</button>
+        <button data-want="nopass">Pass not sent</button>
       </div>
       <input type="search" id="q" placeholder="Search a name, ticket, email or phone">
       <div id="list"></div>
@@ -224,7 +244,28 @@ h2:first-child { margin-top: 4px; }
 (function () {
   "use strict";
 
+  var BUILD = "26 Oct \u00b7 12:00";
   var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
+
+  /* Same trap as the gate: GitHub tells phones to keep this page for
+     ten minutes, so a fix can look like it never landed. Ask once, on
+     load, and take the newer copy. */
+  (function freshen() {
+    var flag = "cf26a-freshened";
+    try { if (sessionStorage.getItem(flag)) return; } catch (e) {}
+    if (typeof fetch !== "function") return;
+    try {
+      fetch(location.pathname + "?probe=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.text() : ""; })
+        .then(function (html) {
+          var m = html.match(/var BUILD = "([^"]+)"/);
+          if (!m || m[1] === BUILD) return;
+          try { sessionStorage.setItem(flag, "1"); } catch (e) {}
+          location.replace(location.pathname + "?b=" + m[1].replace(/\W+/g, ""));
+        })
+        .catch(function () {});
+    } catch (e) {}
+  })();
   var KEY = "cf26.admin";
   var $ = function (id) { return document.getElementById(id); };
 
@@ -387,12 +428,43 @@ h2:first-child { margin-top: 4px; }
     }, function () { $("listNote").textContent = "Could not reach the sheet."; });
   }
 
+  var want = "all";               /* which slice of the list is on show */
+
+  /* A household is "in" if anyone off it has come through, "out" if
+     nobody has, and "part" when some of the party is in and some is
+     still outside — the case worth watching on the night. */
+  function fits(p) {
+    var inN = p.inCount || 0, size = p.p || 1;
+    if (want === "in")     return inN > 0;
+    if (want === "out")    return inN < size;      /* anyone still outside */
+    if (want === "part")   return inN > 0 && inN < size;
+    if (want === "nopass") return !p.sent;
+    return true;
+  }
+
+  function headcount(rows) {
+    var ppl = 0, inside = 0;
+    rows.forEach(function (p) { ppl += (p.p || 1); inside += (p.inCount || 0); });
+    return { ppl: ppl, inside: inside, out: ppl - inside };
+  }
+
+  function paintChips() {
+    [].forEach.call(document.querySelectorAll("#chips button"), function (b) {
+      b.className = b.getAttribute("data-want") === want ? "on" : "";
+    });
+    [].forEach.call(document.querySelectorAll(".sum"), function (b) {
+      b.className = b.getAttribute("data-want") === want ? "sum on" : "sum";
+    });
+  }
+
   function paintPeople() {
     var q = ($("q").value || "").trim().toLowerCase();
     var box = $("list");
     box.innerHTML = "";
+    paintChips();
 
     var hits = people.filter(function (p) {
+      if (!fits(p)) return false;
       if (!q) return true;
       var hay = (p.n + " " + p.t + " " + p.e + " " + p.ph + " " +
                  p.people.map(function (x) { return x.n; }).join(" ")).toLowerCase();
@@ -400,17 +472,48 @@ h2:first-child { margin-top: 4px; }
     });
 
     if (!people.length) { $("listNote").textContent = "Nobody is registered yet."; return; }
-    if (!hits.length) { $("listNote").textContent = "Nobody matches that."; return; }
 
-    $("listNote").textContent = q
-      ? hits.length + " of " + people.length + " shown"
-      : people.length + " registrations";
+    if (!hits.length) {
+      $("listNote").textContent =
+        want === "in"     ? (q ? "Nobody inside matches that." : "Nobody has come in yet.")
+      : want === "out"    ? (q ? "Nobody still outside matches that." : "Everybody registered is inside.")
+      : want === "part"   ? (q ? "No part-arrived party matches that." : "No party is half in — everyone is either all in or still out.")
+      : want === "nopass" ? (q ? "No unsent pass matches that." : "Every registration has had its pass.")
+      :                     "Nobody matches that.";
+      return;
+    }
+
+    var n = headcount(hits);
+    var head =
+        want === "in"     ? n.inside + (n.inside === 1 ? " person" : " people") + " inside, across " +
+                            hits.length + (hits.length === 1 ? " registration" : " registrations")
+      : want === "out"    ? n.out + (n.out === 1 ? " person" : " people") + " still to arrive, across " +
+                            hits.length + (hits.length === 1 ? " registration" : " registrations")
+      : want === "part"   ? hits.length + (hits.length === 1 ? " party" : " parties") + " part way in \u00b7 " +
+                            n.inside + " of " + n.ppl + " through"
+      : want === "nopass" ? hits.length + (hits.length === 1 ? " registration has" : " registrations have") +
+                            " not had a pass"
+      :                     hits.length + (hits.length === 1 ? " registration" : " registrations") +
+                            " \u00b7 " + n.inside + " of " + n.ppl + " inside";
+    if (q && want === "all") head = hits.length + " of " + people.length + " shown";
+    else if (q) head += " \u00b7 matching \u201c" + q + "\u201d";
+    $("listNote").textContent = head;
 
     hits.slice(0, 60).forEach(function (p) { box.appendChild(card(p)); });
     if (hits.length > 60) {
-      $("listNote").textContent = "Showing 60 of " + hits.length + ". Search to narrow it down.";
+      $("listNote").textContent = "Showing the first 60 of " + hits.length + ". " + head;
     }
   }
+
+  function setWant(w) {
+    want = w;
+    paintPeople();
+    try { $("list").scrollIntoView({ block: "start", behavior: "smooth" }); } catch (e) {}
+  }
+
+  [].forEach.call(document.querySelectorAll("#chips button, .sum"), function (b) {
+    b.addEventListener("click", function () { setWant(b.getAttribute("data-want")); });
+  });
 
   function card(p) {
     var el = document.createElement("div");

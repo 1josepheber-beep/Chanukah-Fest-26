@@ -244,6 +244,32 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   text-align: left; font-size: 18px; font-weight: 600;
 }
 
+/* Asked before a scan is thrown away.
+
+   A browser confirm would have done the job and said it in the
+   browser's words, with OK and Cancel standing in for two actions
+   that are not alike at all. At a gate the difference between
+   "let them in" and "move on without them" is the whole point, so
+   it says both. */
+.ask {
+  position: fixed; inset: 0; z-index: 40;
+  background: rgba(7, 18, 33, .78);
+  display: none; align-items: flex-end; justify-content: center;
+  padding: 18px;
+}
+.ask.show { display: flex; }
+.askbox {
+  width: 100%; max-width: 420px;
+  background: #fff; color: var(--ink); border-radius: 16px;
+  padding: 22px 20px calc(env(safe-area-inset-bottom, 0px) + 18px);
+  box-shadow: 0 -8px 40px rgba(0,0,0,.5);
+}
+.askbox .t { font-size: 20px; font-weight: 800; line-height: 1.25; }
+.askbox .s { font-size: 15px; color: var(--muted); margin-top: 8px; line-height: 1.55; }
+.askbox button { width: 100%; margin-top: 12px; padding: 16px; font-size: 16.5px; }
+.askbox .yes { background: var(--green); color: #fff; }
+.askbox .no  { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+
 .banner {
   position: fixed; left: 12px; right: 12px; z-index: 30;
   bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
@@ -331,6 +357,15 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   <button class="ghost push" id="btnFind">Find</button>
   <button class="ghost" id="btnManual">Type it</button>
   <button class="ghost" id="btnRefresh">Refresh</button>
+</div>
+
+<div class="ask" id="ask">
+  <div class="askbox">
+    <div class="t" id="askT">Nobody has been let in yet</div>
+    <div class="s" id="askS"></div>
+    <button class="yes" id="askGo">Let them in</button>
+    <button class="no" id="askSkip">Scan the next one anyway</button>
+  </div>
 </div>
 
 <div class="banner" id="banner"></div>
@@ -740,6 +775,9 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     box.scrollTop = 0;          /* start at the name, whatever the family size */
     paintTally();
     state.busy = true;
+
+    /* so the phone's back button steps out of this, not off the page */
+    try { history.pushState({ cf: 1 }, ""); } catch (e) {}
   }
 
   function clearResult() {
@@ -944,15 +982,18 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 
   /* ---------------- wiring ---------------- */
 
-  $("rGo").addEventListener("click", function (ev) {
-    ev.stopPropagation();
-    if (!pending) return;
-
+  function tickedNames() {
     var names = [];
+    if (!pending) return names;
     for (var k in pending.chosen) {
       if (pending.chosen.hasOwnProperty(k) && pending.chosen[k]) names.push(k);
     }
-    if (!names.length) return;
+    return names;
+  }
+
+  function commit() {
+    var names = tickedNames();
+    if (!names.length) return false;
 
     admit(pending.code, names, pending.byHand);
     pending = null;
@@ -963,16 +1004,82 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     $("rTap").textContent = "or tap anywhere";
     $("result").scrollTop = 0;
     paintTally();
+    return true;
+  }
+
+  $("rGo").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    commit();
   });
+
+  /* ---------------- not so fast ----------------
+     Walking away from a scan that was never confirmed is the one
+     mistake here that costs somebody their entry and leaves no
+     trace. So it asks, in the two words that actually differ. */
+
+  var afterAsk = null;
+
+  function leaving(andThen) {
+    if (!pending || !tickedNames().length) { andThen(); return; }
+
+    var names = tickedNames();
+    $("askS").textContent = names.length +
+      (names.length === 1 ? " person is" : " people are") + " ticked on " +
+      ($("rName").textContent || "this pass") + ", but nobody has gone through yet.";
+    $("askGo").textContent = "Let " + names.length +
+      (names.length === 1 ? " person" : " people") + " in";
+    afterAsk = andThen;
+    $("ask").className = "ask show";
+  }
+
+  function closeAsk() { $("ask").className = "ask"; afterAsk = null; }
+
+  $("askGo").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    var go = afterAsk;
+    commit();
+    $("ask").className = "ask";
+    afterAsk = null;
+    /* they are in; carry on to wherever they were headed, after a
+       moment so the volunteer sees it landed */
+    setTimeout(function () { if (go) go(); }, 900);
+  });
+
+  $("askSkip").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    var go = afterAsk;
+    pending = null;
+    closeAsk();
+    if (go) go();
+  });
+
+  $("ask").addEventListener("click", function (ev) {
+    if (ev.target === $("ask")) closeAsk();      /* tapping the dark cancels */
+  });
+
+  function backToCamera() { clearResult(); lastSeen = ""; }
 
   $("rNext").addEventListener("click", function (ev) {
     ev.stopPropagation();
-    clearResult();
-    lastSeen = "";
+    leaving(backToCamera);
   });
 
   $("stage").addEventListener("click", function () {
-    if (state.busy) { clearResult(); lastSeen = ""; }
+    if (!state.busy) return;
+    if ($("ask").className.indexOf("show") > -1) return;
+    leaving(backToCamera);
+  });
+
+  /* ---------------- the phone's own back button ----------------
+     Without this it leaves the gate entirely and lands on whatever
+     the volunteer was looking at before, which on a borrowed phone
+     could be anything. A result on screen is a step of its own, so
+     back steps out of it and no further. */
+  window.addEventListener("popstate", function () {
+    if (state.busy) {
+      history.pushState({ cf: 1 }, "");       /* hold our place */
+      leaving(backToCamera);
+    }
   });
 
   $("signinGo").addEventListener("click", function () {
@@ -1080,7 +1187,8 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   }
 
   /* for the test page only; harmless in the field */
-  window.__gate = { judge: judge, normalise: normalise, search: search, show: show, admit: admit, state: state };
+  window.__gate = { judge: judge, normalise: normalise, search: search, show: show,
+                    admit: admit, commit: commit, leaving: leaving, state: state };
 })();
 </script>
 </body>

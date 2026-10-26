@@ -110,6 +110,27 @@ h2:first-child { margin-top: 4px; }
 .signin p { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0 0 20px; }
 .signin label { margin-top: 14px; }
 
+/* Asking, in our own words.
+
+   confirm() and prompt() are the browser's dialogs: they say
+   "localhost says", they offer OK and Cancel for two actions that
+   are nothing like each other, and on a phone they look like the
+   page has been taken over by something else. At an event, with a
+   borrowed phone, that is exactly the wrong feeling. */
+.ask { position: fixed; inset: 0; z-index: 40; background: rgba(7,18,33,.78);
+  display: none; align-items: flex-end; justify-content: center; padding: 18px; }
+.ask.show { display: flex; }
+.askbox { width: 100%; max-width: 420px; background: #fff; border-radius: 16px;
+  padding: 22px 20px calc(env(safe-area-inset-bottom,0px) + 18px);
+  box-shadow: 0 -8px 40px rgba(0,0,0,.5); }
+.askbox .t { font-size: 19.5px; font-weight: 800; line-height: 1.3; }
+.askbox .s { font-size: 14.5px; color: var(--muted); margin-top: 8px; line-height: 1.55; }
+.askbox input { margin-top: 14px; }
+.askbox button { width: 100%; margin-top: 12px; padding: 15px; font-size: 16px; }
+.askbox .yes { background: var(--navy); color: #fff; }
+.askbox .yes.danger { background: var(--red); }
+.askbox .no { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+
 .banner { position: fixed; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom,0px) + 12px);
   background: var(--ink); color: #fff; border-radius: 10px; padding: 12px 15px;
   font-size: 13.5px; line-height: 1.5; box-shadow: 0 8px 26px rgba(0,0,0,.4); display: none; z-index: 30; }
@@ -187,6 +208,16 @@ h2:first-child { margin-top: 4px; }
   </main>
 </div>
 
+<div class="ask" id="ask">
+  <div class="askbox">
+    <div class="t" id="askT"></div>
+    <div class="s" id="askS"></div>
+    <input type="text" id="askIn" style="display:none">
+    <button class="yes" id="askYes"></button>
+    <button class="no" id="askNo">Cancel</button>
+  </div>
+</div>
+
 <div class="banner" id="banner"></div>
 
 <script>
@@ -241,6 +272,45 @@ h2:first-child { margin-top: 4px; }
       done(res);
     }, fail);
   }
+
+  /* ---------- asking, in our own words ---------- */
+
+  var asking = null;
+
+  function ask2(opts) {
+    asking = opts;
+    $("askT").textContent = opts.title;
+    $("askS").textContent = opts.detail || "";
+    $("askS").style.display = opts.detail ? "" : "none";
+    $("askYes").textContent = opts.yes || "Yes";
+    $("askYes").className = "yes" + (opts.danger ? " danger" : "");
+    $("askNo").textContent = opts.no || "Cancel";
+
+    var box = $("askIn");
+    if (opts.input) {
+      box.style.display = "";
+      box.type = opts.inputType || "text";
+      box.value = opts.value === undefined ? "" : String(opts.value);
+      setTimeout(function () { box.focus(); box.select && box.select(); }, 80);
+    } else {
+      box.style.display = "none";
+    }
+    $("ask").className = "ask show";
+  }
+
+  function closeAsk() { $("ask").className = "ask"; asking = null; }
+
+  $("askYes").addEventListener("click", function () {
+    var a = asking;
+    var v = $("askIn").value;
+    closeAsk();
+    if (a && a.then) a.then(v);
+  });
+  $("askNo").addEventListener("click", closeAsk);
+  $("ask").addEventListener("click", function (ev) { if (ev.target === $("ask")) closeAsk(); });
+  $("askIn").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") $("askYes").click();
+  });
 
   var noteTimer;
   function say(text, bad) {
@@ -381,40 +451,58 @@ h2:first-child { margin-top: 4px; }
     row.className = "row";
 
     if (p.e) {
-      row.appendChild(button("lite", "Send the pass again", function (b) {
-        if (!confirm("Send " + p.n + "'s pass again to " + p.e + "?")) return;
-        busy(el, true);
-        ask("adminResend", { t: p.t }, function (res) {
-          busy(el, false);
-          if (res && res.ok) { say("Pass sent to " + res.to); loadPeople(); }
-          else say((res && res.error) || "It would not send.", true);
-        }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+      row.appendChild(button("lite", "Send the pass again", function () {
+        ask2({
+          title: "Send the pass again?",
+          detail: p.n + "'s pass will go to " + p.e + ". Same ticket number, so " +
+                  "anyone already scanned in stays scanned in.",
+          yes: "Send it",
+          then: function () {
+            busy(el, true);
+            ask("adminResend", { t: p.t }, function (res) {
+              busy(el, false);
+              if (res && res.ok) { say("Pass sent to " + res.to); loadPeople(); }
+              else say((res && res.error) || "It would not send.", true);
+            }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+          }
+        });
       }));
     }
 
     if (p.inCount > 0) {
       row.appendChild(button("warn", "Undo the check-in", function () {
-        if (!confirm("Put " + p.n + " back outside the gate? " +
-                     p.inCount + (p.inCount === 1 ? " person" : " people") +
-                     " will be able to scan in again.")) return;
-        busy(el, true);
-        ask("adminUndo", { t: p.t, who: "ALL" }, function (res) {
-          busy(el, false);
-          if (res && res.ok) { say("Check-in undone for " + p.n); loadPeople(); }
-          else say((res && res.error) || "It would not undo.", true);
-        }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+        ask2({
+          title: "Put them back outside?",
+          detail: p.inCount + (p.inCount === 1 ? " person" : " people") + " on " +
+                  p.n + "'s pass will be able to scan in again.",
+          yes: "Undo the check-in", danger: true,
+          then: function () {
+            busy(el, true);
+            ask("adminUndo", { t: p.t, who: "ALL" }, function (res) {
+              busy(el, false);
+              if (res && res.ok) { say("Check-in undone for " + p.n); loadPeople(); }
+              else say((res && res.error) || "It would not undo.", true);
+            }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+          }
+        });
       }));
     }
 
     row.appendChild(button("lite", "Change the headcount", function () {
-      var v = prompt("How many people are coming on " + p.n + "'s pass?", String(p.p));
-      if (v === null) return;
-      busy(el, true);
-      ask("adminParty", { t: p.t, n: v }, function (res) {
-        busy(el, false);
-        if (res && res.ok) { say(p.n + " is now " + res.party + " people"); loadPeople(); }
-        else say((res && res.error) || "That would not change.", true);
-      }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+      ask2({
+        title: "How many are coming?",
+        detail: "Everyone on " + p.n + "'s pass, including " + p.n + ".",
+        input: true, inputType: "number", value: p.p,
+        yes: "Save",
+        then: function (v) {
+          busy(el, true);
+          ask("adminParty", { t: p.t, n: v }, function (res) {
+            busy(el, false);
+            if (res && res.ok) { say(p.n + " is now " + res.party + " people"); loadPeople(); }
+            else say((res && res.error) || "That would not change.", true);
+          }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+        }
+      });
     }));
 
     el.appendChild(row);
@@ -453,14 +541,20 @@ h2:first-child { margin-top: 4px; }
         el.appendChild(m);
         var row = document.createElement("div"); row.className = "row";
         row.appendChild(button("warn", "Remove", function () {
-          if (!confirm("Remove " + (s.n || "this volunteer") + "? Their code " +
-                       s.c + " will stop working.")) return;
-          busy(el, true);
-          ask("adminStaffRemove", { c: s.c }, function (res2) {
-            busy(el, false);
-            if (res2 && res2.ok) { say("Removed"); loadStaff(); }
-            else say((res2 && res2.error) || "Could not remove them.", true);
-          }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+          ask2({
+            title: "Remove " + (s.n || "this volunteer") + "?",
+            detail: "Code " + s.c + " will stop working. Anyone they already let " +
+                    "in stays in.",
+            yes: "Remove them", danger: true,
+            then: function () {
+              busy(el, true);
+              ask("adminStaffRemove", { c: s.c }, function (res2) {
+                busy(el, false);
+                if (res2 && res2.ok) { say("Removed"); loadStaff(); }
+                else say((res2 && res2.error) || "Could not remove them.", true);
+              }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+            }
+          });
         }));
         el.appendChild(row);
         box.appendChild(el);
@@ -493,13 +587,19 @@ h2:first-child { margin-top: 4px; }
         if (!me || a.n.toLowerCase() !== String(me.name).toLowerCase()) {
           var row = document.createElement("div"); row.className = "row";
           row.appendChild(button("warn", "Remove", function () {
-            if (!confirm("Remove " + a.n + "? They will not be able to sign in.")) return;
-            busy(el, true);
-            ask("adminAdminRemove", { n: a.n }, function (res2) {
-              busy(el, false);
-              if (res2 && res2.ok) { say("Removed"); loadAdmins(); }
-              else say((res2 && res2.error) || "Could not remove them.", true);
-            }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+            ask2({
+              title: "Remove " + a.n + "?",
+              detail: "They will not be able to sign in to this page any more.",
+              yes: "Remove them", danger: true,
+              then: function () {
+                busy(el, true);
+                ask("adminAdminRemove", { n: a.n }, function (res2) {
+                  busy(el, false);
+                  if (res2 && res2.ok) { say("Removed"); loadAdmins(); }
+                  else say((res2 && res2.error) || "Could not remove them.", true);
+                }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+              }
+            });
           }));
           el.appendChild(row);
         }

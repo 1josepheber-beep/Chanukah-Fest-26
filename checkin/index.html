@@ -364,7 +364,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 </div>
 
 <div class="foot">
-  <div class="tally"><b id="tIn">0</b> in &nbsp;·&nbsp; <span id="tList">no list yet</span></div>
+  <div class="tally"><b id="tIn">0</b> inside &nbsp;·&nbsp; <span id="tList">no list yet</span></div>
   <button class="ghost push" id="btnFind">Find</button>
   <button class="ghost" id="btnManual">Type it</button>
   <button class="ghost" id="btnRefresh">Refresh</button>
@@ -386,7 +386,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 (function () {
   "use strict";
 
-  var BUILD = "26 Oct · 12:40";     /* shown in the bar, so a stale page shows itself */
+  var BUILD = "26 Oct · 13:05";     /* shown in the bar, so a stale page shows itself */
   var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
   var TAG = "CF26:";
 
@@ -603,9 +603,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     });
     if (!clash.length) return "";
 
-    /* correct the running tally: we counted them, the gate did not */
-    state.admitted = Math.max(0, state.admitted - clash.length);
-    paintTally();
+    paintTally();      /* the tally reads off the list, so it is already right */
 
     var names = clash.map(function (x) { return x.n; });
     var whoBy = res.by && res.by !== state.who ? res.by : "another gate";
@@ -708,7 +706,6 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     if (!p.c) p.c = Date.now();
 
     save(KEY_LIST, state.list);
-    state.admitted += names.length;
 
     queuePush(code, byHand ? "manual" : "scan", names);
     drainQueue();
@@ -852,8 +849,23 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     $("who").innerHTML = line + listCount() + " registered &middot; " + BUILD;
   }
 
+  /* How many people are inside according to the sheet, counted over
+     the whole list. It used to show this phone's own session count,
+     which no refresh and no admin undo could ever correct - so a
+     volunteer saw "6 in" long after those six had been undone. */
+  function insideCount() {
+    if (!state.list) return 0;
+    var n = 0;
+    for (var k in state.list.people) {
+      if (!state.list.people.hasOwnProperty(k)) continue;
+      var who = peopleOn(state.list.people[k]);
+      for (var i = 0; i < who.length; i++) if (who[i].was) n++;
+    }
+    return n;
+  }
+
   function paintTally() {
-    $("tIn").textContent = state.admitted;
+    $("tIn").textContent = insideCount();
     var n = listCount();
     if (!n) { $("tList").textContent = "no list yet"; return; }
 

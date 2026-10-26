@@ -44,17 +44,22 @@
 html, body { margin: 0; padding: 0; min-height: 100%; background: var(--page); color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
 
+/* The bar and the tabs used to be two separate sticky elements, with
+   the tabs pinned at a hard-coded top:56px while the bar was really
+   43px tall - so a stripe of page showed between two navy bars. They
+   are one sticky block now, and both line up with the 760px column
+   the cards sit in instead of running the full width of a desktop. */
+.top { position: sticky; top: 0; z-index: 10; background: var(--navy); }
 .bar {
-  position: sticky; top: 0; z-index: 10;
   display: flex; align-items: center; gap: 10px;
-  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;
-  background: var(--navy); color: #fff;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px 12px;
+  color: #fff; max-width: 760px; margin: 0 auto;
 }
 .bar b { font-size: 16px; }
 .bar .who { margin-left: auto; font-size: 12.5px; color: #9FB4CC; text-align: right; line-height: 1.35; }
 .bar .out { font-size: 12.5px; color: #9FB4CC; text-decoration: underline; background: none; border: 0; padding: 0; }
 
-.tabs { display: flex; background: var(--navy); padding: 0 8px 8px; gap: 6px; position: sticky; top: 56px; z-index: 9; }
+.tabs { display: flex; gap: 6px; padding: 0 14px 10px; max-width: 760px; margin: 0 auto; }
 .tabs button {
   flex: 1; padding: 10px 6px; font-size: 14px; font-weight: 700;
   background: rgba(255,255,255,.1); color: #C7D7E8; border: 0; border-radius: 9px;
@@ -169,16 +174,18 @@ h2:first-child { margin-top: 4px; }
 </div>
 
 <div id="app" style="display:none">
-  <div class="bar">
-    <b>Admin</b>
-    <span class="who" id="who"></span>
-    <button class="out" id="outBtn">Sign out</button>
-  </div>
+  <div class="top">
+    <div class="bar">
+      <b>Admin</b>
+      <span class="who" id="who"></span>
+      <button class="out" id="outBtn">Sign out</button>
+    </div>
 
-  <div class="tabs">
-    <button data-tab="people" class="on">People</button>
-    <button data-tab="gate">Gate</button>
-    <button data-tab="settings">Settings</button>
+    <div class="tabs">
+      <button data-tab="people" class="on">People</button>
+      <button data-tab="gate">Gate</button>
+      <button data-tab="settings">Settings</button>
+    </div>
   </div>
 
   <main>
@@ -416,17 +423,45 @@ h2:first-child { margin-top: 4px; }
 
   /* ---------- people ---------- */
 
-  function loadPeople() {
-    $("listNote").textContent = "Loading…";
+  function loadPeople(quiet) {
+    if (!quiet) $("listNote").textContent = "Loading…";
     ask("adminPeople", {}, function (res) {
-      if (!res || !res.ok) { $("listNote").textContent = "Could not load the list."; return; }
+      if (!res || !res.ok) { if (!quiet) $("listNote").textContent = "Could not load the list."; return; }
       people = res.list || [];
       $("sHouse").textContent = res.households;
       $("sExpect").textContent = res.expected;
       $("sIn").textContent = res.inSoFar;
+      lastLoad = Date.now();
       paintPeople();
-    }, function () { $("listNote").textContent = "Could not reach the sheet."; });
+    }, function () { if (!quiet) $("listNote").textContent = "Could not reach the sheet."; });
   }
+
+  /* This page had no refresh of its own, so a desktop left open
+     showed whatever was true when it loaded - including six people
+     still "inside" after they had been undone from a phone. It now
+     re-reads every 20 seconds, quietly: no "Loading...", and never
+     while a dialog is open or the search box is in use, so nothing
+     moves under the cursor. */
+  var lastLoad = 0;
+  var REFRESH_EVERY = 20000;
+
+  function busyOnScreen() {
+    var a = document.getElementById("ask");
+    if (a && a.className.indexOf("show") > -1) return true;
+    if (document.activeElement === $("q")) return true;
+    return false;
+  }
+
+  setInterval(function () {
+    if (document.hidden || !me) return;
+    if (busyOnScreen()) return;
+    if (document.getElementById("tab-people").className.indexOf("on") === -1) return;
+    loadPeople(true);
+  }, REFRESH_EVERY);
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && me && !busyOnScreen()) loadPeople(true);
+  });
 
   var want = "all";               /* which slice of the list is on show */
 

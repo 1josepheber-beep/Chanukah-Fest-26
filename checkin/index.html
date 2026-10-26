@@ -116,6 +116,31 @@ body { display: flex; flex-direction: column; }
 .result .code { font-size: 13px; margin-top: 14px; opacity: .75; font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: 1px; }
 .result .tap { font-size: 13.5px; margin-top: 22px; opacity: .8; }
 
+/* who is coming in */
+.ppl { width: 100%; max-width: 380px; margin: 16px 0 0; text-align: left; }
+.ppl button {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  background: rgba(0,0,0,.2); color: #fff; border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 8px; font-size: 16.5px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,.22); text-align: left;
+}
+.ppl button .tick {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 7px;
+  border: 2px solid rgba(255,255,255,.75); display: flex;
+  align-items: center; justify-content: center; font-size: 17px; line-height: 1;
+}
+.ppl button.on .tick { background: #fff; color: var(--green); border-color: #fff; }
+.ppl button.was { opacity: .55; }
+.ppl button.was .tick { background: rgba(255,255,255,.4); border-color: transparent; color: #fff; }
+.ppl .note { font-size: 13px; opacity: .85; margin: 2px 0 10px; font-weight: 400; }
+
+.letin {
+  width: 100%; max-width: 380px; margin-top: 6px; padding: 16px;
+  font-size: 17px; background: #fff; color: var(--green);
+}
+.letin[disabled] { opacity: .45; }
+.result.again .letin { color: var(--amber); }
+
 /* ---------- foot ---------- */
 
 .foot {
@@ -265,8 +290,10 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     <div class="name" id="rName"></div>
     <div class="count" id="rCount"></div>
     <div class="sub" id="rSub"></div>
+    <div class="ppl" id="rPeople"></div>
+    <button class="letin" id="rGo">Let them in</button>
     <div class="code" id="rCode"></div>
-    <div class="tap">Tap anywhere for the next one</div>
+    <div class="tap" id="rTap">Tap anywhere for the next one</div>
   </div>
 </div>
 
@@ -404,8 +431,22 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   function applyQueueTo(list) {
     if (!list) return;
     for (var i = 0; i < state.queue.length; i++) {
-      var p = list.people[String(state.queue[i].t).toUpperCase()];
-      if (p && !p.c) { p.c = state.queue[i].at; p.b = state.who || "this gate"; }
+      var q = state.queue[i];
+      var p = list.people[String(q.t).toUpperCase()];
+      if (!p) continue;
+
+      var have = String(p.i || "").split(";")
+        .map(function (n) { return n.trim(); })
+        .filter(function (n) { return n; });
+      var lower = have.map(function (n) { return n.toLowerCase(); });
+
+      String(q.who || "").split(";").forEach(function (n) {
+        n = n.trim();
+        if (n && lower.indexOf(n.toLowerCase()) === -1) { have.push(n); lower.push(n.toLowerCase()); }
+      });
+
+      p.i = have.join("; ");
+      if (!p.c) { p.c = q.at; p.b = state.who || "this gate"; }
     }
   }
 
@@ -418,8 +459,9 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 
   /* ---------------- check-ins waiting to be sent ---------------- */
 
-  function queuePush(ticket, how) {
-    state.queue.push({ t: ticket, at: Date.now(), how: how || "scan" });
+  function queuePush(ticket, how, names) {
+    state.queue.push({ t: ticket, at: Date.now(), how: how || "scan",
+                       who: (names || []).join("; ") });
     save(KEY_QUEUE, state.queue);
     paintDot();
   }
@@ -432,7 +474,8 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 
     var item = state.queue[0];
     call({ action: "checkin", key: state.code, t: item.t,
-           how: item.how === "manual" ? "manual" : "scan" }, function (res) {
+           how: item.how === "manual" ? "manual" : "scan",
+           who: item.who || "" }, function (res) {
       draining = false;
       if (res && res.ok) {
         state.queue.shift();
@@ -440,7 +483,6 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
         /* keep the phone's copy honest for whoever scans next */
         if (state.list && res.ticket) {
           var p = state.list.people[String(res.ticket).toUpperCase()];
-          if (p && !p.c) { p.c = res.at || Date.now(); p.b = res.by || ""; save(KEY_LIST, state.list); }
         }
         paintDot();
         if (state.queue.length) setTimeout(drainQueue, 120);
@@ -454,6 +496,47 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   }
 
   /* ---------------- deciding, instantly ---------------- */
+
+  /* Everyone on a pass, in the order the household entered them.
+     The roster carries the names and the headcount; anyone the
+     family never named shows as a numbered guest, so six people are
+     always six rows to tick even when only four were named. */
+  function peopleOn(p) {
+    var names = [], seen = {};
+    var push = function (n) {
+      var k = String(n).trim().toLowerCase();
+      if (!k || seen[k]) return;
+      seen[k] = true;
+      names.push(String(n).trim());
+    };
+
+    push(p.n);
+    String(p.g || "").split(";").forEach(function (g) {
+      if (names.length < (p.p || 1)) push(g.replace(/\s*\(\s*\d+\s*\)\s*$/, ""));
+    });
+    while (names.length < (p.p || 1)) {
+      names.push(p.n + " \u2014 guest " + names.length);
+    }
+
+    var inAlready = {};
+    String(p.i || "").split(";").forEach(function (n) {
+      var k = String(n).trim().toLowerCase();
+      if (k) inAlready[k] = true;
+    });
+
+    /* A row checked in before this version has a time but no list of
+       names, because back then a scan admitted the whole party at
+       once. Treat that as everyone inside -- which is what it meant
+       -- rather than as nobody, which would wave them all through a
+       second time. */
+    var anyNamed = false;
+    for (var k2 in inAlready) if (inAlready.hasOwnProperty(k2)) { anyNamed = true; break; }
+    var allIn = !anyNamed && !!p.c;
+
+    return names.map(function (n) {
+      return { n: n, was: allIn || !!inAlready[n.toLowerCase()] };
+    });
+  }
 
   function normalise(text) {
     var s = String(text || "").trim().toUpperCase();
@@ -473,22 +556,43 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     var p = state.list.people[t];
     if (!p) return { status: "no", code: t, why: "This pass is not on the list." };
 
-    if (p.c) {
-      return { status: "again", code: t, name: p.n, party: p.p, guests: p.g,
-               at: p.c, by: p.b, how: p.h || "scanned" };
-    }
+    var people = peopleOn(p);
+    var outstanding = people.filter(function (x) { return !x.was; });
 
-    /* admit now, record after -- the queue is what makes this honest */
-    p.c = Date.now();
+    return {
+      status: outstanding.length ? "in" : "again",
+      code: t, name: p.n, party: p.p || people.length,
+      people: people, at: p.c, by: p.b, how: p.h || "scanned",
+      byHand: byHand
+    };
+  }
+
+  /* Nothing is recorded until the volunteer presses the button. A
+     scan proposes; a person decides. */
+  function admit(code, names, byHand) {
+    var p = state.list && state.list.people[code];
+    if (!p || !names.length) return;
+
+    var already = String(p.i || "").split(";")
+      .map(function (n) { return n.trim(); })
+      .filter(function (n) { return n; });
+
+    names.forEach(function (n) {
+      if (already.map(function (a) { return a.toLowerCase(); }).indexOf(n.toLowerCase()) === -1) {
+        already.push(n);
+      }
+    });
+
+    p.i = already.join("; ");
     p.b = state.who || "this gate";
     p.h = byHand ? "by hand" : "scanned";
-    save(KEY_LIST, state.list);
-    state.admitted += (p.p || 1);
-    queuePush(t, byHand ? "manual" : "scan");
-    drainQueue();
+    if (!p.c) p.c = Date.now();
 
-    return { status: "in", code: t, name: p.n, party: p.p, guests: p.g,
-             how: p.h };
+    save(KEY_LIST, state.list);
+    state.admitted += names.length;
+
+    queuePush(code, byHand ? "manual" : "scan", names);
+    drainQueue();
   }
 
   /* ---------------- showing it ---------------- */
@@ -507,31 +611,101 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
   }
 
+  var pending = null;                 /* what the volunteer is deciding about */
+
   function show(v) {
     var box = $("result");
     box.className = "result show " + v.status;
+    pending = null;
 
-    $("rMark").textContent  = v.status === "in" ? "✓" : v.status === "again" ? "!" : "✕";
+    $("rMark").textContent  = v.status === "in" ? "\u2713" : v.status === "again" ? "!" : "\u2715";
     $("rName").textContent  = v.name || (v.status === "no" ? "Not on the list" : "");
     $("rCode").textContent  = v.code ? TAG + v.code : "";
+    $("rPeople").innerHTML  = "";
+    $("rGo").style.display  = "none";
+    $("rTap").textContent   = "Tap anywhere for the next one";
 
-    if (v.status === "in") {
-      $("rCount").textContent = (v.party || 1) + (v.party === 1 ? " person" : " people");
-      var how = v.how === "by hand" ? "Let in by hand. " : "";
-      $("rSub").textContent = how + (v.guests ? "With: " + v.guests : "Let them through.");
-      buzz(40);
-    } else if (v.status === "again") {
-      $("rCount").textContent = "Already came in";
-      $("rSub").textContent = (v.how === "by hand" ? "Let in by hand " : "Scanned ") +
-                              (v.at ? "at " + when(v.at) : "earlier") +
-                              (v.by ? " by " + v.by : "") +
-                              ". " + ((v.party || 1) + (v.party === 1 ? " person" : " people")) +
-                              " on this pass.";
-      buzz([25, 60, 25]);
-    } else {
+    if (v.status === "no") {
       $("rCount").textContent = "";
       $("rSub").textContent = v.why || "This pass is not on the list.";
       buzz([70, 50, 70]);
+      state.busy = true;
+      paintTally();
+      return;
+    }
+
+    var people = v.people || [];
+    var inAlready = people.filter(function (x) { return x.was; }).length;
+
+    $("rCount").textContent = (v.party || people.length) +
+      (v.party === 1 ? " person" : " people") +
+      (inAlready ? " \u00b7 " + inAlready + " already in" : "");
+
+    if (v.status === "again") {
+      $("rSub").textContent =
+        (v.how === "by hand" ? "Let in by hand " : "Scanned ") +
+        (v.at ? "at " + when(v.at) : "earlier") + (v.by ? " by " + v.by : "") +
+        ". Everyone on this pass is already inside.";
+      buzz([25, 60, 25]);
+    } else {
+      $("rSub").textContent = inAlready
+        ? "Tick who is arriving now."
+        : "Everyone is ticked. Untick anyone not here yet.";
+      buzz(40);
+    }
+
+    /* The list. Anyone not yet in starts ticked, because almost
+       every family arrives together and that case should cost one
+       tap, not six. */
+    var chosen = {};
+    people.forEach(function (person) {
+      if (!person.was) chosen[person.n] = true;
+
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "hit-person" + (person.was ? " was" : (chosen[person.n] ? " on" : ""));
+      if (person.was) b.className = "was";
+      else b.className = "on";
+
+      var tick = document.createElement("span");
+      tick.className = "tick";
+      tick.textContent = person.was || chosen[person.n] ? "\u2713" : "";
+      b.appendChild(tick);
+
+      var label = document.createElement("span");
+      label.textContent = person.n + (person.was ? "  \u00b7 already in" : "");
+      b.appendChild(label);
+
+      if (!person.was) {
+        b.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          chosen[person.n] = !chosen[person.n];
+          b.className = chosen[person.n] ? "on" : "";
+          tick.textContent = chosen[person.n] ? "\u2713" : "";
+          refreshGo();
+        });
+      } else {
+        b.addEventListener("click", function (ev) { ev.stopPropagation(); });
+      }
+
+      $("rPeople").appendChild(b);
+    });
+
+    function refreshGo() {
+      var n = 0;
+      for (var k in chosen) if (chosen.hasOwnProperty(k) && chosen[k]) n++;
+      var go = $("rGo");
+      go.disabled = n === 0;
+      go.textContent = n === 0 ? "Nobody ticked"
+                     : n === 1 ? "Let 1 person in"
+                     : "Let " + n + " people in";
+    }
+
+    if (v.status === "in") {
+      $("rGo").style.display = "";
+      refreshGo();
+      $("rTap").textContent = "Tap the background to cancel";
+      pending = { code: v.code, chosen: chosen, byHand: v.byHand };
     }
 
     paintTally();
@@ -740,6 +914,26 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 
   /* ---------------- wiring ---------------- */
 
+  $("rGo").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    if (!pending) return;
+
+    var names = [];
+    for (var k in pending.chosen) {
+      if (pending.chosen.hasOwnProperty(k) && pending.chosen[k]) names.push(k);
+    }
+    if (!names.length) return;
+
+    admit(pending.code, names, pending.byHand);
+    pending = null;
+
+    $("rSub").textContent = names.length + (names.length === 1 ? " person" : " people") + " let in.";
+    $("rPeople").innerHTML = "";
+    $("rGo").style.display = "none";
+    $("rTap").textContent = "Tap anywhere for the next one";
+    paintTally();
+  });
+
   $("stage").addEventListener("click", function () {
     if (state.busy) { clearResult(); lastSeen = ""; }
   });
@@ -849,7 +1043,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   }
 
   /* for the test page only; harmless in the field */
-  window.__gate = { judge: judge, normalise: normalise, search: search, state: state };
+  window.__gate = { judge: judge, normalise: normalise, search: search, show: show, admit: admit, state: state };
 })();
 </script>
 </body>

@@ -1267,6 +1267,41 @@ html, body { overflow-x: clip; max-width: 100%; }
   }
   .cf26 .cf-banner-over > * { position: relative; }
 }
+
+/* The four things people come here to do, put where they will see
+   them: straight under the banner, above the story. Four across on a
+   computer, two by two on a phone -- never one tall column, which
+   would push the rest of the page out of reach. */
+.cf26-quick { padding: 26px 0 4px; }
+.cf26-quick-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.cf26-quick a {
+  display: flex; flex-direction: column; justify-content: center;
+  min-height: 74px; padding: 14px 18px;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  text-decoration: none; color: var(--ink);
+  box-shadow: 0 1px 2px rgba(10, 30, 56, .05);
+  transition: border-color .12s, box-shadow .12s, transform .12s;
+}
+.cf26-quick a:hover {
+  border-color: var(--gold); box-shadow: 0 6px 16px rgba(10, 30, 56, .10);
+  transform: translateY(-1px);
+}
+.cf26-quick .qt { font-size: 16px; font-weight: 800; line-height: 1.25; }
+.cf26-quick .qs { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+.cf26-quick .qt::after { content: " \203A"; color: var(--gold-dark); font-weight: 700; }
+
+@media (max-width: 780px) {
+  .cf26-quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .cf26-quick a { min-height: 68px; padding: 12px 14px; }
+  .cf26-quick .qt { font-size: 14.5px; }
+  .cf26-quick .qs { font-size: 12px; }
+}
+@media (max-width: 360px) {
+  .cf26-quick-grid { grid-template-columns: 1fr; }
+}
 </style>
 
 <div class="cf26"><span data-cf="page.a10ad0a5">
@@ -1371,6 +1406,32 @@ html, body { overflow-x: clip; max-width: 100%; }
       <p class="cf26-hero-sub" data-cf="hero.9074814d">Live Music • Kosher Food • Family Fun • Menorah Lighting &amp; Spectacular Fireworks!</p>
 
       
+    </div>
+  </div><div class="cf26-quick cf26-band" data-cf-sec="quick">
+    <div class="cf26-wrap">
+      <div class="cf26-quick-grid">
+
+        <a href="https://www.ticketsignup.io/TicketEvent/HoustonChanukahFest" target="_blank" rel="noopener" data-ev="reserve_seats_quick">
+          <span class="qt">Reserve your Seats</span>
+          <span class="qs">Guaranteed seating up front</span>
+        </a>
+
+        <a href="sponsor/" data-ev="sponsor_quick">
+          <span class="qt">Sponsorship</span>
+          <span class="qs">Put your name behind the night</span>
+        </a>
+
+        <a href="vendor/" data-ev="vendor_quick">
+          <span class="qt">Apply as a Vendor</span>
+          <span class="qs">Food, retail and activity booths</span>
+        </a>
+
+        <a href="volunteer/" data-ev="volunteer_quick">
+          <span class="qt">Sign up to Volunteer</span>
+          <span class="qs">A few hours makes the day work</span>
+        </a>
+
+      </div>
     </div>
   </div><div class="cf26-about cf26-band cf26-anchor" id="about" data-cf-sec="about">
     <div class="cf26-wrap">

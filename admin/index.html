@@ -2,735 +2,566 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex, nofollow">
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
-<title>Chanukah Fest 2026 — Edit the site</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A1E38">
+<title>Chanukah Fest — Admin</title>
+<link rel="icon" href="../images/icon-32.png">
+<link rel="apple-touch-icon" href="../images/icon-180.png">
 
-<script>
-/* ===================================================================
-   SETTINGS
-   =================================================================== */
-var CONFIG = {
-  FILE_VERSION: "Editor v1",
+<!--
+  The office, on a phone.
 
-  // The same Apps Script the forms and the draw screen use.
-  ENDPOINT: "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec",
+  Everything the spreadsheet menus do, for somebody standing at a
+  gate in December with a parent in front of them who deleted their
+  pass. Opening Google Sheets on a phone to fix that is not a plan.
 
-  // Deliberately empty. This page sits on a public address, so the key
-  // is typed in once per computer and kept in that browser.
-  KEY: "",
+  On security, plainly: this page is public and so is the script
+  behind it. What stands between them is a password kept on a tab of
+  the spreadsheet. Anyone holding one can read the whole guest list
+  and send passes. It is a shared secret, like a key to the office --
+  adequate for an evening's roster, and no reason for anyone to
+  reuse a password they use elsewhere.
 
-  SITE: "../"
-};
-
-/* Only these are offered. White, and the red pair that marks a bad form
-   field, stay fixed — they are not brand choices and changing them only
-   breaks legibility. */
-var COLOURS = [
-  ["gold",      "Main gold",          "#F0B429"],
-  ["gold-dark", "Gold, pressed",      "#DDA31C"],
-  ["gold-deep", "Gold text on pale",  "#8A6A1E"],
-  ["navy",      "Dark sections",      "#0A1E38"],
-  ["navy-2",    "Darkest bands",      "#06142A"],
-  ["ink",       "Headings",           "#16202E"],
-  ["page",      "Page background",    "#F4F6F9"],
-  ["link",      "Links",              "#1B6FA8"],
-  ["body-txt",  "Body text",          "#46566A"],
-  ["muted",     "Quiet text",         "#6B7C90"],
-  ["soft",      "Text on dark",       "#C9DAEC"],
-  ["line",      "Borders",            "#DDE5EE"],
-  ["line-2",    "Borders, alternate", "#E3E9F0"],
-  ["mint",      "Confirmations",      "#3EE8B5"]
-];
-</script>
+  Everything here reads and writes the same sheet the gate reads, so
+  a change made on this page is live for the volunteers the moment
+  they tap Refresh.
+-->
 
 <style>
 :root {
-  --bg:      #0E1623;
-  --panel:   #16202E;
-  --panel-2: #1D2A3C;
-  --edge:    #2A3A50;
-  --text:    #E8EEF6;
-  --dim:     #8EA1B8;
-  --gold:    #F0B429;
-  --mint:    #3EE8B5;
-  --warn:    #E8734A;
-  --sans: "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif;
-  color-scheme: dark;
+  --navy:  #0A1E38;
+  --gold:  #F0B429;
+  --ink:   #16202E;
+  --muted: #6B7C90;
+  --line:  #DDE5EE;
+  --green: #1E8449;
+  --amber: #B9770E;
+  --red:   #A93226;
+  --page:  #EEF2F7;
 }
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
-body {
-  background: var(--bg); color: var(--text);
-  font: 15px/1.5 var(--sans);
-  display: flex; flex-direction: column;
-}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; min-height: 100%; background: var(--page); color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
 
-/* ---------------- the way in ---------------- */
-.lock {
-  position: fixed; inset: 0; z-index: 90;
-  background: #0A1420;
-  display: flex; align-items: center; justify-content: center; padding: 24px;
-}
-/* a class selector out-specifies the hidden attribute, so the overlay
-   would stay on top and swallow every click after unlocking */
-.lock[hidden] { display: none; }
-.lock-box { width: min(100%, 400px); text-align: center; }
-.lock-box h1 { font-size: 1.6rem; margin: 0 0 6px; }
-.lock-box p { color: var(--dim); margin: 0 0 20px; font-size: .95rem; }
-.lock-box input {
-  width: 100%; padding: 13px 15px; font: 1rem var(--sans);
-  background: #0E1A28; color: var(--text);
-  border: 1px solid var(--edge); border-radius: 9px;
-}
-.lock-box button {
-  width: 100%; margin-top: 10px; padding: 13px;
-  font: 700 1rem var(--sans); cursor: pointer;
-  background: var(--gold); color: #16202E; border: 0; border-radius: 9px;
-}
-.lock-msg { margin-top: 12px; min-height: 1.3em; color: var(--warn); font-size: .9rem; }
-
-/* ---------------- frame ---------------- */
-header {
-  display: flex; align-items: center; gap: 14px;
-  padding: 11px 16px; background: var(--panel);
-  border-bottom: 1px solid var(--edge); flex: 0 0 auto;
-}
-header h1 { font-size: 1rem; margin: 0; font-weight: 800; letter-spacing: .01em; }
-header .spacer { flex: 1; }
-.pill {
-  font-size: .78rem; color: var(--dim);
-  background: var(--panel-2); border: 1px solid var(--edge);
-  padding: 4px 10px; border-radius: 999px;
-}
-.pill.dirty { color: #16202E; background: var(--gold); border-color: var(--gold); font-weight: 700; }
-
-button.go, button.ghost {
-  font: 700 .9rem var(--sans); cursor: pointer;
-  padding: 9px 18px; border-radius: 8px; border: 1px solid var(--edge);
-  background: var(--panel-2); color: var(--text);
-}
-button.go { background: var(--mint); color: #0B1F18; border-color: var(--mint); }
-button.go:disabled { opacity: .4; cursor: default; }
-button.ghost:hover { background: var(--edge); }
-
-main { flex: 1; display: grid; grid-template-columns: minmax(380px, 460px) 1fr; min-height: 0; }
-
-/* ---------------- left: the fields ---------------- */
-.side { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--edge); }
-.tabs { display: flex; gap: 2px; padding: 10px 12px 0; background: var(--panel); flex-wrap: wrap; }
-.tab {
-  font: 700 .82rem var(--sans); cursor: pointer;
-  padding: 8px 12px; border-radius: 8px 8px 0 0;
-  border: 1px solid transparent; border-bottom: 0;
-  background: transparent; color: var(--dim);
-}
-.tab.on { background: var(--bg); color: var(--text); border-color: var(--edge); }
-.tab .n { opacity: .55; font-weight: 600; }
-
-.search { padding: 10px 12px; background: var(--panel); border-bottom: 1px solid var(--edge); }
-.search button.only {
-  width: 100%; margin-top: 7px; padding: 7px 10px;
-  font: 600 .82rem var(--sans); cursor: pointer; text-align: left;
-  background: var(--panel-2); color: var(--dim);
-  border: 1px solid var(--edge); border-radius: 8px;
-}
-.search button.only.on { background: var(--gold); color: #16202E; border-color: var(--gold); }
-.search input {
-  width: 100%; padding: 9px 12px; font: .92rem var(--sans);
-  background: #0E1A28; color: var(--text);
-  border: 1px solid var(--edge); border-radius: 8px;
-}
-.fields { overflow-y: auto; padding: 8px 12px 40px; flex: 1; }
-
-.sec { border: 1px solid var(--edge); border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
-.sec-head {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 12px; background: var(--panel); cursor: pointer;
-}
-.sec-head b { font-size: .88rem; flex: 1; }
-.sec-head .n { font-size: .76rem; color: var(--dim); }
-.sec-tools { display: flex; gap: 4px; }
-.sec-tools button {
-  font: 700 .74rem var(--sans); cursor: pointer; padding: 3px 7px;
-  background: var(--panel-2); color: var(--dim);
-  border: 1px solid var(--edge); border-radius: 6px;
-}
-.sec-tools button:hover { color: var(--text); }
-.sec-tools button.off { background: var(--warn); color: #2A0F05; border-color: var(--warn); }
-.sec-body { padding: 4px 12px 12px; display: none; }
-.sec.open .sec-body { display: block; }
-.sec.hiddenblk .sec-head b { text-decoration: line-through; opacity: .5; }
-
-.f { padding: 9px 0; border-top: 1px solid rgba(42,58,80,.6); }
-.f:first-child { border-top: 0; }
-.f label { display: block; font-size: .74rem; color: var(--dim); margin-bottom: 4px; }
-.f .row { display: flex; gap: 6px; align-items: flex-start; }
-.f textarea, .f input[type="text"], .f input[type="url"] {
-  flex: 1; width: 100%; padding: 8px 10px; font: .9rem var(--sans);
-  background: #0E1A28; color: var(--text);
-  border: 1px solid var(--edge); border-radius: 7px; resize: vertical;
-}
-.f textarea { min-height: 38px; }
-.f.changed textarea, .f.changed input { border-color: var(--gold); }
-.f .undo {
-  font: .72rem var(--sans); cursor: pointer; padding: 6px 8px;
-  background: transparent; color: var(--dim);
-  border: 1px solid var(--edge); border-radius: 6px; visibility: hidden;
-}
-.f.changed .undo { visibility: visible; }
-.f .kind { font-size: .68rem; color: var(--gold); margin-left: 6px; }
-
-.swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.sw { display: flex; align-items: center; gap: 9px; padding: 7px 9px;
-      border: 1px solid var(--edge); border-radius: 8px; }
-.sw input[type="color"] { width: 34px; height: 30px; padding: 0; border: 0; background: none; cursor: pointer; }
-.sw span { font-size: .78rem; flex: 1; }
-.sw .hex { font-size: .7rem; color: var(--dim); font-family: ui-monospace, monospace; }
-
-/* ---------------- right: the preview ---------------- */
-.preview { display: flex; flex-direction: column; min-height: 0; background: #0A1420; }
-.preview-bar {
+.bar {
+  position: sticky; top: 0; z-index: 10;
   display: flex; align-items: center; gap: 10px;
-  padding: 8px 14px; border-bottom: 1px solid var(--edge); background: var(--panel);
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;
+  background: var(--navy); color: #fff;
 }
-.preview-bar span { font-size: .78rem; color: var(--dim); flex: 1; }
-.preview-bar button {
-  font: 600 .78rem var(--sans); cursor: pointer; padding: 5px 11px;
-  background: var(--panel-2); color: var(--dim);
-  border: 1px solid var(--edge); border-radius: 7px;
-}
-.preview-bar button.on { color: var(--text); border-color: var(--gold); }
-.frame-wrap { flex: 1; overflow: auto; display: flex; justify-content: center; padding: 14px; }
-iframe {
-  width: 100%; height: 100%; border: 1px solid var(--edge);
-  border-radius: 10px; background: #fff;
-}
-iframe.phone { width: 400px; flex: 0 0 400px; }
+.bar b { font-size: 16px; }
+.bar .who { margin-left: auto; font-size: 12.5px; color: #9FB4CC; text-align: right; line-height: 1.35; }
+.bar .out { font-size: 12.5px; color: #9FB4CC; text-decoration: underline; background: none; border: 0; padding: 0; }
 
-.msg { padding: 9px 16px; font-size: .85rem; min-height: 1.2em; background: var(--panel); border-top: 1px solid var(--edge); }
-.msg.bad { color: var(--warn); }
-.msg.good { color: var(--mint); }
-
-@media (max-width: 900px) {
-  main { grid-template-columns: 1fr; }
-  .preview { display: none; }
+.tabs { display: flex; background: var(--navy); padding: 0 8px 8px; gap: 6px; position: sticky; top: 56px; z-index: 9; }
+.tabs button {
+  flex: 1; padding: 10px 6px; font-size: 14px; font-weight: 700;
+  background: rgba(255,255,255,.1); color: #C7D7E8; border: 0; border-radius: 9px;
 }
+.tabs button.on { background: var(--gold); color: var(--ink); }
+
+main { padding: 16px 14px 40px; max-width: 760px; margin: 0 auto; }
+.panel { display: none; }
+.panel.on { display: block; }
+
+.sums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.sum { background: #fff; border: 1px solid var(--line); border-radius: 11px; padding: 12px 10px; text-align: center; }
+.sum b { display: block; font-size: 22px; line-height: 1.1; }
+.sum span { font-size: 11.5px; color: var(--muted); }
+
+input[type=text], input[type=password], input[type=search], input[type=number] {
+  width: 100%; font: inherit; font-size: 16px; padding: 13px 14px;
+  border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink);
+}
+input:focus { outline: 0; border-color: var(--gold); }
+label { display: block; font-size: 12.5px; font-weight: 700; color: var(--muted); margin: 0 0 6px; }
+
+button { font: inherit; cursor: pointer; border: 0; border-radius: 10px; font-weight: 700; }
+.go   { background: var(--navy); color: #fff; padding: 14px 18px; font-size: 15.5px; width: 100%; }
+.gold { background: var(--gold); color: var(--ink); padding: 13px 16px; font-size: 15px; }
+.lite { background: #fff; color: var(--ink); border: 1px solid var(--line); padding: 11px 14px; font-size: 14px; }
+.warn { background: #fff; color: var(--red); border: 1px solid #F0C8C2; padding: 11px 14px; font-size: 14px; }
+button:disabled { opacity: .5; }
+
+.card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+.card h3 { margin: 0 0 4px; font-size: 16.5px; }
+.card .meta { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 11px; }
+.row button { flex: 1 1 auto; min-width: 118px; }
+
+.pill { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; margin-left: 6px; vertical-align: 2px; }
+.pill.none { background: #EEF2F7; color: var(--muted); }
+.pill.some { background: #FDF3E0; color: var(--amber); }
+.pill.all  { background: #E6F4EC; color: var(--green); }
+
+.people { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.people span { font-size: 12.5px; padding: 5px 10px; border-radius: 999px; background: #EEF2F7; color: var(--muted); }
+.people span.in { background: #E6F4EC; color: var(--green); font-weight: 700; }
+
+.note { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 10px 0 0; }
+.err  { font-size: 13.5px; color: var(--red); margin-top: 10px; min-height: 18px; line-height: 1.5; }
+.ok   { font-size: 13.5px; color: var(--green); margin-top: 10px; min-height: 18px; line-height: 1.5; }
+h2 { font-size: 17px; margin: 22px 0 10px; }
+h2:first-child { margin-top: 4px; }
+
+.signin { max-width: 380px; margin: 8vh auto; padding: 0 18px; }
+.signin h1 { font-size: 22px; margin: 0 0 6px; }
+.signin p { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0 0 20px; }
+.signin label { margin-top: 14px; }
+
+.banner { position: fixed; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom,0px) + 12px);
+  background: var(--ink); color: #fff; border-radius: 10px; padding: 12px 15px;
+  font-size: 13.5px; line-height: 1.5; box-shadow: 0 8px 26px rgba(0,0,0,.4); display: none; z-index: 30; }
+.banner.show { display: block; }
+.busy { opacity: .55; pointer-events: none; }
 </style>
 </head>
+
 <body>
 
-<div class="lock" id="lock">
-  <div class="lock-box">
-    <h1>Edit the site</h1>
-    <p>Chanukah Fest 2026. Enter the access key.</p>
-    <input type="password" id="lockKey" autocomplete="current-password" spellcheck="false" placeholder="Access key">
-    <button id="lockBtn">Unlock</button>
-    <div class="lock-msg" id="lockMsg"></div>
-  </div>
+<div class="signin" id="signin">
+  <h1>Chanukah Fest admin</h1>
+  <p>Sign in to see who is registered, send a pass again, undo a check-in, or add people to the gate.</p>
+  <label for="u">Name</label>
+  <input type="text" id="u" autocomplete="username" autocapitalize="words" spellcheck="false">
+  <label for="pw">Password</label>
+  <input type="password" id="pw" autocomplete="current-password">
+  <button class="go" id="inBtn" style="margin-top:16px">Sign in</button>
+  <div class="err" id="inErr"></div>
+  <p class="note">Don't use a password you use anywhere else. It is kept in plain text on the Admins tab of the spreadsheet, where anyone with the sheet can read it.</p>
 </div>
 
-<header>
-  <h1>Chanukah Fest 2026</h1>
-  <span class="pill" id="count">—</span>
-  <span class="spacer"></span>
-  <button class="ghost" id="check">Check connection</button>
-  <button class="ghost" id="revertAll">Undo all changes</button>
-  <button class="go" id="save" disabled>Save and publish</button>
-</header>
-
-<main>
-  <div class="side">
-    <div class="tabs" id="tabs"></div>
-    <div class="search">
-      <input type="search" id="find" placeholder="Search all 605 pieces of text…">
-      <button class="only" id="onlyChanged">Show only what has been changed</button>
-    </div>
-    <div class="fields" id="fields"></div>
+<div id="app" style="display:none">
+  <div class="bar">
+    <b>Admin</b>
+    <span class="who" id="who"></span>
+    <button class="out" id="outBtn">Sign out</button>
   </div>
 
-  <div class="preview">
-    <div class="preview-bar">
-      <span id="previewOf">Preview</span>
-      <button id="wide" class="on">Desktop</button>
-      <button id="narrow">Phone</button>
-      <button id="reload">Reload</button>
-    </div>
-    <div class="frame-wrap"><iframe id="frame" title="Preview"></iframe></div>
+  <div class="tabs">
+    <button data-tab="people" class="on">People</button>
+    <button data-tab="gate">Gate</button>
+    <button data-tab="settings">Settings</button>
   </div>
-</main>
 
-<div class="msg" id="msg"></div>
+  <main>
+    <section class="panel on" id="tab-people">
+      <div class="sums">
+        <div class="sum"><b id="sHouse">—</b><span>registrations</span></div>
+        <div class="sum"><b id="sExpect">—</b><span>people expected</span></div>
+        <div class="sum"><b id="sIn">—</b><span>inside now</span></div>
+      </div>
+      <input type="search" id="q" placeholder="Search a name, ticket, email or phone">
+      <div id="list"></div>
+      <div class="note" id="listNote"></div>
+    </section>
+
+    <section class="panel" id="tab-gate">
+      <h2>Volunteers on the gate</h2>
+      <div id="staff"></div>
+      <div class="card">
+        <label for="newStaff">Add someone</label>
+        <input type="text" id="newStaff" placeholder="Their name">
+        <div class="row"><button class="gold" id="addStaff">Give them a code</button></div>
+        <div class="ok" id="staffMsg"></div>
+      </div>
+      <p class="note">They open <b>chanukahinhouston.com/checkin</b> on their own phone and type the code in once.</p>
+    </section>
+
+    <section class="panel" id="tab-settings">
+      <h2>Who can use this page</h2>
+      <div id="admins"></div>
+      <div class="card">
+        <label for="newAdmin">Add an admin</label>
+        <input type="text" id="newAdmin" placeholder="Their name">
+        <label for="newAdminPw" style="margin-top:10px">Password for them</label>
+        <input type="text" id="newAdminPw" placeholder="At least 6 characters">
+        <div class="row"><button class="gold" id="addAdmin">Add them</button></div>
+        <div class="ok" id="adminMsg"></div>
+      </div>
+      <p class="note">Tell them the password yourself. This page never shows it again, and nobody can be removed if they are the last one left.</p>
+    </section>
+  </main>
+</div>
+
+<div class="banner" id="banner"></div>
 
 <script>
-/* ===================================================================
-   STATE
-   The schema says what exists and what it originally said. `edits`
-   holds only what has been changed from that, which is also all that
-   is ever written to the spreadsheet — so a page whose wording nobody
-   has touched keeps using the wording baked into the HTML, and keeps
-   working even if the spreadsheet is unreachable.
-   =================================================================== */
-var $ = function (id) { return document.getElementById(id); };
+(function () {
+  "use strict";
 
-var SCHEMA = null;
-var saved = { fields: {}, colours: {}, sections: {} };   // what is live now
-var edits = { fields: {}, colours: {}, sections: {} };   // what has changed here
-var page = "index";
-var openSecs = {};
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
+  var KEY = "cf26.admin";
+  var $ = function (id) { return document.getElementById(id); };
 
-function merged() {
-  var out = { ok: true, fields: {}, colours: {}, sections: {} };
-  [saved, edits].forEach(function (src) {
-    for (var k in src.fields) out.fields[k] = src.fields[k];
-    for (var c in src.colours) out.colours[c] = src.colours[c];
-    for (var p in src.sections) {
-      out.sections[p] = out.sections[p] || {};
-      for (var s in src.sections[p]) out.sections[p][s] = src.sections[p][s];
+  var me = (function () {
+    try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { return null; }
+  })();
+  var people = [], staff = [], admins = [];
+
+  /* ---------- talking to the sheet ----------
+     JSONP, because a web app on script.google.com answers a script
+     tag from anywhere and a fetch() from a phone does not. */
+  var n = 0;
+  function call(params, done, fail) {
+    var name = "cfa" + (++n) + "_" + Date.now();
+    var tag = document.createElement("script");
+    var over = false;
+
+    var timer = setTimeout(function () {
+      if (over) return; over = true; cleanup(); fail && fail("timeout");
+    }, 20000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (tag.parentNode) tag.parentNode.removeChild(tag);
     }
-  });
-  return out;
-}
+    window[name] = function (d) { if (over) return; over = true; cleanup(); done(d); };
 
-function countEdits() {
-  var n = Object.keys(edits.fields).length + Object.keys(edits.colours).length;
-  for (var p in edits.sections) n += Object.keys(edits.sections[p]).length;
-  return n;
-}
-
-function touched() {
-  var n = countEdits();
-  var pill = $("count");
-  pill.textContent = n ? n + " unsaved change" + (n === 1 ? "" : "s") : "No changes";
-  pill.className = "pill" + (n ? " dirty" : "");
-  $("save").disabled = !n;
-}
-
-/* ===================================================================
-   THE FIELD LIST
-   =================================================================== */
-function pageOf(id) {
-  for (var i = 0; i < SCHEMA.pages.length; i++)
-    if (SCHEMA.pages[i].id === id) return SCHEMA.pages[i];
-  return SCHEMA.pages[0];
-}
-
-function drawTabs() {
-  var box = $("tabs");
-  box.innerHTML = "";
-  SCHEMA.pages.forEach(function (p) {
-    var b = document.createElement("button");
-    b.className = "tab" + (p.id === page ? " on" : "");
-    b.innerHTML = p.name + ' <span class="n">' + p.fields.length + "</span>";
-    b.onclick = function () { page = p.id; drawTabs(); drawFields(); showPreview(); };
-    box.appendChild(b);
-  });
-  var b = document.createElement("button");
-  b.className = "tab" + (page === "~colours" ? " on" : "");
-  b.innerHTML = 'Colours <span class="n">' + COLOURS.length + "</span>";
-  b.onclick = function () { page = "~colours"; drawTabs(); drawFields(); };
-  box.appendChild(b);
-}
-
-function secState(pid, sid) {
-  var m = merged().sections[pid] || {};
-  return m[sid] || {};
-}
-
-function setSec(pid, sid, patch) {
-  edits.sections[pid] = edits.sections[pid] || {};
-  var now = edits.sections[pid][sid] || {};
-  var base = (saved.sections[pid] || {})[sid] || {};
-  var next = {};
-  for (var k in base) next[k] = base[k];
-  for (var k2 in now) next[k2] = now[k2];
-  for (var k3 in patch) next[k3] = patch[k3];
-  edits.sections[pid][sid] = next;
-  touched(); push();
-}
-
-function drawFields() {
-  var box = $("fields");
-  box.innerHTML = "";
-  var q = $("find").value.trim().toLowerCase();
-
-  if (page === "~colours") return drawColours(box);
-
-  var p = pageOf(page);
-  var bySec = {};
-  p.fields.forEach(function (f) {
-    // "only changed" is how you find a stray note typed into a field
-    // months ago, which is otherwise one row among six hundred
-    if (onlyChanged && String(cur(f)) === String(f.value)) return;
-    (bySec[f.sec] = bySec[f.sec] || []).push(f);
-  });
-
-  var order = p.sections.map(function (s) { return s.id; });
-  Object.keys(bySec).forEach(function (s) { if (order.indexOf(s) === -1) order.push(s); });
-
-  order.forEach(function (sid, idx) {
-    var list = (bySec[sid] || []).filter(function (f) {
-      return !q || f.label.toLowerCase().indexOf(q) > -1 ||
-             String(cur(f)).toLowerCase().indexOf(q) > -1;
-    });
-    if (!list.length) return;
-
-    var st = secState(page, sid);
-    var sec = document.createElement("div");
-    sec.className = "sec" + (openSecs[page + sid] || q ? " open" : "") + (st.hidden ? " hiddenblk" : "");
-
-    var head = document.createElement("div");
-    head.className = "sec-head";
-    head.innerHTML = '<b>' + sid.replace(/-/g, " ") + '</b><span class="n">' + list.length + "</span>";
-    head.onclick = function (e) {
-      if (e.target.tagName === "BUTTON") return;
-      openSecs[page + sid] = !openSecs[page + sid];
-      drawFields();
-    };
-
-    var tools = document.createElement("div");
-    tools.className = "sec-tools";
-    tools.appendChild(mini(st.hidden ? "Show" : "Hide", st.hidden ? "off" : "", function () {
-      setSec(page, sid, { hidden: !st.hidden }); drawFields();
-    }));
-    tools.appendChild(mini("↑", "", function () { move(page, order, sid, -1); }));
-    tools.appendChild(mini("↓", "", function () { move(page, order, sid, 1); }));
-    head.appendChild(tools);
-    sec.appendChild(head);
-
-    var body = document.createElement("div");
-    body.className = "sec-body";
-    list.forEach(function (f) { body.appendChild(fieldRow(f)); });
-    sec.appendChild(body);
-    box.appendChild(sec);
-  });
-
-  if (!box.children.length) {
-    box.innerHTML = '<p style="color:var(--dim);padding:14px 2px">' +
-      (onlyChanged ? "Nothing on this page has been changed."
-                   : "Nothing matches \u201c" + esc(q) + "\u201d.") + "</p>";
-  }
-
-  if (onlyChanged) {
-    var n = 0;
-    SCHEMA.pages.forEach(function (pg) {
-      pg.fields.forEach(function (f) { if (String(cur(f)) !== String(f.value)) n++; });
-    });
-    var head = document.createElement("p");
-    head.style.cssText = "color:var(--gold);font-size:.8rem;margin:0 2px 10px";
-    head.textContent = n + " field" + (n === 1 ? " has" : "s have") +
-                       " been changed across the whole site.";
-    box.insertBefore(head, box.firstChild);
-  }
-}
-
-function mini(label, cls, fn) {
-  var b = document.createElement("button");
-  b.textContent = label; b.className = cls;
-  b.onclick = function (e) { e.stopPropagation(); fn(); };
-  return b;
-}
-
-function move(pid, order, sid, dir) {
-  var now = order.slice();
-  var i = now.indexOf(sid);
-  var j = i + dir;
-  if (i < 0 || j < 0 || j >= now.length) return;
-  now.splice(j, 0, now.splice(i, 1)[0]);
-  now.forEach(function (s, at) { setSec(pid, s, { at: at }); });
-  drawFields();
-}
-
-function cur(f) {
-  if (f.key in edits.fields) return edits.fields[f.key];
-  if (f.key in saved.fields) return saved.fields[f.key];
-  return f.value;
-}
-
-function fieldRow(f) {
-  var wrap = document.createElement("div");
-  var changed = (f.key in edits.fields) || (f.key in saved.fields && saved.fields[f.key] !== f.value);
-  wrap.className = "f" + (changed ? " changed" : "");
-
-  var lab = document.createElement("label");
-  lab.textContent = f.label;
-  if (f.type !== "text") {
-    var k = document.createElement("span");
-    k.className = "kind"; k.textContent = f.type;
-    lab.appendChild(k);
-  }
-  wrap.appendChild(lab);
-
-  var row = document.createElement("div");
-  row.className = "row";
-
-  var input;
-  var value = String(cur(f));
-  if (f.type === "link" || f.type === "image") {
-    input = document.createElement("input");
-    input.type = "text";
-  } else {
-    input = document.createElement("textarea");
-    input.rows = value.length > 70 ? 3 : 1;
-  }
-  input.value = value;
-  input.oninput = function () {
-    if (input.value === f.value) delete edits.fields[f.key];
-    else edits.fields[f.key] = input.value;
-    wrap.className = "f" + (input.value === f.value ? "" : " changed");
-    touched(); push();
-  };
-  row.appendChild(input);
-
-  row.appendChild((function () {
-    var u = document.createElement("button");
-    u.className = "undo"; u.textContent = "Undo";
-    u.onclick = function () {
-      delete edits.fields[f.key];
-      input.value = f.value;
-      edits.fields[f.key] = f.value;    // explicitly return it to the original
-      wrap.className = "f";
-      touched(); push();
-    };
-    return u;
-  })());
-
-  wrap.appendChild(row);
-  return wrap;
-}
-
-function drawColours(box) {
-  var grid = document.createElement("div");
-  grid.className = "swatches";
-  COLOURS.forEach(function (c) {
-    var name = c[0], label = c[1], dflt = c[2];
-    var value = edits.colours[name] || saved.colours[name] || dflt;
-
-    var sw = document.createElement("div");
-    sw.className = "sw";
-    var pick = document.createElement("input");
-    pick.type = "color"; pick.value = value;
-    var txt = document.createElement("span"); txt.textContent = label;
-    var hex = document.createElement("span"); hex.className = "hex"; hex.textContent = value;
-    pick.oninput = function () {
-      hex.textContent = pick.value;
-      if (pick.value.toUpperCase() === dflt.toUpperCase()) delete edits.colours[name];
-      else edits.colours[name] = pick.value;
-      touched(); push();
-    };
-    sw.appendChild(pick); sw.appendChild(txt); sw.appendChild(hex);
-    grid.appendChild(sw);
-  });
-  box.appendChild(grid);
-
-  var note = document.createElement("p");
-  note.style.cssText = "color:var(--dim);font-size:.8rem;margin-top:14px";
-  note.textContent = "Colours apply to every page at once. White and the red used to " +
-                     "mark a missed form field are fixed, because changing those only " +
-                     "makes the site harder to read.";
-  box.appendChild(note);
-}
-
-function esc(s) {
-  return String(s).replace(/[&<>"]/g, function (c) {
-    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-  });
-}
-
-/* ===================================================================
-   PREVIEW
-   =================================================================== */
-var frameReady = false;
-
-function showPreview() {
-  var p = page === "~colours" ? "index" : page;
-  var url = CONFIG.SITE + (p === "index" ? "" : p + "/");
-  $("previewOf").textContent = "Preview — " + url;
-  frameReady = false;
-  $("frame").src = url;
-}
-
-function push() {
-  if (!frameReady) return;
-  try {
-    $("frame").contentWindow.postMessage({ cf: "preview", data: merged() }, "*");
-  } catch (e) {}
-}
-
-addEventListener("message", function (e) {
-  if (e.data && e.data.cf === "ready") { frameReady = true; push(); }
-});
-
-/* ===================================================================
-   TALKING TO THE SPREADSHEET
-   =================================================================== */
-function say(text, kind) {
-  var m = $("msg");
-  m.textContent = text;
-  m.className = "msg" + (kind ? " " + kind : "");
-}
-
-function load(done) {
-  fetch(CONFIG.ENDPOINT + "?action=content&t=" + Date.now())
-    .then(function (r) { return r.json(); })
-    .then(function (d) {
-      if (!d || !d.ok) return done(false);
-      saved = { fields: d.fields || {}, colours: d.colours || {}, sections: d.sections || {} };
-      done(true);
-    })
-    .catch(function () { done(false); });
-}
-
-$("save").onclick = function () {
-  var n = countEdits();
-  $("save").disabled = true;
-  say("Saving " + n + " change" + (n === 1 ? "" : "s") + "…");
-
-  var body = new URLSearchParams();
-  body.set("action", "savecontent");
-  body.set("key", CONFIG.KEY);
-  body.set("payload", JSON.stringify(edits));
-
-  fetch(CONFIG.ENDPOINT, { method: "POST", body: body })
-    .then(function (r) { return r.json(); })
-    .then(function (d) {
-      if (!d || !d.ok) throw new Error(d && d.error || "refused");
-      // fold what was just saved into what is live, and start clean
-      for (var k in edits.fields) saved.fields[k] = edits.fields[k];
-      for (var c in edits.colours) saved.colours[c] = edits.colours[c];
-      for (var p in edits.sections) {
-        saved.sections[p] = saved.sections[p] || {};
-        for (var s in edits.sections[p]) saved.sections[p][s] = edits.sections[p][s];
-      }
-      edits = { fields: {}, colours: {}, sections: {} };
-      touched(); drawFields();
-      say("Saved. The site is updated — give it a few seconds, then reload the page to see it.", "good");
-    })
-    .catch(function (err) {
-      $("save").disabled = false;
-      say("Could not save: " + err.message + ". Nothing was changed on the site.", "bad");
-    });
-};
-
-/* Says, in plain words, whether the site can actually read what has
-   been saved — and clears this browser's copy, which is the one thing
-   that can make a page keep showing wording that was changed days ago. */
-$("check").onclick = function () {
-  say("Checking\u2026");
-  var url = CONFIG.ENDPOINT + "?action=content&t=" + Date.now();
-
-  var report = function (how, d) {
-    if (!d || !d.ok) {
-      say("Reached Google (" + how + ") but it did not return saved content. " +
-          "Check the deployment is set to Anyone.", "bad");
-      return;
+    var q = [];
+    for (var k in params) if (params.hasOwnProperty(k)) {
+      q.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k]));
     }
-    var nf = Object.keys(d.fields || {}).length;
-    var nc = Object.keys(d.colours || {}).length;
-    var ns = 0;
-    for (var p in d.sections || {}) ns += Object.keys(d.sections[p]).length;
-    var cached = "none";
+    q.push("callback=" + name);
+    tag.src = ENDPOINT + "?" + q.join("&");
+    tag.onerror = function () { if (over) return; over = true; cleanup(); fail && fail("offline"); };
+    document.head.appendChild(tag);
+  }
+
+  function ask(action, extra, done, fail) {
+    if (!me) return;
+    var p = { action: action, user: me.u, pass: me.p };
+    for (var k in extra) if (extra.hasOwnProperty(k)) p[k] = extra[k];
+    call(p, function (res) {
+      if (res && res.status === "badlogin") { signOut("That login stopped working."); return; }
+      done(res);
+    }, fail);
+  }
+
+  var noteTimer;
+  function say(text, bad) {
+    var b = $("banner");
+    b.textContent = text;
+    b.style.background = bad ? "#A93226" : "#16202E";
+    b.className = "banner show";
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(function () { b.className = "banner"; }, 4500);
+  }
+
+  function when(ms) {
+    if (!ms) return "";
     try {
-      var raw = localStorage.getItem("cf26-content-v1");
-      cached = raw ? Object.keys(JSON.parse(raw).fields || {}).length + " saved changes" : "none";
-    } catch (e) {}
-    say("Connected (" + how + "). The spreadsheet holds " + nf + " changed text" +
-        (nf === 1 ? "" : "s") + ", " + nc + " colour" + (nc === 1 ? "" : "s") +
-        " and " + ns + " block setting" + (ns === 1 ? "" : "s") +
-        ". This browser's copy: " + cached + ".",
-        nf + nc + ns ? "good" : "bad");
-  };
+      var d = new Date(ms), h = d.getHours(), m = d.getMinutes();
+      var ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12;
+      return h + ":" + (m < 10 ? "0" : "") + m + ap;
+    } catch (e) { return ""; }
+  }
 
-  var answered = false;
-  fetch(url).then(function (r) { return r.json(); })
-    .then(function (d) { answered = true; report("direct", d); })
-    .catch(function () {
-      // the same second route the pages use
-      var name = "cfCheck" + Math.floor(Math.random() * 1e9);
-      var tag = document.createElement("script");
-      window[name] = function (d) { answered = true; report("fallback", d); tag.remove(); };
-      tag.src = url + "&callback=" + name;
-      tag.onerror = function () {
-        tag.remove();
-        say("Could not reach the script at all. Check the address, and that the " +
-            "deployment is set to Anyone.", "bad");
-      };
-      document.head.appendChild(tag);
+  /* ---------- signing in ---------- */
+
+  function signIn() {
+    var u = ($("u").value || "").trim(), p = $("pw").value || "";
+    if (!u || !p) { $("inErr").textContent = "Both, please."; return; }
+    $("inErr").textContent = "Checking…";
+    $("inBtn").disabled = true;
+
+    call({ action: "adminLogin", user: u, pass: p }, function (res) {
+      $("inBtn").disabled = false;
+      if (!res || !res.ok) {
+        $("inErr").textContent = (res && res.status === "badlogin")
+          ? "That name and password do not match." : "Something went wrong. Try again.";
+        return;
+      }
+      me = { u: u, p: p, name: res.name };
+      try { localStorage.setItem(KEY, JSON.stringify(me)); } catch (e) {}
+      start();
+    }, function () {
+      $("inBtn").disabled = false;
+      $("inErr").textContent = "Could not reach the sheet. Check the signal.";
     });
-  setTimeout(function () {
-    if (!answered) say("No answer from Google after 8 seconds.", "bad");
-  }, 8000);
-};
+  }
 
-$("revertAll").onclick = function () {
-  if (!countEdits()) return;
-  if (!confirm("Undo every unsaved change on every page?")) return;
-  edits = { fields: {}, colours: {}, sections: {} };
-  touched(); drawFields(); showPreview();
-  say("All unsaved changes undone.");
-};
+  function signOut(why) {
+    me = null;
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    $("app").style.display = "none";
+    $("signin").style.display = "";
+    $("pw").value = "";
+    $("inErr").textContent = why || "";
+  }
 
-var onlyChanged = false;
-$("onlyChanged").onclick = function () {
-  onlyChanged = !onlyChanged;
-  $("onlyChanged").className = "only" + (onlyChanged ? " on" : "");
-  drawFields();
-};
+  function start() {
+    $("signin").style.display = "none";
+    $("app").style.display = "";
+    $("who").textContent = me.name;
+    loadPeople();
+    loadStaff();
+    loadAdmins();
+  }
 
-$("find").oninput = drawFields;
-$("reload").onclick = showPreview;
-$("wide").onclick = function () {
-  $("frame").className = ""; $("wide").className = "on"; $("narrow").className = "";
-};
-$("narrow").onclick = function () {
-  $("frame").className = "phone"; $("narrow").className = "on"; $("wide").className = "";
-};
+  /* ---------- people ---------- */
 
-addEventListener("beforeunload", function (e) {
-  if (countEdits()) { e.preventDefault(); e.returnValue = ""; }
-});
+  function loadPeople() {
+    $("listNote").textContent = "Loading…";
+    ask("adminPeople", {}, function (res) {
+      if (!res || !res.ok) { $("listNote").textContent = "Could not load the list."; return; }
+      people = res.list || [];
+      $("sHouse").textContent = res.households;
+      $("sExpect").textContent = res.expected;
+      $("sIn").textContent = res.inSoFar;
+      paintPeople();
+    }, function () { $("listNote").textContent = "Could not reach the sheet."; });
+  }
 
-/* ===================================================================
-   THE WAY IN
-   The key is checked by using it, exactly as on the draw screen: if
-   the script accepts a save, it was right. There is nothing to verify
-   locally, which is the point of keeping it out of this file.
-   =================================================================== */
-function start() {
-  fetch(CONFIG.SITE + "assets/content-schema.json")
-    .then(function (r) { return r.json(); })
-    .then(function (s) {
-      SCHEMA = s;
-      var total = s.pages.reduce(function (a, p) { return a + p.fields.length; }, 0);
-      $("find").placeholder = "Search all " + total + " pieces of text…";
-      load(function (ok) {
-        $("lock").hidden = true;
-        drawTabs(); drawFields(); showPreview(); touched();
-        say(ok ? "Ready." : "Could not read saved content — showing the wording built into the pages.",
-            ok ? "" : "bad");
+  function paintPeople() {
+    var q = ($("q").value || "").trim().toLowerCase();
+    var box = $("list");
+    box.innerHTML = "";
+
+    var hits = people.filter(function (p) {
+      if (!q) return true;
+      var hay = (p.n + " " + p.t + " " + p.e + " " + p.ph + " " +
+                 p.people.map(function (x) { return x.n; }).join(" ")).toLowerCase();
+      return hay.indexOf(q) > -1;
+    });
+
+    if (!people.length) { $("listNote").textContent = "Nobody is registered yet."; return; }
+    if (!hits.length) { $("listNote").textContent = "Nobody matches that."; return; }
+
+    $("listNote").textContent = q
+      ? hits.length + " of " + people.length + " shown"
+      : people.length + " registrations";
+
+    hits.slice(0, 60).forEach(function (p) { box.appendChild(card(p)); });
+    if (hits.length > 60) {
+      $("listNote").textContent = "Showing 60 of " + hits.length + ". Search to narrow it down.";
+    }
+  }
+
+  function card(p) {
+    var el = document.createElement("div");
+    el.className = "card";
+
+    var state = p.inCount === 0 ? "none" : (p.inCount >= p.p ? "all" : "some");
+    var label = p.inCount === 0 ? "not in" : (p.inCount >= p.p ? "all in" : p.inCount + " of " + p.p + " in");
+
+    var h = document.createElement("h3");
+    h.textContent = p.n;
+    var pill = document.createElement("span");
+    pill.className = "pill " + state;
+    pill.textContent = label;
+    h.appendChild(pill);
+    el.appendChild(h);
+
+    var meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = "CF26:" + p.t + " · " + p.p + (p.p === 1 ? " person" : " people") +
+      (p.e ? " · " + p.e : " · no email on file") +
+      (p.at ? " · came in " + when(p.at) + (p.by ? " by " + p.by : "") : "") +
+      (p.sent ? "" : " · pass not sent");
+    el.appendChild(meta);
+
+    if (p.people.length > 1) {
+      var who = document.createElement("div");
+      who.className = "people";
+      p.people.forEach(function (x) {
+        var s = document.createElement("span");
+        if (x.in) s.className = "in";
+        s.textContent = x.n;
+        who.appendChild(s);
       });
-    })
-    .catch(function () {
-      $("lockMsg").textContent = "Could not load the list of editable text.";
+      el.appendChild(who);
+    }
+
+    var row = document.createElement("div");
+    row.className = "row";
+
+    if (p.e) {
+      row.appendChild(button("lite", "Send the pass again", function (b) {
+        if (!confirm("Send " + p.n + "'s pass again to " + p.e + "?")) return;
+        busy(el, true);
+        ask("adminResend", { t: p.t }, function (res) {
+          busy(el, false);
+          if (res && res.ok) { say("Pass sent to " + res.to); loadPeople(); }
+          else say((res && res.error) || "It would not send.", true);
+        }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+      }));
+    }
+
+    if (p.inCount > 0) {
+      row.appendChild(button("warn", "Undo the check-in", function () {
+        if (!confirm("Put " + p.n + " back outside the gate? " +
+                     p.inCount + (p.inCount === 1 ? " person" : " people") +
+                     " will be able to scan in again.")) return;
+        busy(el, true);
+        ask("adminUndo", { t: p.t, who: "ALL" }, function (res) {
+          busy(el, false);
+          if (res && res.ok) { say("Check-in undone for " + p.n); loadPeople(); }
+          else say((res && res.error) || "It would not undo.", true);
+        }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+      }));
+    }
+
+    row.appendChild(button("lite", "Change the headcount", function () {
+      var v = prompt("How many people are coming on " + p.n + "'s pass?", String(p.p));
+      if (v === null) return;
+      busy(el, true);
+      ask("adminParty", { t: p.t, n: v }, function (res) {
+        busy(el, false);
+        if (res && res.ok) { say(p.n + " is now " + res.party + " people"); loadPeople(); }
+        else say((res && res.error) || "That would not change.", true);
+      }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+    }));
+
+    el.appendChild(row);
+    return el;
+  }
+
+  function button(cls, text, onClick) {
+    var b = document.createElement("button");
+    b.className = cls; b.type = "button"; b.textContent = text;
+    b.addEventListener("click", function () { onClick(b); });
+    return b;
+  }
+  function busy(el, yes) { el.className = yes ? "card busy" : "card"; }
+
+  /* ---------- the gate ---------- */
+
+  function loadStaff() {
+    ask("adminStaff", {}, function (res) {
+      staff = (res && res.list) || [];
+      var box = $("staff");
+      box.innerHTML = "";
+      if (!staff.length) {
+        box.innerHTML = '<p class="note">Nobody has a code yet.</p>';
+        return;
+      }
+      staff.forEach(function (s) {
+        var el = document.createElement("div");
+        el.className = "card";
+        var h = document.createElement("h3"); h.textContent = s.n || "(no name)";
+        el.appendChild(h);
+        var m = document.createElement("div");
+        m.className = "meta";
+        m.textContent = "Code " + s.c + " · " + s.count +
+          (s.count === 1 ? " person" : " people") + " let in" +
+          (s.used ? " · last used " + when(s.used) : " · not used yet");
+        el.appendChild(m);
+        var row = document.createElement("div"); row.className = "row";
+        row.appendChild(button("warn", "Remove", function () {
+          if (!confirm("Remove " + (s.n || "this volunteer") + "? Their code " +
+                       s.c + " will stop working.")) return;
+          busy(el, true);
+          ask("adminStaffRemove", { c: s.c }, function (res2) {
+            busy(el, false);
+            if (res2 && res2.ok) { say("Removed"); loadStaff(); }
+            else say((res2 && res2.error) || "Could not remove them.", true);
+          }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+        }));
+        el.appendChild(row);
+        box.appendChild(el);
+      });
     });
-}
+  }
 
-$("lockBtn").onclick = function () {
-  var k = $("lockKey").value.trim();
-  if (!k) { $("lockMsg").textContent = "Enter the access key."; return; }
-  CONFIG.KEY = k;
-  try { localStorage.setItem("cf26-admin-key", k); } catch (e) {}
-  start();
-};
-$("lockKey").addEventListener("keydown", function (e) {
-  if (e.key === "Enter") $("lockBtn").click();
-});
+  /* ---------- admins ---------- */
 
-try {
-  var k = localStorage.getItem("cf26-admin-key");
-  if (k) { CONFIG.KEY = k; start(); }
-} catch (e) {}
+  function loadAdmins() {
+    ask("adminAdmins", {}, function (res) {
+      admins = (res && res.list) || [];
+      var box = $("admins");
+      box.innerHTML = "";
+      admins.forEach(function (a) {
+        var el = document.createElement("div");
+        el.className = "card";
+        var h = document.createElement("h3"); h.textContent = a.n;
+        if (me && a.n.toLowerCase() === String(me.name).toLowerCase()) {
+          var p = document.createElement("span");
+          p.className = "pill all"; p.textContent = "you";
+          h.appendChild(p);
+        }
+        el.appendChild(h);
+        var m = document.createElement("div");
+        m.className = "meta";
+        m.textContent = a.seen ? "Last signed in " + when(a.seen) : "Has not signed in yet";
+        el.appendChild(m);
+
+        if (!me || a.n.toLowerCase() !== String(me.name).toLowerCase()) {
+          var row = document.createElement("div"); row.className = "row";
+          row.appendChild(button("warn", "Remove", function () {
+            if (!confirm("Remove " + a.n + "? They will not be able to sign in.")) return;
+            busy(el, true);
+            ask("adminAdminRemove", { n: a.n }, function (res2) {
+              busy(el, false);
+              if (res2 && res2.ok) { say("Removed"); loadAdmins(); }
+              else say((res2 && res2.error) || "Could not remove them.", true);
+            }, function () { busy(el, false); say("Could not reach the sheet.", true); });
+          }));
+          el.appendChild(row);
+        }
+        box.appendChild(el);
+      });
+    });
+  }
+
+  /* ---------- wiring ---------- */
+
+  $("inBtn").addEventListener("click", signIn);
+  $("pw").addEventListener("keydown", function (e) { if (e.key === "Enter") signIn(); });
+  $("u").addEventListener("keydown", function (e) { if (e.key === "Enter") $("pw").focus(); });
+  $("outBtn").addEventListener("click", function () { signOut(""); });
+  $("q").addEventListener("input", paintPeople);
+
+  Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function (b) {
+    b.addEventListener("click", function () {
+      Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function (x) { x.className = ""; });
+      b.className = "on";
+      Array.prototype.forEach.call(document.querySelectorAll(".panel"), function (p) { p.className = "panel"; });
+      $("tab-" + b.getAttribute("data-tab")).className = "panel on";
+    });
+  });
+
+  $("addStaff").addEventListener("click", function () {
+    var name = ($("newStaff").value || "").trim();
+    if (!name) { $("staffMsg").textContent = "Give them a name first."; return; }
+    $("addStaff").disabled = true;
+    ask("adminStaffAdd", { n: name }, function (res) {
+      $("addStaff").disabled = false;
+      if (res && res.ok) {
+        $("newStaff").value = "";
+        $("staffMsg").textContent = res.name + "'s code is " + res.code + " — tell them now, it is on the Gate tab too.";
+        loadStaff();
+      } else {
+        $("staffMsg").textContent = (res && res.error) || "Could not add them.";
+      }
+    }, function () { $("addStaff").disabled = false; $("staffMsg").textContent = "Could not reach the sheet."; });
+  });
+
+  $("addAdmin").addEventListener("click", function () {
+    var name = ($("newAdmin").value || "").trim();
+    var pw = ($("newAdminPw").value || "").trim();
+    $("addAdmin").disabled = true;
+    ask("adminAdminAdd", { n: name, pw: pw }, function (res) {
+      $("addAdmin").disabled = false;
+      if (res && res.ok) {
+        $("newAdmin").value = ""; $("newAdminPw").value = "";
+        $("adminMsg").textContent = res.name + " can sign in now. Tell them the password yourself.";
+        loadAdmins();
+      } else {
+        $("adminMsg").textContent = (res && res.error) || "Could not add them.";
+      }
+    }, function () { $("addAdmin").disabled = false; $("adminMsg").textContent = "Could not reach the sheet."; });
+  });
+
+  /* ---------- opening ---------- */
+
+  if (me && me.u && me.p) { start(); }
+  else { setTimeout(function () { $("u").focus(); }, 120); }
+
+  window.__admin = { call: call, ask: ask, state: function () { return { me: me, people: people }; } };
+})();
 </script>
-
 </body>
 </html>

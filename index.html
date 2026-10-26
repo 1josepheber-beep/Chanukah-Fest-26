@@ -236,6 +236,13 @@
 
 .cf26 .cf26-wrap:has(> .cf26-hero-sub[data-cf-blank]) .cf26-kicker { margin-bottom: 0; }
 
+/* A blank heading is hidden by #cf-hide, but whatever sits under it
+   still carried the top margin that was meant to clear a heading -
+   leaving a hole of white with nothing above it. If the heading (and
+   the lede under it) are blank, there is nothing to clear. */
+.cf26 .cf26-wrap > h2[data-cf-blank] + .cf26-lede[data-cf-blank] + * { margin-top: 0; }
+.cf26 .cf26-wrap > h2[data-cf-blank] + *:not(.cf26-lede) { margin-top: 0; }
+
 .cf26 .cf26-kicker {
   display: inline-block;
   font-size: 13.5px;

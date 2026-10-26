@@ -71,7 +71,13 @@ body { display: flex; flex-direction: column; }
   border-bottom: 1px solid rgba(255,255,255,.12);
 }
 .bar b { font-size: 15px; font-weight: 700; }
-.bar .who { font-size: 12.5px; color: #9FB4CC; margin-left: auto; text-align: right; line-height: 1.35; }
+.bar .who {
+  font: inherit; font-size: 12.5px; color: #9FB4CC; margin-left: auto;
+  text-align: right; line-height: 1.35;
+  background: none; border: 0; padding: 4px 2px 4px 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.bar .who u { text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,.4); }
 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); flex: 0 0 auto; }
 .dot.off { background: var(--amber); }
 
@@ -341,7 +347,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 <div class="bar">
   <span class="dot" id="dot"></span>
   <b>Gate</b>
-  <span class="who" id="who"></span>
+  <button class="who" id="who" type="button"></button>
 </div>
 
 <div class="stage" id="stage">
@@ -386,7 +392,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 (function () {
   "use strict";
 
-  var BUILD = "26 Oct · 13:05";     /* shown in the bar, so a stale page shows itself */
+  var BUILD = "26 Oct · 13:30";     /* shown in the bar, so a stale page shows itself */
   var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
   var TAG = "CF26:";
 
@@ -537,7 +543,11 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   /* ---------------- check-ins waiting to be sent ---------------- */
 
   function queuePush(ticket, how, names) {
+    /* Stamp the volunteer's own code on the item. Without it a scan
+       taken by one volunteer and sent after the next one signs in
+       would be logged against the wrong person at the door. */
     state.queue.push({ t: ticket, at: Date.now(), how: how || "scan",
+                       key: state.code,
                        who: (names || []).join("; ") });
     save(KEY_QUEUE, state.queue);
     paintDot();
@@ -550,7 +560,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     draining = true;
 
     var item = state.queue[0];
-    call({ action: "checkin", key: state.code, t: item.t,
+    call({ action: "checkin", key: item.key || state.code, t: item.t,
            how: item.how === "manual" ? "manual" : "scan",
            who: item.who || "" }, function (res) {
       draining = false;
@@ -845,9 +855,59 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   }
 
   function paintWho() {
-    var line = state.who ? state.who + "<br>" : "";
+    var line = state.who ? "<u>" + esc(state.who) + "</u><br>" : "";
     $("who").innerHTML = line + listCount() + " registered &middot; " + BUILD;
   }
+
+  function esc(t) {
+    return String(t).replace(/[&<>"]/g, function (c) {
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c];
+    });
+  }
+
+  /* ---------------- handing the phone over ----------------
+
+     A volunteer going on break passes the phone to the next one, who
+     needs their own code on it so the door log credits the right
+     person. Anything already scanned but not yet sent keeps the code
+     of whoever took it, so a handover mid-queue still logs correctly.
+
+     The guest list stays on the phone: it carries no phone numbers,
+     emails or addresses (the roster strips them), and the next
+     volunteer may well sign in with no signal to fetch a new one. */
+
+  function signOut() {
+    state.code = "";
+    state.who = "";
+    try { localStorage.removeItem(KEY_CODE); localStorage.removeItem(KEY_WHO); } catch (e) {}
+    stopCamera();
+    clearResult();
+    pending = null;
+    $("code").value = "";
+    $("signinErr").textContent = "";
+    $("signin").className = "panel show";
+    paintWho(); paintDot();
+    setTimeout(function () { $("code").focus(); }, 140);
+  }
+
+  $("who").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    if (!state.code) return;
+
+    var waiting = state.queue.length;
+    $("askT").textContent = "Hand the phone over?";
+    $("askS").textContent = (state.who ? state.who + " will be signed out. " : "") +
+      "The next volunteer types their own code." +
+      (waiting ? " " + waiting + (waiting === 1 ? " scan has" : " scans have") +
+                 " not reached the sheet yet \u2014 they will send once there is" +
+                 " signal, still credited to " + (state.who || "this gate") + "."
+                : "");
+    $("askGo").textContent = "Sign out";
+    $("askSkip").textContent = "Stay signed in";
+    afterAsk = signOut;
+    askIsSignOut = true;
+    $("ask").className = "ask show";
+  });
 
   /* How many people are inside according to the sheet, counted over
      the whole list. It used to show this phone's own session count,
@@ -902,6 +962,19 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
   var ctx = canvas.getContext("2d", { willReadFrequently: true });
   var scanning = false;
   var lastSeen = "", lastAt = 0;
+
+  var askIsSignOut = false;
+
+  function stopCamera() {
+    scanning = false;
+    try {
+      if (state.stream) {
+        state.stream.getTracks().forEach(function (t) { try { t.stop(); } catch (e) {} });
+      }
+    } catch (e) {}
+    state.stream = null;
+    try { $("video").srcObject = null; } catch (e) {}
+  }
 
   function startCamera() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -1117,11 +1190,24 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
     $("ask").className = "ask show";
   }
 
-  function closeAsk() { $("ask").className = "ask"; afterAsk = null; }
+  function closeAsk() {
+    $("ask").className = "ask";
+    afterAsk = null;
+    askIsSignOut = false;
+    /* put the words back, so the next unconfirmed scan reads right */
+    $("askT").textContent = "Nobody has been let in yet";
+    $("askSkip").textContent = "Scan the next one anyway";
+  }
 
   $("askGo").addEventListener("click", function (ev) {
     ev.stopPropagation();
     var go = afterAsk;
+
+    /* The same panel asks two different questions. For a handover
+       there is nothing to commit - running the check-in path here
+       would let in whoever happened to be on screen. */
+    if (askIsSignOut) { closeAsk(); if (go) go(); return; }
+
     commit();
     $("ask").className = "ask";
     afterAsk = null;
@@ -1132,6 +1218,7 @@ input[type=text]::placeholder { color: rgba(255,255,255,.3); letter-spacing: 2px
 
   $("askSkip").addEventListener("click", function (ev) {
     ev.stopPropagation();
+    if (askIsSignOut) { closeAsk(); return; }   /* "Stay signed in" */
     var go = afterAsk;
     pending = null;
     closeAsk();

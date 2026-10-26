@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,viewport-fit=cover">
-<title data-cf="page.9a53bfe6">Chanukah Fest 2026 Raffle</title>
+<title data-cf="page.9a53bfe6">Registration — Chanukah Fest 2026</title>
 <meta name="description" content="Enter the free raffle at Chanukah Fest 2026, Houston City Hall.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap">
 
@@ -461,6 +461,33 @@ html, body { overflow-x: clip; max-width: 100%; }
   height: auto;
   margin: 0 auto;
 }
+
+/* ---- the embedded booking form -------------------------------------- */
+.formframe {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.formframe iframe {
+  display: block;
+  width: 100%;
+  height: 1650px;
+  border: 0;
+}
+/* shown once their form has been sent */
+.cf-after { display: none; margin-top: 18px; text-align: center; }
+.cf-after.show { display: block; }
+.cf-after p { font-size: 15px; color: var(--muted); line-height: 1.6; margin: 0 0 14px; }
+.cf-after .cf26-btn { display: inline-block; }
+
+.framefall { margin-top: 14px; font-size: 13.5px; color: var(--muted); text-align: center; }
+.framefall a { font-weight: 700; }
+@media (max-width: 640px) {
+  .formframe iframe { height: 1850px; }   /* their form stacks, so it grows */
+}
 </style>
 <!-- How the site is used. Counts visits and which buttons get pressed;
      analytics.js below gives every button a name worth reading. -->
@@ -476,6 +503,94 @@ html, body { overflow-x: clip; max-width: 100%; }
 <script src="../assets/to-top.js?v=20261022x" defer=""></script>
 <script src="../assets/content.js?v=20261022z2" defer=""></script>
 <script src="../assets/analytics.js?v=20261024a" defer=""></script>
+<script>
+/* Fit the frame to their form, if their form offers to say how tall it is.
+
+   A page inside a frame from another site cannot be measured from out
+   here -- the browser seals that off, and rightly. The one way across is
+   for the page inside to volunteer the number, which many booking tools
+   do without being asked.
+
+   So this listens. If a message arrives from their server carrying a
+   height, the frame takes it, and fields added to the form from now on
+   simply make it taller on its own. If no message ever comes, nothing
+   happens and the set height stands.
+
+   Only their origin is listened to, and only a sane number is accepted:
+   a frame is a door, and this is the hinge. */
+(function () {
+  var FROM = "https://forms.chabadms.com";
+  if (!window.addEventListener) return;
+
+  /* Their form is on their server, so nothing here can read it. But a
+     frame still tells its own page when it loads something new, even
+     when the contents stay private -- so the first load is the form,
+     and any load after that is what came back from sending it.
+
+     That is enough to stop the worst of it: their thank-you is a
+     short page sitting in a frame built tall enough for a long form,
+     which leaves a screen and a half of nothing to scroll past. So
+     the frame shrinks to fit, the page scrolls to it, and a way back
+     to the homepage appears.
+
+     If their form ever stops navigating on submit, no load fires, and
+     the page simply behaves as it does today. */
+  var loads = 0;
+
+  /* This script sits in the head, where the frame does not exist
+     yet, so the listener waits for the document to be built. */
+  function watchFrame() {
+    var pageFrame = document.querySelector(".formframe iframe");
+    if (!pageFrame) return;
+
+    pageFrame.addEventListener("load", function () {
+      loads++;
+      if (loads < 2) return;
+
+      pageFrame.style.height = "820px";
+
+      var after = document.getElementById("cfAfter");
+      if (after) after.className = "cf-after show";
+
+      try {
+        var band = document.querySelector(".formframe");
+        if (band && band.scrollIntoView) {
+          band.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      } catch (e) {
+        window.scrollTo(0, 0);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", watchFrame);
+  } else {
+    watchFrame();
+  }
+
+  window.addEventListener("message", function (ev) {
+    if (ev.origin !== FROM) return;
+
+    /* Looked up now rather than when this script ran: this sits in the
+       head, where the frame does not exist yet. */
+    var frame = document.querySelector(".formframe iframe");
+    if (!frame) return;
+
+    var d = ev.data, h = 0;
+    if (typeof d === "number") h = d;
+    else if (d && typeof d === "object") h = d.height || d.scrollHeight || d.frameHeight || 0;
+    else if (typeof d === "string") {
+      var m = d.match(/(\d{3,5})/);          // "height:1820", "1820px", bare digits
+      if (m) h = parseInt(m[1], 10);
+    }
+
+    h = Math.round(h);
+    if (h > 300 && h < 20000) frame.style.height = h + "px";
+  }, false);
+})();
+</script>
+
 <link rel="icon" href="../images/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../images/icon-180.png">
 <meta property="og:title" content="Chanukah Fest Raffle">
@@ -536,89 +651,38 @@ html, body { overflow-x: clip; max-width: 100%; }
 
 <div class="form-band" data-cf-sec="form-band">
   <div class="wrap">
-    <h2 data-cf="form-band.28f00c1c">Enter the raffle</h2>
-    <p class="hint" style="margin-bottom:20px;" data-cf="form-band.b2b5b292">Takes about thirty seconds. One form per household.</p><span data-cf="form-band.9a50cf3d">
 
-    <!-- The form posts into this, so the page never navigates away. -->
-    </span><iframe name="sink" id="sink" title="submission" style="display:none;width:0;height:0;border:0"></iframe>
+    <h2>Register</h2>
+    <p class="lede">Add everyone coming, and give where you can.</p>
 
-    <div class="done" id="done" tabindex="-1">
-      <span class="badge" data-cf="form-band.6c72638c">YOU'RE IN</span>
-      <h2 data-cf="form-band.184eb63a">Thank you!</h2>
-      <p id="doneMsg"></p>
-      <div class="done-list">
-        <div class="done-list-label" id="doneCount"></div>
-        <div id="doneNames"></div>
-      </div>
+    <!-- The Chabad booking form, on their server. Nothing here can reach
+         inside it: a frame from another site is sealed off by the browser,
+         so its width, height, fonts and wording are theirs, not ours.
 
-      <a class="done-next" href="../" data-cf-href="form-band.2124692f" data-cf="form-band.d90dd689">Back to Chanukah Fest 2026</a>
-
-      <div class="done-more">
-        <a href="../sponsor/" data-cf-href="form-band.987469ad" data-cf="form-band.76d657b1">Sponsor the festival</a>
-        <a href="../vendor/" data-cf-href="form-band.13b72917" data-cf="form-band.1b1129aa">Reserve a booth</a>
-        <a href="../#location" data-cf-href="form-band.331d4aa4" data-cf="form-band.88b84613">Getting there</a>
-      </div>
+         Width is ours to give, so it gets all of it. Height is not -- the
+         page inside cannot tell us how tall it has become, so the frame is
+         set tall enough for the longest version of their form and scrolls
+         within itself if it ever needs more. -->
+    <div class="formframe">
+      <iframe
+        src="https://forms.chabadms.com/eventreservation.aspx?serialnumber=0111-1161-5073&amp;formid=5050"
+        title="Chanukah Fest registration"
+        loading="lazy"
+        scrolling="auto"></iframe>
     </div>
 
-    <form id="raffle" method="POST" novalidate="" target="sink" action="https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec">
+    <div class="cf-after" id="cfAfter">
+      <p>Your pass will arrive by email shortly &mdash; keep it on your phone
+         for the gate on Smith Street.</p>
+      <a class="cf26-btn" href="../" data-ev="after_register_home">Back to the homepage</a>
+    </div>
 
-      <input type="hidden" name="source" value="Chanukah Fest 2026 raffle page">
+    <p class="framefall">
+      Form not loading?
+      <a href="https://forms.chabadms.com/eventreservation.aspx?serialnumber=0111-1161-5073&amp;formid=5050"
+         target="_blank" rel="noopener">Open it in its own tab</a>.
+    </p>
 
-      <div class="hp" aria-hidden="true">
-        <label for="company" data-cf="form-band.7a199499">Company</label>
-        <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
-      </div>
-
-      <div class="namerow">
-        <div class="field" data-check="required">
-          <label for="first"><span data-cf="form-band.7e568a90">First name </span><span class="req">*</span></label>
-          <input type="text" id="first" name="first" autocomplete="given-name">
-          <div class="err" data-cf="form-band.7311e710">Please enter your first name.</div>
-        </div>
-        <div class="field" data-check="required">
-          <label for="last"><span data-cf="form-band.adec36a8">Last name </span><span class="req">*</span></label>
-          <input type="text" id="last" name="last" autocomplete="family-name">
-          <div class="err" data-cf="form-band.1e148cc2">Please enter your last name.</div>
-        </div>
-      </div>
-
-      <div class="field agefield">
-        <label for="age"><span data-cf="form-band.ff9f1ff3">Age </span><span class="opt" data-cf="form-band.c7cdc43e">— optional</span></label>
-        <input type="number" id="age" name="age" min="0" max="120" inputmode="numeric">
-      </div>
-
-      <div class="field" data-check="phone">
-        <label for="phone"><span data-cf="form-band.8e5c12de">Mobile number </span><span class="req">*</span></label>
-        <div class="hint" data-cf="form-band.d3534f9a">This is how we reach you if you win.</div>
-        <input type="tel" id="phone" name="phone" autocomplete="tel">
-        <div class="err" data-cf="form-band.74f8ebb1">Please enter a phone number with at least 10 digits.</div>
-      </div>
-
-      <div class="field" data-check="email">
-        <label for="email"><span data-cf="form-band.84add5b2">Email </span><span class="req">*</span></label>
-        <input type="email" id="email" name="email" autocomplete="email">
-        <div class="err" data-cf="form-band.d2306dd8">Please enter a valid email address.</div>
-      </div>
-
-      <div class="field">
-        <label for="address">Address</label>
-        <input type="text" id="address" name="address" autocomplete="street-address">
-      </div>
-
-      <div class="fam">
-        <h3 data-cf="form-band.a9637373">Coming with family?</h3>
-        <p class="hint" style="margin-top:4px;"><span data-cf="form-band.5c0bea97">Add everyone in your group, up to ten. Children included — </span><strong data-cf="form-band.d619b0dd">each person gets their own chance to win.</strong></p>
-
-        <div id="famRows"></div>
-
-        <button type="button" class="add" id="addBtn" data-cf="form-band.fa5aff3a">+ Add a family member</button>
-      </div>
-
-      <button type="submit" class="submit" id="submitBtn" data-ev="submit_raffle">Submit</button>
-      <div class="summary" id="summary"></div>
-      <p class="after" data-cf="form-band.7e68a088" data-cf-blank=""></p>
-
-    </form>
   </div>
 </div>
 
@@ -641,286 +705,4 @@ html, body { overflow-x: clip; max-width: 100%; }
     Questions? Call </span><a href="tel:7137740300" data-cf-href="contact.57805bb0" data-cf="contact.5b3e2939">713-774-0300</a>
   </div>
 </div>
-
-<template id="famTemplate" data-cf-sec="block6">
-  <div class="fam-row">
-    <div class="fam-head">
-      <span class="fam-n"></span>
-      <button type="button" class="remove" data-cf="block6.e963907d">Remove</button>
-    </div>
-    <div class="namerow">
-      <div class="field" data-check="famname">
-        <label><span data-cf="block6.7e568a90">First name </span><span class="req">*</span></label>
-        <input type="text" class="fam-first" autocomplete="off">
-        <div class="err" data-cf="block6.fe6dd7bf">Please enter a first name.</div>
-      </div>
-      <div class="field" data-check="famname">
-        <label><span data-cf="block6.adec36a8">Last name </span><span class="req">*</span></label>
-        <input type="text" class="fam-last" autocomplete="off">
-        <div class="err" data-cf="block6.bc3c8663">Please enter a last name.</div>
-      </div>
-    </div>
-    <div class="field agefield">
-      <label><span data-cf="block6.ff9f1ff3">Age </span><span class="opt" data-cf="block6.c7cdc43e">— optional</span></label>
-      <input type="number" class="fam-age" min="0" max="120" inputmode="numeric">
-    </div>
-  </div>
-</template>
-
-<script>
-(function () {
-  "use strict";
-
-  var MAX_FAMILY = 10;
-
-  var form     = document.getElementById("raffle");
-  var rowsBox  = document.getElementById("famRows");
-  var addBtn   = document.getElementById("addBtn");
-  var tmpl     = document.getElementById("famTemplate");
-  var summary  = document.getElementById("summary");
-  var uid      = 0;
-
-  /* ---------------- validity rules ---------------- */
-
-  function digits(v) { return String(v || "").replace(/\D/g, ""); }
-
-  // Deliberately loose. A real address can look like almost anything;
-  // this only catches obvious typos like a missing @ or domain.
-  function looksLikeEmail(v) {
-    v = String(v || "").trim();
-    return v.length >= 5 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-  }
-
-  function fieldOf(input) { return input.closest(".field"); }
-
-  /** Is this one field acceptable right now? */
-  function isValid(field) {
-    var input = field.querySelector("input");
-    if (!input) return true;
-    var v = input.value.trim();
-
-    switch (field.dataset.check) {
-      case "required":
-        return v.length > 0;
-      case "phone":
-        return digits(v).length >= 10;
-      case "email":
-        return looksLikeEmail(v);
-      case "famname":
-        // Only required once somebody has started filling the row in.
-        return rowHasContent(field.closest(".fam-row")) ? v.length > 0 : true;
-      default:
-        return true;
-    }
-  }
-
-  /** Has anything at all been typed into this family row? */
-  function rowHasContent(row) {
-    if (!row) return false;
-    var vals = row.querySelectorAll("input");
-    for (var i = 0; i < vals.length; i++) {
-      if (vals[i].value.trim()) return true;
-    }
-    return false;
-  }
-
-  function mark(field, bad) {
-    field.classList.toggle("bad", bad);
-    var row = field.closest(".fam-row");
-    if (row) {
-      row.classList.toggle("bad-row", !!row.querySelector(".field.bad"));
-    }
-  }
-
-  /* ---------------- family rows ---------------- */
-
-  function renumber() {
-    var rows = rowsBox.querySelectorAll(".fam-row");
-    for (var i = 0; i < rows.length; i++) {
-      rows[i].querySelector(".fam-n").textContent = "Family member " + (i + 1);
-    }
-    addBtn.disabled = rows.length >= MAX_FAMILY;
-    addBtn.textContent = rows.length >= MAX_FAMILY
-      ? "That's the maximum of ten"
-      : (rows.length ? "+ Add another" : "+ Add a family member");
-  }
-
-  function addRow(focusIt) {
-    if (rowsBox.querySelectorAll(".fam-row").length >= MAX_FAMILY) return;
-
-    var row = tmpl.content.firstElementChild.cloneNode(true);
-    uid++;
-
-    // Unique ids so every label points at its own input.
-    var pairs = [[".fam-first", "famfirst"], [".fam-last", "famlast"], [".fam-age", "famage"]];
-    for (var i = 0; i < pairs.length; i++) {
-      var inp = row.querySelector(pairs[i][0]);
-      var id = pairs[i][1] + uid;
-      inp.id = id;
-      inp.closest(".field").querySelector("label").setAttribute("for", id);
-    }
-
-    row.querySelector(".remove").addEventListener("click", function () {
-      row.remove();
-      renumber();
-      refreshRowValidity();
-    });
-
-    rowsBox.appendChild(row);
-    renumber();
-    if (focusIt) row.querySelector(".fam-first").focus();
-    return row;
-  }
-
-  /* A row's names stop being required the moment the row is emptied
-     again, so clearing a half-typed row is a valid way out. */
-  function refreshRowValidity() {
-    var rows = rowsBox.querySelectorAll(".fam-row");
-    for (var i = 0; i < rows.length; i++) {
-      var fields = rows[i].querySelectorAll(".field.bad");
-      for (var k = 0; k < fields.length; k++) {
-        if (isValid(fields[k])) mark(fields[k], false);
-      }
-    }
-  }
-
-  addBtn.addEventListener("click", function () { addRow(true); });
-
-  /* ---------------- live error clearing ---------------- */
-
-  form.addEventListener("input", function (e) {
-    var input = e.target;
-    if (!input.matches || !input.matches("input")) return;
-    var field = fieldOf(input);
-    if (field && field.classList.contains("bad") && isValid(field)) {
-      mark(field, false);
-      if (!form.querySelector(".field.bad")) summary.classList.remove("show");
-    }
-    if (input.closest(".fam-row")) refreshRowValidity();
-  });
-
-  // Checking on the way out of a field catches mistakes earlier than
-  // waiting for submit, without nagging while they are still typing.
-  form.addEventListener("focusout", function (e) {
-    var input = e.target;
-    if (!input.matches || !input.matches("input")) return;
-    var field = fieldOf(input);
-    if (!field || !field.dataset.check) return;
-    if (input.value.trim() === "" && field.dataset.check !== "famname") return;
-    mark(field, !isValid(field));
-  });
-
-  /* ---------------- submit ---------------- */
-
-  form.addEventListener("submit", function (e) {
-    var fields = form.querySelectorAll(".field[data-check]");
-    var firstBad = null;
-    var count = 0;
-
-    for (var i = 0; i < fields.length; i++) {
-      var ok = isValid(fields[i]);
-      mark(fields[i], !ok);
-      if (!ok) {
-        count++;
-        if (!firstBad) firstBad = fields[i];
-      }
-    }
-
-    if (firstBad) {
-      e.preventDefault();
-      summary.textContent = count === 1
-        ? "One field needs your attention — it's highlighted above."
-        : count + " fields need your attention — they're highlighted above.";
-      summary.classList.add("show");
-
-      var input = firstBad.querySelector("input");
-      firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
-      setTimeout(function () { try { input.focus({ preventScroll: true }); } catch (err) { input.focus(); } }, 320);
-      return;
-    }
-
-    // Valid. Give the family inputs the names the script expects, in
-    // order, skipping any row left completely blank.
-    var rows = rowsBox.querySelectorAll(".fam-row");
-    var n = 0;
-    for (var r = 0; r < rows.length; r++) {
-      var first = rows[r].querySelector(".fam-first");
-      var last  = rows[r].querySelector(".fam-last");
-      var age   = rows[r].querySelector(".fam-age");
-
-      if (!rowHasContent(rows[r])) {
-        first.removeAttribute("name");
-        last.removeAttribute("name");
-        age.removeAttribute("name");
-        continue;
-      }
-
-      n++;
-      first.name = "fam" + n + "_first";
-      last.name  = "fam" + n + "_last";
-      age.name   = "fam" + n + "_age";
-    }
-
-    summary.classList.remove("show");
-
-    var btn = document.getElementById("submitBtn");
-    btn.disabled = true;
-    btn.textContent = "Entering you…";
-
-    // Everyone on this entry, for the confirmation below.
-    var people = [nameOf("first", "last")];
-    var frows = rowsBox.querySelectorAll(".fam-row");
-    for (var z = 0; z < frows.length; z++) {
-      if (!rowHasContent(frows[z])) continue;
-      var nm = (frows[z].querySelector(".fam-first").value.trim() + " " +
-                frows[z].querySelector(".fam-last").value.trim()).trim();
-      var ag = frows[z].querySelector(".fam-age").value.trim();
-      people.push(ag ? nm + " (" + ag + ")" : nm);
-    }
-
-    submitted = true;
-    showDone(people);
-    // The browser carries on and posts into the hidden frame.
-  });
-
-  function nameOf(a, b) {
-    return (document.getElementById(a).value.trim() + " " +
-            document.getElementById(b).value.trim()).trim();
-  }
-
-  /* ---------------- confirmation, in place ---------------- */
-
-  var submitted = false;
-
-  function showDone(people) {
-    document.getElementById("doneMsg").textContent = people.length > 1
-      ? "All " + people.length + " of you are in the draw, each with your own chance to win. " +
-        "Winners are announced from the main stage throughout the afternoon — stay close and listen for your names."
-      : "You are entered in the Chanukah Fest raffle. Winners are announced from the main stage " +
-        "throughout the afternoon — stay close and listen for your name.";
-
-    document.getElementById("doneCount").textContent =
-      people.length === 1 ? "ENTERED" : people.length + " PEOPLE ENTERED";
-
-    var box = document.getElementById("doneNames");
-    box.textContent = "";
-    for (var i = 0; i < people.length; i++) {
-      var d = document.createElement("div");
-      d.textContent = people[i];
-      box.appendChild(d);
-    }
-
-    form.hidden = true;
-    var done = document.getElementById("done");
-    done.classList.add("show");
-    done.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(function () { try { done.focus({ preventScroll: true }); } catch (e) {} }, 300);
-  }
-
-  renumber();
-})();
-</script>
-
-
-
 </body></html>

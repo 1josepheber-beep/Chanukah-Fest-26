@@ -323,10 +323,18 @@
   background-size: 100% 100%;
 }
 
-.vf26 #vf-food:checked + .vf26-tier { counter-increment: subtotal 1500; }
+/* These four numbers are a COPY of the prices printed on the cards,
+   and they had drifted: food was still 1500 while the card said
+   $2,500, so ticking food and artisan totalled $2,500 instead of
+   $3,500 - and looked like the second tick had not counted.
+
+   They are kept only as the no-JavaScript fallback. The script at
+   the end of the page adds up the prices read off the cards
+   themselves, so changing a price in one place is now enough. */
+.vf26 #vf-food:checked + .vf26-tier { counter-increment: subtotal 2500; }
 .vf26 #vf-artisan:checked + .vf26-tier { counter-increment: subtotal 1000; }
-.vf26 #vf-nonprofit:checked + .vf26-tier { counter-increment: subtotal 750; }
-.vf26 #vf-activity:checked + .vf26-tier { counter-increment: subtotal 550; }
+.vf26 #vf-nonprofit:checked + .vf26-tier { counter-increment: subtotal 1000; }
+.vf26 #vf-activity:checked + .vf26-tier { counter-increment: subtotal 1000; }
 
 .vf26 .vf26-total {
   display: flex;
@@ -349,6 +357,10 @@
   font-weight: 800;
   color: var(--gold) !important;
 }
+
+/* The script fills this in, comma and all. Without it the counter
+   above still shows a correct number, just without the comma. */
+.vf26 .vf26-total-amount[data-total]::after { content: attr(data-total); }
 
 .vf26 .vf26-total-note {
   font-size: 13.5px;
@@ -1173,4 +1185,47 @@ Requires health permit.</span>
 
 
 
+<script>
+/* The booth total.
+
+   This used to be done entirely with a CSS counter, which meant the
+   prices were written down twice: once on the card and once in the
+   stylesheet. They drifted, and the total went wrong in a way that
+   looked like a tick had been ignored.
+
+   So the price printed on the card is now the only price. Change a
+   card and the total follows. The CSS counter is still there and
+   still correct, as the answer for a browser with no JavaScript. */
+(function () {
+  var picker = document.querySelector(".vf26-tiers");
+  var out    = document.querySelector(".vf26-total-amount");
+  if (!picker || !out) return;
+
+  var boxes = picker.querySelectorAll('input[type="checkbox"]');
+  if (!boxes.length) return;
+
+  /* "$2,500" -> 2500. Anything unreadable counts as nothing rather
+     than as NaN, which would wipe out the whole total. */
+  function priceOf(box) {
+    var card = document.querySelector('label[for="' + box.id + '"]');
+    var tag  = card && card.querySelector(".vf26-tier-price");
+    if (!tag) return 0;
+    var n = parseFloat(String(tag.textContent).replace(/[^0-9.]/g, ""));
+    return isFinite(n) ? n : 0;
+  }
+
+  function paint() {
+    var sum = 0;
+    for (var i = 0; i < boxes.length; i++) {
+      if (boxes[i].checked) sum += priceOf(boxes[i]);
+    }
+    out.setAttribute("data-total", "$" + sum.toLocaleString("en-US"));
+  }
+
+  for (var i = 0; i < boxes.length; i++) {
+    boxes[i].addEventListener("change", paint);
+  }
+  paint();            /* and on load, in case the browser kept the ticks */
+})();
+</script>
 </body></html>

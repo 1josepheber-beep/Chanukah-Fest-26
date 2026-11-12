@@ -546,8 +546,7 @@ h2:first-child { margin-top: 4px; }
 
   function setWant(w) {
     want = w;
-    paintPeople();
-    try { $("list").scrollIntoView({ block: "start", behavior: "smooth" }); } catch (e) {}
+    paintPeople();      /* and stay put - no jumping the page around */
   }
 
   [].forEach.call(document.querySelectorAll("#chips button, .sum"), function (b) {

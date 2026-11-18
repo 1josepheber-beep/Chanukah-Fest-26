@@ -974,6 +974,10 @@
 .cf26 .cf26-contact a { color: var(--gold) !important; font-weight: 600; }
 
 .cf26 .cf26-contact strong { color: #FFFFFF !important; }
+/* The organisation's name links home. Kept white, so the footer looks
+   the same; it only reveals itself as a link under the finger. */
+.cf26 .cf26-contact a.cf26-org { color: #FFFFFF !important; text-decoration: none; }
+.cf26 .cf26-contact a.cf26-org:hover strong { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ============================ RESPONSIVE ============================ */
 @media (max-width: 900px) {
@@ -1788,7 +1792,7 @@ Thank you for helping us keep this celebration safe and joyful for all families!
       </div>
 
       <div class="cf26-contact">
-        <strong data-cf="close.2b8232f4">Chabad Outreach of Houston</strong><br><span data-cf="close.ce86c2b1">
+        <a class="cf26-org" href="https://chabadoutreach.org" target="_blank" rel="noopener"><strong data-cf="close.2b8232f4">Chabad Outreach of Houston</strong></a><br><span data-cf="close.ce86c2b1">
         11000 Fondren Street, Suite B104, Houston, TX 77096</span><br>
         <a href="tel:7137740300" data-cf-href="close.57805bb0" data-cf="close.5b3e2939">713-774-0300</a><span data-cf="close.7cf96120"> &nbsp;|&nbsp; </span><a href="mailto:HoustonChanukahFest@ChabadOutreach.org" data-cf-href="close.81a1890c" data-cf="close.177dd039">HoustonChanukahFest@ChabadOutreach.org</a>
       </div>

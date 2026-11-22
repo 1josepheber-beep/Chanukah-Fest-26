@@ -16,7 +16,7 @@
 // Bump this whenever you paste a new copy in, so you can tell at a
 // glance which version Google is actually serving. Open the /exec URL
 // in a browser and the version is printed on the page.
-var VERSION = 'v24 — the big lists are cached for 30 seconds';
+var VERSION = 'v25 — lists, codes and logins cached';
 
 var SHEET_NAME = 'Entries';
 var WINNERS_NAME = 'Winners';
@@ -2636,12 +2636,37 @@ function startRegistrationIntake() {
 /* ---------- the gate ---------- */
 
 /** The staff row for a code, or null. */
+/* The staff and admin tabs are tiny and almost never change, yet
+   every single request read one of them before doing anything else -
+   about a second each time. They are now kept for a minute and
+   forgotten the moment a volunteer or admin is added or removed. */
+var PEOPLE_CACHE_SECONDS = 60;
+
+function staffRows_() {
+  return cachedList_('staffRows', function () {
+    var sh = getStaffSheet_(), last = sh.getLastRow();
+    if (last < 2) return { rows: [] };
+    return { rows: sh.getRange(2, 1, last - 1, STAFF_HEADERS.length).getValues() };
+  }, PEOPLE_CACHE_SECONDS).rows;
+}
+
+function adminRows_() {
+  return cachedList_('adminRows', function () {
+    var sh = getAdminSheet_(), last = sh.getLastRow();
+    if (last < 2) return { rows: [] };
+    return { rows: sh.getRange(2, 1, last - 1, ADMIN_HEADERS.length).getValues() };
+  }, PEOPLE_CACHE_SECONDS).rows;
+}
+
+function forgetPeople_() {
+  var c = listCache_();
+  if (c) { try { c.removeAll(['staffRows', 'adminRows']); } catch (e) {} }
+}
+
 function findStaff_(code) {
   var c = trim_(code).toUpperCase();
   if (!c) return null;
-  var sh = getStaffSheet_(), last = sh.getLastRow();
-  if (last < 2) return null;
-  var rows = sh.getRange(2, 1, last - 1, STAFF_HEADERS.length).getValues();
+  var rows = staffRows_();
   for (var i = 0; i < rows.length; i++) {
     if (trim_(rows[i][S.CODE - 1]).toUpperCase() === c) {
       return { row: i + 2, name: trim_(rows[i][S.NAME - 1]), code: c };
@@ -2676,7 +2701,7 @@ function listCache_() {
   try { return CacheService.getScriptCache(); } catch (e) { return null; }
 }
 
-function cachedList_(key, build) {
+function cachedList_(key, build, seconds) {
   var c = listCache_();
   if (c) {
     try { var hit = c.get(key); if (hit) return JSON.parse(hit); } catch (e) {}
@@ -2685,7 +2710,7 @@ function cachedList_(key, build) {
   if (c) {
     try {
       var packed = JSON.stringify(fresh);
-      if (packed.length < 95000) c.put(key, packed, LIST_CACHE_SECONDS);  // the cache's own limit is 100KB
+      if (packed.length < 95000) c.put(key, packed, seconds || LIST_CACHE_SECONDS);  // the cache's own limit is 100KB
     } catch (e) {}
   }
   return fresh;
@@ -2884,7 +2909,7 @@ function bumpStaff_(staff, party) {
 /* ---------- adding volunteers, and trying the whole thing ---------- */
 
 /** Menu: add one person to the gate and show them their code. */
-function addCheckInVolunteer() {
+function addCheckInVolunteer__raw() {
   var ui = SpreadsheetApp.getUi();
   var ask = ui.prompt('Add someone to the gate',
     'Their name:', ui.ButtonSet.OK_CANCEL);
@@ -3578,14 +3603,19 @@ function findAdmin_(name, pass) {
   var n = trim_(name).toLowerCase(), pw = trim_(pass);
   if (!n || !pw) return null;
 
-  var sh = getAdminSheet_(), last = sh.getLastRow();
-  if (last < 2) return null;
-
-  var rows = sh.getRange(2, 1, last - 1, ADMIN_HEADERS.length).getValues();
+  var rows = adminRows_();
   for (var i = 0; i < rows.length; i++) {
     if (trim_(rows[i][A.NAME - 1]).toLowerCase() !== n) continue;
     if (trim_(rows[i][A.PASS - 1]) !== pw) continue;
-    try { sh.getRange(i + 2, A.SEEN).setValue(new Date()); } catch (e) {}
+    // "Last seen" used to be written on EVERY request - a sheet write
+    // per click. Once every five minutes per admin says the same thing.
+    try {
+      var c = listCache_(), stamp = 'seen:' + n;
+      if (!c || !c.get(stamp)) {
+        getAdminSheet_().getRange(i + 2, A.SEEN).setValue(new Date());
+        if (c) c.put(stamp, '1', 300);
+      }
+    } catch (e) {}
     return { row: i + 2, name: trim_(rows[i][A.NAME - 1]) };
   }
   return null;
@@ -3765,7 +3795,7 @@ function adminStaff_() {
   return { ok: true, list: out };
 }
 
-function adminAddStaff_(admin, name) {
+function adminAddStaff___raw(admin, name) {
   var n = trim_(name);
   if (!n) return { ok: false, error: 'Give them a name.' };
   var code = newStaffCode_();
@@ -3773,7 +3803,7 @@ function adminAddStaff_(admin, name) {
   return { ok: true, name: n, code: code };
 }
 
-function adminRemoveStaff_(admin, code) {
+function adminRemoveStaff___raw(admin, code) {
   var c = trim_(code).toUpperCase();
   var sh = getStaffSheet_(), last = sh.getLastRow();
   if (last < 2) return { ok: false, error: 'Nobody to remove.' };
@@ -3798,7 +3828,7 @@ function adminList_() {
   return { ok: true, list: out };          /* passwords never leave */
 }
 
-function adminAddAdmin_(admin, name, pass) {
+function adminAddAdmin___raw(admin, name, pass) {
   var n = trim_(name), pw = trim_(pass);
   if (!n) return { ok: false, error: 'Give them a name.' };
   if (pw.length < 6) return { ok: false, error: 'Six characters or more, please.' };
@@ -3818,7 +3848,7 @@ function findAdminByName_(name) {
   return 0;
 }
 
-function adminRemoveAdmin_(admin, name) {
+function adminRemoveAdmin___raw(admin, name) {
   var row = findAdminByName_(name);
   if (!row) return { ok: false, error: 'No admin by that name.' };
   if (trim_(name).toLowerCase() === trim_(admin.name).toLowerCase()) {
@@ -3837,7 +3867,7 @@ function adminRemoveAdmin_(admin, name) {
  * Run from the editor, once, so there is somebody who can sign in
  * before anybody can sign in to add them.
  */
-function createTheFirstAdmin() {
+function createTheFirstAdmin__raw() {
   var ui = SpreadsheetApp.getUi();
   var sh = getAdminSheet_();
   if (sh.getLastRow() > 1) {
@@ -3873,7 +3903,7 @@ function createTheFirstAdmin() {
  * tab, because a password nobody can look up is a password somebody
  * will be locked out by at six o'clock on a Sunday.
  */
-function setUpOfficeAdmins() {
+function setUpOfficeAdmins__raw() {
   var ui = SpreadsheetApp.getUi();
   var sh = getAdminSheet_();
   var made = [], already = [];
@@ -3973,4 +4003,34 @@ function sendMyselfATestPass() {
 function markWinner_(p) {
   try { return markWinner___raw(p); }
   finally { forgetLists_(); }
+}
+
+/* Writers to the staff and admin tabs forget the people cache. */
+function addCheckInVolunteer() {
+  try { return addCheckInVolunteer__raw(); }
+  finally { forgetPeople_(); }
+}
+function adminAddStaff_(admin, name) {
+  try { return adminAddStaff___raw(admin, name); }
+  finally { forgetPeople_(); }
+}
+function adminRemoveStaff_(admin, code) {
+  try { return adminRemoveStaff___raw(admin, code); }
+  finally { forgetPeople_(); }
+}
+function adminAddAdmin_(admin, name, pass) {
+  try { return adminAddAdmin___raw(admin, name, pass); }
+  finally { forgetPeople_(); }
+}
+function adminRemoveAdmin_(admin, name) {
+  try { return adminRemoveAdmin___raw(admin, name); }
+  finally { forgetPeople_(); }
+}
+function setUpOfficeAdmins() {
+  try { return setUpOfficeAdmins__raw(); }
+  finally { forgetPeople_(); }
+}
+function createTheFirstAdmin() {
+  try { return createTheFirstAdmin__raw(); }
+  finally { forgetPeople_(); }
 }

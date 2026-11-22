@@ -968,18 +968,26 @@ function restore() {
 var lastTransport = "none";
 var lastDetail = "";
 
-function buildUrl(params, cb) {
+/* The relay: the same request made to Google from a server, so a
+   laptop signed into several Google accounts (the one running the
+   draw, as likely as not) is not bounced with a 503. The <script>
+   fallback below still goes straight to Google. */
+var RELAY = "https://gcvbohdarppaolqhdnri.supabase.co/functions/v1/cf26-relay";
+
+function buildUrl(params, cb, viaRelay) {
   var qs = ["key=" + encodeURIComponent(CONFIG.KEY), "callback=" + cb, "t=" + Date.now()];
   for (var k in params) {
     if (params[k] !== undefined && params[k] !== null) {
       qs.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k]));
     }
   }
-  return CONFIG.ENDPOINT + "?" + qs.join("&");
+  return (viaRelay && RELAY ? RELAY : CONFIG.ENDPOINT) + "?" + qs.join("&");
 }
 
 /** Pulls the JSON out of  callback({...}) */
 function unwrap(text) {
+  var trimmed = String(text).replace(/^\s+/, "");
+  if (trimmed.charAt(0) === "{" || trimmed.charAt(0) === "[") return JSON.parse(trimmed);  /* the relay hands back bare JSON */
   var open = text.indexOf("(");
   var close = text.lastIndexOf(")");
   if (open < 0 || close <= open) {
@@ -1046,7 +1054,7 @@ function jsonp(params, done) {
     try { ctl = new AbortController(); } catch (e) {}
     var killer = setTimeout(function () { try { if (ctl) ctl.abort(); } catch (e) {} }, 12000);
 
-    fetch(url, {
+    fetch(buildUrl(params, cb, true), {
       method: "GET",
       mode: "cors",
       cache: "no-store",
@@ -1063,13 +1071,12 @@ function jsonp(params, done) {
         try {
           data = unwrap(txt);
         } catch (bad) {
-          // Google answered, just not with data. A script tag would be
-          // handed the same page, so retrying that way only wastes the
-          // twelve second timeout and leaves HTML being parsed as code.
-          finish({ ok: false, error: bad.message }, "direct", "");
+          // The relay answered, but not with data. Try Google directly
+          // before giving up, in case the relay itself is the problem.
+          viaScriptTag(bad.message);
           return;
         }
-        finish(data, "direct", "");
+        finish(data, "relay", "");
       })
       .catch(function (err) {
         clearTimeout(killer);

@@ -7,7 +7,12 @@
 <meta name="theme-color" content="#0A1E38">
 <title>Chanukah Fest — Admin</title>
 <link rel="icon" href="../images/icon-32.png">
-<link rel="apple-touch-icon" href="../images/icon-180.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fest Admin">
 
 <!--
   The office, on a phone.
@@ -158,6 +163,24 @@ h2:first-child { margin-top: 4px; }
   font-size: 13.5px; line-height: 1.5; box-shadow: 0 8px 26px rgba(0,0,0,.4); display: none; z-index: 30; }
 .banner.show { display: block; }
 .busy { opacity: .55; pointer-events: none; }
+
+/* The "put this on your home screen" card on the sign-in screen.
+   Hidden once the page is running as an installed app. */
+.install {
+  margin-top: 18px; padding: 14px 16px; border-radius: 12px;
+  background: rgba(240,180,41,.10); border: 1px solid rgba(240,180,41,.45);
+  font-size: 14px; line-height: 1.55; display: none;
+}
+.install.show { display: block; }
+.install b { display: block; font-size: 15px; margin-bottom: 4px; }
+.install button {
+  margin-top: 10px; width: 100%; padding: 13px; font: inherit; font-weight: 700;
+  font-size: 15px; border: 0; border-radius: 10px; background: #F0B429; color: #16202E;
+}
+.install .ios { display: none; }
+.install.ios .ios { display: block; }
+.install.ios .android { display: none; }
+@media (display-mode: standalone) { .install { display: none !important; } }
 </style>
 </head>
 
@@ -175,6 +198,13 @@ h2:first-child { margin-top: 4px; }
   <button class="go" id="inBtn" style="margin-top:16px">Sign in</button>
   <div class="err" id="inErr"></div>
   <p class="note">Don't use a password you use anywhere else. It is kept in plain text on the Admins tab of the spreadsheet, where anyone with the sheet can read it.</p>
+
+  <div class="install" id="install">
+    <b>Put the Admin page on your home screen</b>
+    <span class="android">Then it opens like an app, full screen, even with no signal &mdash; and nobody has to find the link again.
+      <button type="button" id="installGo">Add to home screen</button></span>
+    <span class="ios">Tap the <b style="display:inline">Share</b> button at the bottom of Safari, then <b style="display:inline">Add to Home Screen</b>. It will open like an app, full screen, even with no signal.</span>
+  </div>
 </div>
 
 <div id="app" style="display:none">
@@ -255,7 +285,7 @@ h2:first-child { margin-top: 4px; }
 (function () {
   "use strict";
 
-  var BUILD = "26 Oct \u00b7 12:00";
+  var BUILD = "21 Nov · 21:00";
   var ENDPOINT = "https://script.google.com/macros/s/AKfycby-nh9repj61bjYbGdydbV_UfX_kTBWSFeFK7xHbYGjvgQSP3fvw7gCOIfRKjW77mzu/exec";
 
   /* Same trap as the gate: GitHub tells phones to keep this page for
@@ -804,6 +834,35 @@ h2:first-child { margin-top: 4px; }
   else { setTimeout(function () { $("u").focus(); }, 120); }
 
   window.__admin = { call: call, ask: ask, state: function () { return { me: me, people: people }; } };
+
+  /* ---------------- installing as an app ----------------
+     Registers the service worker (offline + installable) and shows the
+     sign-in screen a card explaining how to add it to the home screen.
+     Android fires beforeinstallprompt and gives us a button; iPhone
+     never does, so it gets written instructions instead. */
+  (function () {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    }
+    var standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+                     window.navigator.standalone === true;
+    var card = document.getElementById("install");
+    if (!card || standalone) return;
+    var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+    var deferred = null;
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault(); deferred = e; card.className = "install show";
+    });
+    if (isIOS) { card.className = "install show ios"; }
+    var btn = document.getElementById("installGo");
+    if (btn) btn.addEventListener("click", function () {
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; card.className = "install"; });
+    });
+    window.addEventListener("appinstalled", function () { card.className = "install"; });
+  })();
+
 })();
 </script>
 </body>

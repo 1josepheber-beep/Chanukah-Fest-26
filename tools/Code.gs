@@ -16,7 +16,7 @@
 // Bump this whenever you paste a new copy in, so you can tell at a
 // glance which version Google is actually serving. Open the /exec URL
 // in a browser and the version is printed on the page.
-var VERSION = 'v25 — lists, codes and logins cached';
+var VERSION = 'v26 — the draw takes an admin login';
 
 var SHEET_NAME = 'Entries';
 var WINNERS_NAME = 'Winners';
@@ -541,7 +541,11 @@ function doGet(e) {
     return ContentService.createTextOutput(ab).setMimeType(ContentService.MimeType.JSON);
   }
 
-  if (p.callback && p.key === DRAW_KEY) {
+  // The draw. Used to insist on a JSONP callback; the relay strips
+  // that, so through the relay this branch was skipped and the draw
+  // was handed the status page below instead of its entries. Plain
+  // JSON when there is no callback, JSONP when there is.
+  if (drawAllowed_(p)) {
     var payload;
     try {
       if (p.action === 'won')       payload = markWinner_(p);
@@ -550,9 +554,12 @@ function doGet(e) {
     } catch (err) {
       payload = { ok: false, error: String(err && err.message || err) };
     }
-    return ContentService
-      .createTextOutput(p.callback + '(' + JSON.stringify(payload) + ')')
-      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    var pj = JSON.stringify(payload);
+    if (p.callback) {
+      return ContentService.createTextOutput(p.callback + '(' + pj + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(pj).setMimeType(ContentService.MimeType.JSON);
   }
 
   return messagePage(
@@ -560,6 +567,17 @@ function doGet(e) {
     'Scan the QR code at the festival, or visit the raffle page to enter.' +
     '<br><br><span style="font-size:14px;opacity:.65">Script ' + VERSION + '</span>'
   );
+}
+
+/** The draw opens to the shared draw key, or to any admin's own name
+    and password from the Admins tab - the same login as the admin page,
+    so there is one fewer secret to pass around on the night. */
+function drawAllowed_(p) {
+  if (p.key && p.key === DRAW_KEY) return true;
+  if (p.user && p.pass) {
+    try { return !!findAdmin_(p.user, p.pass); } catch (e) { return false; }
+  }
+  return false;
 }
 
 /**

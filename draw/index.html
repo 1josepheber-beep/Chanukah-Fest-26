@@ -24,6 +24,10 @@ var CONFIG = {
   // that unlocks the entrant list cannot live in the file. It is typed
   // in once per computer and kept in that browser from then on.
   KEY: "",
+  // The admin name that goes with it. The draw accepts the same name
+  // and password as the admin page; the old shared key still works if
+  // the name is left blank.
+  USER: "",
 
   // How many prizes. Change it here or in the admin panel.
   PRIZES: 30,
@@ -631,9 +635,11 @@ h1 {
 <div class="lock" id="lock">
   <div class="lock-box">
     <h1>Raffle Draw</h1>
-    <p>Chanukah Fest 2026. Enter the access key to load the entries.</p>
+    <p>Chanukah Fest 2026. Sign in with your admin name and password to load the entries.</p>
+    <input type="text" id="lockUser" autocomplete="username" autocapitalize="none"
+           spellcheck="false" placeholder="Name or email" />
     <input type="password" id="lockKey" autocomplete="current-password"
-           spellcheck="false" placeholder="Access key" />
+           spellcheck="false" placeholder="Password" />
     <button id="lockBtn">Unlock</button>
     <div class="lock-msg" id="lockMsg"></div>
     <div class="lock-keep">Remembered on this computer until you sign out.
@@ -914,7 +920,7 @@ function save() {
       winners: winners, prizes: CONFIG.PRIZES,
       subject: CONFIG.SUBJECT, message: CONFIG.MESSAGE, send: CONFIG.SEND_EMAILS,
       showStatus: CONFIG.SHOW_STATUS, demo: CONFIG.DEMO,
-      endpoint: CONFIG.ENDPOINT, key: CONFIG.KEY,
+      endpoint: CONFIG.ENDPOINT, key: CONFIG.KEY, user: CONFIG.USER,
       auto: CONFIG.AUTO, autoFrom: CONFIG.AUTO_FROM,
       autoUntil: CONFIG.AUTO_UNTIL, autoEvery: CONFIG.AUTO_EVERY,
       fx: CONFIG.FX, fxDre: CONFIG.FX_DREIDELS,
@@ -938,6 +944,7 @@ function restore() {
     if (typeof d.demo === "boolean") CONFIG.DEMO = d.demo;
     if (d.endpoint) CONFIG.ENDPOINT = d.endpoint;
     if (d.key) CONFIG.KEY = d.key;
+    if (d.user) CONFIG.USER = d.user;
     if (typeof d.auto === "boolean") CONFIG.AUTO = d.auto;
     if (d.autoFrom) CONFIG.AUTO_FROM = d.autoFrom;
     if (d.autoUntil) CONFIG.AUTO_UNTIL = d.autoUntil;
@@ -975,7 +982,11 @@ var lastDetail = "";
 var RELAY = "https://gcvbohdarppaolqhdnri.supabase.co/functions/v1/cf26-relay";
 
 function buildUrl(params, cb, viaRelay) {
-  var qs = ["key=" + encodeURIComponent(CONFIG.KEY), "callback=" + cb, "t=" + Date.now()];
+  // An admin name + password, or - with no name - the old shared key.
+  var qs = CONFIG.USER
+    ? ["user=" + encodeURIComponent(CONFIG.USER), "pass=" + encodeURIComponent(CONFIG.KEY)]
+    : ["key=" + encodeURIComponent(CONFIG.KEY)];
+  qs.push("callback=" + cb, "t=" + Date.now());
   for (var k in params) {
     if (params[k] !== undefined && params[k] !== null) {
       qs.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k]));
@@ -1071,9 +1082,12 @@ function jsonp(params, done) {
         try {
           data = unwrap(txt);
         } catch (bad) {
-          // The relay answered, but not with data. Try Google directly
-          // before giving up, in case the relay itself is the problem.
-          viaScriptTag(bad.message);
+          // The script answered - through the relay - with a web page
+          // instead of data. That is the script refusing the login, not
+          // the relay failing (a relay failure is a thrown fetch, caught
+          // below). Retrying via Google would only sit on the twelve
+          // second timeout and then blame the connection.
+          finish({ ok: false, error: bad.message }, "relay", "");
           return;
         }
         finish(data, "relay", "");
@@ -2276,6 +2290,7 @@ $("resetBtn").onclick = function () {
 
 $("signOutBtn").onclick = function () {
   CONFIG.KEY = "";
+  CONFIG.USER = "";
   save();
   location.reload();
 };
@@ -2296,13 +2311,14 @@ addEventListener("keydown", function (e) {
    of keeping it out of this file.
    =================================================================== */
 
-function tryKey(key) {
+function tryKey(key, user) {
   var btn = $("lockBtn");
   btn.disabled = true;
   btn.textContent = "Checking\u2026";
   $("lockMsg").textContent = "";
 
   CONFIG.KEY = key;
+  CONFIG.USER = user || "";
   loadEntries(function (ok) {
     btn.disabled = false;
     btn.textContent = "Unlock";
@@ -2312,21 +2328,26 @@ function tryKey(key) {
       return;
     }
     CONFIG.KEY = "";
+    CONFIG.USER = "";
     $("lockMsg").textContent = lastReply.indexOf("web page") > -1 || lastReply.indexOf("error") > -1
-      ? "That key was not accepted."
+      ? (user ? "That name and password were not accepted." : "That key was not accepted.")
       : "Could not reach the spreadsheet. Check the connection and try again.";
     $("lockKey").select();
   });
 }
 
 $("lockBtn").onclick = function () {
+  var u = $("lockUser").value.trim();
   var k = $("lockKey").value.trim();
-  if (!k) { $("lockMsg").textContent = "Enter the access key."; return; }
-  tryKey(k);
+  if (!k) { $("lockMsg").textContent = u ? "Enter your password." : "Enter your name and password."; return; }
+  tryKey(k, u);
 };
 
 $("lockKey").addEventListener("keydown", function (e) {
   if (e.key === "Enter") $("lockBtn").click();
+});
+$("lockUser").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") $("lockKey").focus();
 });
 
 /* ===================================================================
@@ -2343,7 +2364,7 @@ if (CONFIG.KEY) {
   $("lock").hidden = true;
   loadEntries();
 } else {
-  setTimeout(function () { $("lockKey").focus(); }, 60);
+  setTimeout(function () { $("lockUser").focus(); }, 60);
 }
 </script>
 

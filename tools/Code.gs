@@ -16,7 +16,7 @@
 // Bump this whenever you paste a new copy in, so you can tell at a
 // glance which version Google is actually serving. Open the /exec URL
 // in a browser and the version is printed on the page.
-var VERSION = 'v26 — the draw takes an admin login';
+var VERSION = 'v27 — drawing a winner no longer overwrites their registration';
 
 var SHEET_NAME = 'Entries';
 var WINNERS_NAME = 'Winners';
@@ -761,7 +761,12 @@ function markWinner___raw(p) {
     var prizeLabel = 'Prize ' + prizeNum;
     var emailed, note = '';
 
-    if (!email) {
+    if (trim_(p.noemail)) {
+      // The draw screen asked for the win to be recorded without an
+      // email going out. Used when prizes are handed over in person
+      // and the thank-you goes later, in one batch.
+      emailed = 'Not sent (emails switched off at the draw)';
+    } else if (!email) {
       emailed = 'No email on file';
     } else {
       try {
@@ -776,12 +781,26 @@ function markWinner___raw(p) {
     ws.appendRow([prizeNum, who, age, household, phone, email, new Date(), emailed, ticket]);
 
     // Mark the entry row so the sheet is readable at a glance.
-    var prior = trim_(entry[C.PRIZE - 1]);
-    sheet.getRange(row, C.WON).setValue('Yes');
-    sheet.getRange(row, C.WON_AT).setValue(new Date());
-    sheet.getRange(row, C.PRIZE).setValue(prior ? prior + ', ' + prizeNum : String(prizeNum));
-    sheet.getRange(row, C.EMAILED).setValue(emailed);
-    sheet.getRange(row, 1, 1, HEADERS.length).setBackground('#FFF3D6');
+    // Mark the row so the sheet is readable at a glance.
+    //
+    // ONLY on the Entries tab. Those four columns -- Won, Won at,
+    // Prizes won, Emailed -- are numbers 11 to 14 there, but on the
+    // Registrations tab 11 to 14 are Party size, Family members, Pass
+    // sent and Came in at. Writing to them by number destroyed a
+    // household's headcount, its guest names, its pass record and its
+    // check-in, one family per winner, and the gate reads that same
+    // tab. The Winners tab is the record either way; here we only
+    // tint the row.
+    if (src.isReg) {
+      sheet.getRange(row, 1, 1, REG_HEADERS.length).setBackground('#FFF3D6');
+    } else {
+      var prior = trim_(entry[C.PRIZE - 1]);
+      sheet.getRange(row, C.WON).setValue('Yes');
+      sheet.getRange(row, C.WON_AT).setValue(new Date());
+      sheet.getRange(row, C.PRIZE).setValue(prior ? prior + ', ' + prizeNum : String(prizeNum));
+      sheet.getRange(row, C.EMAILED).setValue(emailed);
+      sheet.getRange(row, 1, 1, HEADERS.length).setBackground('#FFF3D6');
+    }
 
     return {
       ok: true, name: who, household: household,

@@ -45,7 +45,11 @@ var CONFIG = {
   // Drawing is BLOCKED unless the Google Sheet answered, so a sample
   // name can never be announced to a room. Switch this on in the admin
   // panel to practise with the sample names.
-  DEMO: false,
+  // Practice mode: draw the REAL entrants, but record nothing and email
+  // nobody. The screen looks exactly like the night, which is the point
+  // of a rehearsal. Deliberately not saved across a reload - nobody
+  // should discover on the night that it was left on.
+  PRACTICE: false,
 
   // The winner email. {name} {firstname} {prize} get filled in.
   // Editable from the admin panel.
@@ -628,6 +632,17 @@ h1 {
   .t-stub { padding: 18px 22px 18px 16px; }
   .slots { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
+
+/* Impossible to miss, because the costly mistake is running the real
+   draw with this still on: winners announced, nothing written down. */
+.practice-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 90;
+  background: #F0B429; color: #16202E;
+  font-weight: 800; font-size: 14px; letter-spacing: .04em; text-transform: uppercase;
+  text-align: center; padding: 9px 14px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.45);
+}
+body.practice { padding-top: 38px; }
 </style>
 </head>
 <body>
@@ -653,6 +668,8 @@ h1 {
 
 <canvas id="fx"></canvas>
 <button id="adminDot" aria-label="Admin"></button>
+
+<div class="practice-bar" id="practiceBar" hidden>Practice mode &middot; nothing is being recorded or emailed</div>
 
 <div class="wrap">
   <header>
@@ -719,12 +736,13 @@ h1 {
         Show status messages on the screen
       </label>
       <label style="display:flex;align-items:center;gap:10px;margin-top:10px;color:var(--text);font-size:.95rem">
-        <input type="checkbox" id="demoMode" style="width:18px;height:18px;accent-color:#F0B429">
-        Demo mode — let me draw the sample names
+        <input type="checkbox" id="practiceMode" style="width:18px;height:18px;accent-color:#F0B429">
+        Practice mode — rehearse with the real names
       </label>
       <div class="hint" style="margin-top:4px">
-        Leave this off for the real event. With it off, Draw does nothing
-        unless the sheet answered.
+        Draws real entrants so the screen looks exactly like the night, but
+        records nothing and emails nobody. The same person can come up twice.
+        Switches itself off when the page is reloaded.
       </div>
 
       <div style="margin-top:14px">
@@ -869,7 +887,7 @@ function setStatus(text, kind) {
   if (panel) panel.textContent = text;
 
   // If we are sitting in the not-connected state, show the reason there.
-  if (usingSample && !CONFIG.DEMO && $("winnerName").textContent === "Can't draw yet") {
+  if (usingSample && $("winnerName").textContent === "Can't draw yet") {
     $("winnerExtra").style.whiteSpace = "normal";
     $("winnerExtra").textContent = text;
   }
@@ -882,16 +900,18 @@ function wonCount() {
   return n;
 }
 
-/** Drawing is only allowed on real entries, unless demo mode is on. */
+/** Drawing needs real entries. Sample names mean the sheet could not be
+    reached, and nothing should be announced from those. */
 function canDraw() {
   if (nextSlot() === -1) return false;
-  if (usingSample && !CONFIG.DEMO) return false;
+  if (usingSample) return false;
   return true;
 }
 
 function updateDrawButton() {
   $("drawBtn").disabled = !canDraw();
-  if (usingSample && !CONFIG.DEMO) {
+  $("drawBtn").textContent = CONFIG.PRACTICE ? "Practice draw" : "Draw!";
+  if (usingSample) {
     $("tLabel").textContent = "Not connected to the Google Sheet";
     $("winnerName").style.fontSize = "";
     $("winnerName").textContent = "Can't draw yet";
@@ -919,7 +939,7 @@ function save() {
     localStorage.setItem(STORE, JSON.stringify({
       winners: winners, prizes: CONFIG.PRIZES,
       subject: CONFIG.SUBJECT, message: CONFIG.MESSAGE, send: CONFIG.SEND_EMAILS,
-      showStatus: CONFIG.SHOW_STATUS, demo: CONFIG.DEMO,
+      showStatus: CONFIG.SHOW_STATUS,
       endpoint: CONFIG.ENDPOINT, key: CONFIG.KEY, user: CONFIG.USER,
       auto: CONFIG.AUTO, autoFrom: CONFIG.AUTO_FROM,
       autoUntil: CONFIG.AUTO_UNTIL, autoEvery: CONFIG.AUTO_EVERY,
@@ -941,7 +961,6 @@ function restore() {
     if (d.message) CONFIG.MESSAGE = d.message;
     if (typeof d.send === "boolean") CONFIG.SEND_EMAILS = d.send;
     if (typeof d.showStatus === "boolean") CONFIG.SHOW_STATUS = d.showStatus;
-    if (typeof d.demo === "boolean") CONFIG.DEMO = d.demo;
     if (d.endpoint) CONFIG.ENDPOINT = d.endpoint;
     if (d.key) CONFIG.KEY = d.key;
     if (d.user) CONFIG.USER = d.user;
@@ -1269,7 +1288,7 @@ function renderSlots() {
    =================================================================== */
 function draw() {
   if (drawing) return;
-  if (usingSample && !CONFIG.DEMO) {
+  if (usingSample) {
     setStatus("Not connected to the sheet. Drawing is blocked so a sample name " +
               "can't be announced. Redeploy the Apps Script, then Reload entries.", "bad");
     return;
@@ -1291,7 +1310,7 @@ function draw() {
   var t = $("ticket");
   t.classList.remove("win");
   t.classList.add("rolling");
-  $("tLabel").textContent = "Drawing winner " + prizeNum + "…" + (usingSample ? "  (DEMO)" : "");
+  $("tLabel").textContent = "Drawing winner " + prizeNum + "…" + (CONFIG.PRACTICE ? "  (PRACTICE)" : "");
   $("winnerExtra").textContent = "";
   $("prizeNo").textContent = prizeNum;
   tick();
@@ -1315,7 +1334,7 @@ function reveal(w, slot) {
   void t.offsetWidth;
   t.classList.add("win");
 
-  $("tLabel").textContent = usingSample ? "Demo draw — not a real entrant" : "And the winner is";
+  $("tLabel").textContent = CONFIG.PRACTICE ? "Practice \u2014 not recorded" : "And the winner is";
   showName(w.name);
   $("prizeNo").textContent = prizeNum;
   $("winnerExtra").style.whiteSpace = "nowrap";
@@ -1345,30 +1364,44 @@ function announceEmail(w, prizeNum) {
     setStatus("Sample names. Nothing emailed, sheet unchanged.", "offline");
     return;
   }
-  if (!CONFIG.SEND_EMAILS) {
-    setStatus("Winner " + prizeNum + ": " + w.name + ". Emails are switched off.", "live");
+
+  // Practice: a real name on the screen and nothing else. The sheet is
+  // not touched, so the same person can come up again, which is what
+  // makes it a rehearsal rather than a draw.
+  if (CONFIG.PRACTICE) {
+    setStatus("PRACTICE \u2014 " + w.name + " drawn for prize " + prizeNum +
+              ". Nothing recorded, nobody emailed.", "offline");
     return;
   }
+
   if (!w.id) {
-    setStatus("Couldn't match " + w.name + " back to the sheet, so no email was sent.", "bad");
+    setStatus("Couldn't match " + w.name + " back to the sheet, so the win was not recorded.", "bad");
     return;
   }
 
-  setStatus("Emailing " + w.name + "…", "busy");
+  var quiet = !CONFIG.SEND_EMAILS;
+  setStatus(quiet ? "Recording " + w.name + "\u2026" : "Emailing " + w.name + "\u2026", "busy");
 
-  jsonp({
+  var ask = {
     action: "won",
     ticket: w.id,
     prize: prizeNum,
     subject: CONFIG.SUBJECT,
     message: CONFIG.MESSAGE
-  }, function (r) {
-    if (r && r.ok && r.emailed) {
-      setStatus("Winner " + prizeNum + " — " + w.name +
-        (w.household !== w.name ? " (entered by " + w.household + ")" : "") +
-        " — emailed.", "live");
+  };
+  if (quiet) ask.noemail = "1";
+
+  jsonp(ask, function (r) {
+    var who = w.name + (w.household !== w.name ? " (entered by " + w.household + ")" : "");
+    if (r && r.ok && quiet) {
+      setStatus("Winner " + prizeNum + " \u2014 " + who + " \u2014 recorded. Emails are switched off.", "live");
+    } else if (r && r.ok && r.emailed) {
+      setStatus("Winner " + prizeNum + " \u2014 " + who + " \u2014 emailed.", "live");
+    } else if (r && r.ok) {
+      setStatus("Winner " + prizeNum + " \u2014 " + who + " \u2014 recorded, but the email did not send" +
+        ((r.note || r.error) ? ": " + (r.note || r.error) : "."), "bad");
     } else {
-      setStatus("Winner " + prizeNum + " drawn, but the email did not send" +
+      setStatus("Winner " + prizeNum + " drawn, but it was NOT recorded" +
         ((r && (r.note || r.error)) ? ": " + (r.note || r.error) : "."), "bad");
     }
   });
@@ -2040,7 +2073,7 @@ function autoTick() {
     return;
   }
   // Better to say so plainly than to let a timer count down to nothing.
-  if (usingSample && !CONFIG.DEMO) {
+  if (usingSample) {
     setAutoBar("done", "Not connected to the sheet \u2014 nothing will be drawn", 0);
     return;
   }
@@ -2129,7 +2162,7 @@ function showAdmin() {
   $("prizeCount").value = CONFIG.PRIZES;
   $("sendEmails").checked = CONFIG.SEND_EMAILS;
   $("showStatus").checked = CONFIG.SHOW_STATUS;
-  $("demoMode").checked = CONFIG.DEMO;
+  $("practiceMode").checked = CONFIG.PRACTICE;
   $("emSubject").value = CONFIG.SUBJECT;
   $("emMessage").value = CONFIG.MESSAGE;
   $("autoOn").checked = CONFIG.AUTO;
@@ -2182,7 +2215,8 @@ $("applyBtn").onclick = function () {
   CONFIG.PRIZES = n;
   CONFIG.SEND_EMAILS = $("sendEmails").checked;
   CONFIG.SHOW_STATUS = $("showStatus").checked;
-  CONFIG.DEMO = $("demoMode").checked;
+  CONFIG.PRACTICE = $("practiceMode").checked;
+  paintPractice();
   CONFIG.AUTO = $("autoOn").checked;
   CONFIG.AUTO_FROM = $("autoFrom").value || CONFIG.AUTO_FROM;
   CONFIG.AUTO_UNTIL = $("autoUntil").value || CONFIG.AUTO_UNTIL;
@@ -2353,9 +2387,17 @@ $("lockUser").addEventListener("keydown", function (e) {
 /* ===================================================================
    GO
    =================================================================== */
+function paintPractice() {
+  var bar = $("practiceBar");
+  if (bar) bar.hidden = !CONFIG.PRACTICE;
+  document.body.className = CONFIG.PRACTICE ? "practice" : "";
+  updateDrawButton();
+}
+
 $("drawBtn").onclick = draw;
 $("eventName").textContent = CONFIG.EVENT;
 restore();
+paintPractice();
 renderSlots();
 buildScenery();
 resetAuto();
